@@ -1,0 +1,41 @@
+{% extends 'core/main.html' %}
+{% block content %}
+
+{% if request.user.is_authenticated %}
+<p>{{request.user}}</p>
+<a href="{% url 'logout' %}"> Logout</a>
+{% else %}
+<a href="{% url 'login' %}"> Log in</a>
+{% endif %}
+<hr>
+
+<h1>My do to list </h1>
+<a href="{% url 'task_create' %}">add task</a>
+<p>Task count: {{count}}</p>
+
+<form method="get">
+    <input type="text" name="search_area" value="{{search_input}}">
+    <input type="submit" value="search">
+</form>
+
+<table class="">
+    <tr>
+        <th>Items</th>
+    </tr>
+    {% for task in tasks %}
+    <tr>
+        <td>{{task.title}}</td>
+        <td><a href="{% url 'task_detail' task.id %}">View</a></td>
+        <td><a href="{% url 'task_update' task.id %}">Edit</a></td>
+        <td><a href="{% url 'task_delete' task.id %}">Delete</a></td>
+    </tr>
+    {% empty %}
+    <h3>No item in list</h3>
+    {% endfor %}
+</table>
+<div class="mt-3">
+    <!--    {% include 'core/offert_card.html' %}-->
+</div>
+
+
+{% endblock content %}
