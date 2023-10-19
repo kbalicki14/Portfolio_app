@@ -1,11 +1,12 @@
 {% extends 'core/main.html' %}
 {% block content %}
 
-<h1>Register</h1>
+
 <form method="post">
     {% csrf_token %}
-    <div class="row row-col-1">
+    <div class="row row-col-1 justify-content-center mt-5">
         <div class="col-lg-4 col-md-6">
+            <h1>Register</h1>
             <div class="mb-3 ">
                 <label for="InputEmail1" class="form-label">{{form.username.label}}</label>
                 <!--        {{form.username}}-->
@@ -24,11 +25,10 @@
             </div>
 
             <input type="submit" class="btn btn-primary col-3 mb-3" value="Register">
+            <p>Already have account <a href="{% url 'login' %}">Login</a></p>
         </div>
     </div>
 </form>
 
-
-<p>Already have account <a href="{% url 'login' %}">Login</a></p>
 
 {% endblock content %}
