@@ -1,0 +1,33 @@
+{% extends 'core/main.html' %}
+{% block content %}
+{% for item in advert %}
+
+
+<div class="card mb-3 " style="max-width: 1000px; max-height:300px">
+    <a class="text-decoration-none text-body " href="#">
+        <div class="row g-0">
+            <div class="col-md-4" style="">
+                <img src="{{ item.img.url }}"
+                     class="img-fluid  w-100 mx-auto d-block rounded-start " style="max-height:295px"
+                     alt="advert image">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">{{ item.title }}</h5>
+                    <p class="card-text">{{ item.description }} {% lorem 20 w random %}</p>
+                    <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                </div>
+            </div>
+        </div>
+
+    </a>
+</div>
+
+
+<!--<div class="col-md-4">-->
+<!--    {{ item.title }}-->
+<!--    <img src="{{ item.img.url }}" class="img-responsive"-->
+<!--         style="width: 300px; float: left; margin-right: 10px;"/>-->
+<!--</div>-->
+{% endfor %}
+{% endblock content %}

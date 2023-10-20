@@ -9,7 +9,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 
-from .models import Task
+from .forms import AdvertiseForm
+from .models import Task, AdvertiseModel
 
 
 # Create your views here.
@@ -87,3 +88,40 @@ class TaskDelete(LoginRequiredMixin, DeleteView):
     model = Task
     context_object_name = 'task'
     success_url = reverse_lazy('task')
+
+
+class AdvertiseCreate(CreateView):
+    model = AdvertiseModel
+    form_class = AdvertiseForm
+    template_name = 'core/img_update.html'
+    success_url = reverse_lazy('upload')
+    context_object_name = 'img_obj'
+    success_url = reverse_lazy('advert_list')
+
+
+def imageUpload(request):
+    """Process images uploaded by users"""
+    if request.method == 'POST':
+        form = AdvertiseForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            # Get the current instance object to display in the template
+            img_obj = form.instance
+            return render(request, 'core/img_update.html', {'form': form, 'img_obj': img_obj})
+    else:
+        form = AdvertiseForm()
+        return render(request, 'core/img_update.html', {'form': form})
+
+
+# def AdvView(request):
+#     if request.method == 'GET':
+#         # getting all the objects of hotel.
+#         advert = AdvertiseModel.objects.all()
+#         return render((request, 'img_update.html',
+#                        {'advert': advert}))
+
+
+class AdvertList(ListView):
+    model = AdvertiseModel
+    context_object_name = 'advert'
+    template_name = 'core/advert_list.html'

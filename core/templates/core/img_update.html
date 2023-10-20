@@ -1,0 +1,21 @@
+{% extends 'core/main.html' %}
+{% block content %}
+<!--<div class=" row row-col-1 justify-content-center">-->
+<!--    <div class="col-5">-->
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Upload</button>
+</form>
+{% if img_obj %}
+<h3>Succesfully uploaded : {{img_obj.title}}</h3>
+<img src="{{ img_obj.img.url}}" alt="connect" style="max-height:300px">
+{% endif %}
+<!--    </div>-->
+<!--</div>-->
+{% endblock content %}
+
+
+
+
+

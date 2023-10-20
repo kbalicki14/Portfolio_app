@@ -11,7 +11,7 @@
                     <a class="nav-link active" aria-current="page" href="#">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Features</a>
+                    <a class="nav-link" href="{% url 'advert_list' %}">Features</a>
                 </li>
                 <li class="nav-item me-3">
                     <a class="nav-link" href="#">About us</a>
@@ -24,7 +24,7 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="#">Profile</a></li>
-                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="{% url 'advertise' %}">Action</a></li>
                         <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                     </ul>
                 </li>

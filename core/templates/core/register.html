@@ -8,24 +8,32 @@
         <div class="col-lg-4 col-md-6">
             <h1>Register</h1>
             <div class="mb-3 ">
-                <label for="InputEmail1" class="form-label">{{form.username.label}}</label>
-                <!--        {{form.username}}-->
-
-                <input type="text" name="{{form.username.name}}" class="form-control" id="InputEmail1"
-                       aria-describedby="emailHelp">
+                {% load widget_tweaks %}
+                <label for="id_username" class="form-label">{{form.username.label}}</label>
+                <!--                <input type="text" name="{{form.username.name}}" class="form-control" id="id_username"-->
+                <!--                       aria-describedby="emailHelp">-->
+                {% render_field form.username placeholder=form.username.label class+="form-control" %}
             </div>
             <div class="mb-3 ">
-                <label for="InputPassword1" class="form-label">{{form.password1.label}}</label>
-                <input type="password" name="{{form.password1.name}}" class="form-control" id="InputPassword1">
+                <label for="id_password1" class="form-label">{{form.password1.label}}</label>
+                <!--                <input type="password" name="{{form.password1.name}}" class="form-control" id="InputPassword1">-->
+                {% render_field form.password1 placeholder=form.password1.label class+="form-control" %}
+
             </div>
             <div class="mb-3 ">
 
-                <label for="InputPassword2" class="form-label">{{form.password2.label}}</label>
-                <input type="password" name="{{form.password2.name}}" class="form-control" id="InputPassword2">
+                <label for="id_password2" class="form-label">{{form.password2.label}}</label>
+                <!--                <input type="password" name="{{form.password2.name}}" class="form-control" id="InputPassword2">-->
+                {% render_field form.password2 placeholder=form.password2.label class+="form-control" %}
+
             </div>
 
-            <input type="submit" class="btn btn-primary col-3 mb-3" value="Register">
+            <input type="submit" class="btn btn-primary col-4 mb-3" value="Register">
             <p>Already have account <a href="{% url 'login' %}">Login</a></p>
+
+            {% if form.errors %}
+            <small class="help-block">{{ form.errors|striptags }}</small>
+            {% endif %}
         </div>
     </div>
 </form>
