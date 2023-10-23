@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
@@ -9,8 +10,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 
-from .forms import AdvertiseForm
-from .models import Task, AdvertiseModel
+from .forms import AdvertiseForm, MultiImageForm
+from .models import Task, AdvertiseModel, Image
 
 
 # Create your views here.
@@ -90,13 +91,67 @@ class TaskDelete(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('task')
 
 
+# png not upload
 class AdvertiseCreate(CreateView):
     model = AdvertiseModel
     form_class = AdvertiseForm
     template_name = 'core/img_update.html'
-    success_url = reverse_lazy('upload')
+    # success_url = reverse_lazy('upload')
     context_object_name = 'img_obj'
-    success_url = reverse_lazy('advert_list')
+    success_url = reverse_lazy('advertise')
+
+
+class CreateImageToGallery(CreateView):
+    model = Image
+    form_class = MultiImageForm
+    template_name = 'core/add_to_gallery.html'
+    context_object_name = 'image'
+    success_url = reverse_lazy('task')
+
+    def post(self, request, *args, **kwargs):
+        form = MultiImageForm(request.POST, request.FILES)
+        images = request.FILES.getlist("image")
+        if form.is_valid():
+            title = form.cleaned_data['title']
+            advertise = form.cleaned_data['advertise']
+
+            for image in images:
+                Image.objects.create(title=title, advertise=advertise, image=image)
+            return redirect('task')
+
+    # def form_valid(self, form):
+    #     # adverstment_gallery = form
+    #     # title = form.cleaned_data['title']
+    #     images = form.cleaned_data['image']
+    #     # img = form.FILES.getlist('image')
+    #
+    #     # images = form.FILES.getlist('image')
+    #     for image in images:
+    #         Image.objects.create(image=image)
+
+
+def AddMultiImage(request):
+    form = MultiImageForm()
+
+    if request.method == 'POST':
+        form = MultiImageForm(request.POST, request.FILES)
+        images = request.FILES.getlist("image")
+
+        # images = form.cleaned_data.getlist('image')
+        if form.is_valid():
+            title = form.cleaned_data['title']
+            advertise = form.cleaned_data['advertise']
+
+            for image in images:
+                Image.objects.create(title=title, advertise=advertise, image=image)
+            return redirect('task')
+
+    context = {'form': form}
+    return render(request, 'core/add_to_gallery.html', context)
+
+
+def thanks(request):
+    return HttpResponse('<h1>Form saved.</h1>')
 
 
 def imageUpload(request):
@@ -111,14 +166,6 @@ def imageUpload(request):
     else:
         form = AdvertiseForm()
         return render(request, 'core/img_update.html', {'form': form})
-
-
-# def AdvView(request):
-#     if request.method == 'GET':
-#         # getting all the objects of hotel.
-#         advert = AdvertiseModel.objects.all()
-#         return render((request, 'img_update.html',
-#                        {'advert': advert}))
 
 
 class AdvertList(ListView):

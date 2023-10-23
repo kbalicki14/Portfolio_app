@@ -54,17 +54,20 @@ class AdvertiseModel(models.Model):
     def __str__(self):
         return self.title
 
-# class Image(models.Model):
-#     title = models.CharField(max_length=200)
-#     image = models.ImageField(upload_to='images')
-#
-#     def __str__(self):
-#         return self.title
-#
-#
-# class AdvertiseImgGallery(models.Model):
+
+# class ImageGallery(models.Model):
 #     advertise = models.ForeignKey(AdvertiseModel, related_name='advertise', on_delete=models.CASCADE)
-#     gallery = models.ForeignKey(Image, on_delete=models.CASCADE)
+#     # gallery = models.ForeignKey(Image, on_delete=models.CASCADE)
+
+
+class Image(models.Model):
+    title = models.CharField(max_length=50, default='No title')
+    image = models.ImageField(upload_to='images')
+    advertise = models.ForeignKey(AdvertiseModel, related_name='advertise', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.title
+
 #
 #
 # class ImageTags(models.Model):

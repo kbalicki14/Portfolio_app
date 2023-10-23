@@ -1,5 +1,7 @@
 from django import forms
-from .models import AdvertiseModel
+from django.forms import ClearableFileInput
+
+from .models import AdvertiseModel, Image
 
 
 class AdvertiseForm(forms.ModelForm):
@@ -9,3 +11,14 @@ class AdvertiseForm(forms.ModelForm):
                   'title', 'description', 'advertise_category', 'street', 'street_number', 'apartment_number', 'town',
                   'zip_code',
                   'img')
+
+
+class MultiImageForm(forms.ModelForm):
+    image = forms.ImageField(label='Image', widget=forms.ClearableFileInput(attrs={"multiple": True}))
+
+    class Meta:
+        model = Image
+        fields = ['title', 'image', 'advertise']
+        # widgets = {
+        #     'image': ClearableFileInput(attrs={'multiple': True}),
+        # }

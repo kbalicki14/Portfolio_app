@@ -13,10 +13,18 @@
 <a href="{% url 'task_create' %}">add task</a>
 <p>Task count: {{count}}</p>
 
-<form method="get">
-    <input type="text" name="search_area" value="{{search_input}}">
-    <input type="submit" value="search">
-</form>
+<!--<form method="get">-->
+<!--    <input type="text" name="search_area" value="{{search_input}}">-->
+<!--    <input type="submit" value="search">-->
+<!--</form>-->
+
+<div class="container">
+    <form class="d-flex" role="search" method="get">
+        <input class="form-control me-2" type="search" placeholder="Search" name="search_area" value="{{search_input}}"
+               aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+    </form>
+</div>
 
 <table class="">
     <tr>
