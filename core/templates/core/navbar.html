@@ -14,7 +14,7 @@
                     <a class="nav-link" href="{% url 'advert_list' %}">Features</a>
                 </li>
                 <li class="nav-item me-3">
-                    <a class="nav-link" href="#">About us</a>
+                    <a class="nav-link" href="{% url 'multi_image' %}">About us</a>
                 </li>
                 {% if request.user.is_authenticated %}
                 <li class="nav-item dropdown ">

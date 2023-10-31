@@ -7,4 +7,14 @@
     <button type="submit">Add</button>
 </form>
 
+{% for item in advert %}
+<div class="container">
+    <div class="col-md-4" style="max-width: 500px;">
+        <img src="{{ item.form.url }}"
+             class="img-fluid  w-100 mx-auto d-block rounded-start " style="max-height:295px"
+             alt="advert image">
+    </div>
+</div>
+
+{% endfor %}
 {% endblock content %}
