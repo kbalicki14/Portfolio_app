@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
@@ -11,7 +11,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 
 from .forms import AdvertiseForm, MultiImageForm
-from .models import Task, AdvertiseModel, Image
+from .models import Task, AdvertiseModel, Image, CityList
 
 
 # Create your views here.
@@ -100,6 +100,16 @@ class AdvertiseCreate(CreateView):
     context_object_name = 'img_obj'
     success_url = reverse_lazy('advertise')
 
+    def get(self, request, *args, **kwargs):
+        if 'term' in request.GET:
+            querySet = CityList.objects.filter(city_name__istartswith=request.GET.get('term'))
+            city_list = list()
+            for city in querySet:
+                city_list.append(city.city_name)
+            print(list)
+            return JsonResponse(city_list, safe=False)
+        return super().get(request, *args, **kwargs)
+
 
 class CreateImageToGallery(CreateView):
     model = Image
@@ -144,7 +154,7 @@ def AddMultiImage(request):
 
             for image in images:
                 Image.objects.create(title=title, advertise=advertise, image=image)
-            return redirect('task')
+            return redirect('multi_image')
 
     context = {'form': form}
     return render(request, 'core/add_to_gallery.html', context)

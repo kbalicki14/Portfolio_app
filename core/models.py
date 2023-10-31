@@ -43,7 +43,7 @@ class AdvertiseModel(models.Model):
     rating_sum = models.IntegerField(default=0)
     rating_count = models.IntegerField(default=0)
     street = models.CharField(max_length=50)
-    street_number = models.IntegerField(max_length=4)
+    street_number = models.CharField(max_length=4)
     apartment_number = models.CharField(max_length=4)
     town = models.CharField(max_length=40)
     zip_code = models.CharField(max_length=6)
@@ -68,7 +68,16 @@ class Image(models.Model):
     def __str__(self):
         return self.title
 
-#
-#
+
+# class Address(models.Model):
+#     pass
+
+
+class CityList(models.Model):
+    city_name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.city_name
+
 # class ImageTags(models.Model):
 #     pass

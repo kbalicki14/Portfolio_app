@@ -24,7 +24,7 @@ urlpatterns = [
     path('upload/', AdvertiseCreate.as_view(), name='advertise'),
     path('multi_image/', CreateImageToGallery.as_view(), name='multi_image'),
     # path('gallery/', AdvertiseCreate.as_view(), name='advertise'),
-    path('multi_image_work/', AddMultiImage, name='multi_image'),
+    path('multi_image_work/', AddMultiImage, name='multi_image_work'),
 
 ]
 if settings.DEBUG:

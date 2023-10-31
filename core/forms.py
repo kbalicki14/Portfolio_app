@@ -1,10 +1,12 @@
 from django import forms
 from django.forms import ClearableFileInput
 
-from .models import AdvertiseModel, Image
+from .models import AdvertiseModel, Image, CityList
 
 
 class AdvertiseForm(forms.ModelForm):
+    # town = forms.ModelChoiceField(queryset=CityList.objects.all())
+
     class Meta:
         model = AdvertiseModel
         fields = ('user',
@@ -19,6 +21,3 @@ class MultiImageForm(forms.ModelForm):
     class Meta:
         model = Image
         fields = ['title', 'image', 'advertise']
-        # widgets = {
-        #     'image': ClearableFileInput(attrs={'multiple': True}),
-        # }

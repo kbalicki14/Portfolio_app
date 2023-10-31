@@ -1,11 +1,58 @@
 {% extends 'core/main.html' %}
+{% load static %}
+{% block head %}
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/resources/demos/style.css">
+
+<!--select2-->
+<!--<script src="https://code.jquery.com/jquery-3.7.1.min.js"-->
+<!--        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>-->
+<!--<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>-->
+<!--<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>-->
+
+{% endblock head %}
+
+
 {% block content %}
 <!--<div class=" row row-col-1 justify-content-center">-->
 <!--    <div class="col-5">-->
 <form method="post" enctype="multipart/form-data">
+    {% load widget_tweaks %}
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Upload</button>
+
+    <label for="id_user" class="form-label">{{form.user.label}}</label>
+    {% render_field form.user placeholder=form.user.label class+="form-control" %}
+
+    <label for="id_title" class="form-label">{{form.title.label}}</label>
+    {% render_field form.title placeholder=form.user.label class+="form-control" %}
+
+    <label for="id_description" class="form-label">{{form.description.label}}</label>
+    {% render_field form.description placeholder=form.description.label class+="form-control" %}
+
+    <label for="id_advertise_category" class="form-label">{{form.advertise_category.label}}</label>
+    {% render_field form.advertise_category placeholder=form.advertise_category.label class+="form-control" %}
+
+    <label for="id_street" class="form-label">{{form.street.label}}</label>
+    {% render_field form.street placeholder=form.street.label class+="form-control" %}
+
+    <label for="id_street_number" class="form-label">{{form.street_number.label}}</label>
+    {% render_field form.street_number placeholder=form.street_number.label class+="form-control" %}
+
+    <label for="id_apartment_number" class="form-label">{{form.apartment_number.label}}</label>
+    {% render_field form.apartment_number placeholder=form.apartment_number.label class+="form-control" %}
+
+    <label for="id_town" class="form-label">{{form.town.label}}</label>
+    {% render_field form.town placeholder=form.town.label class+="form-control"%}
+
+    <label for="id_zip_code" class="form-label">{{form.zip_code.label}}</label>
+    {% render_field form.zip_code placeholder=form.zip_code.label class+="form-control" %}
+
+    <label for="id_img" class="form-label">{{form.img.label}}</label>
+    {% render_field form.img placeholder=form.img.label class+="form-control" %}
+
+
+    <button type="submit" class="btn btn-primary col-3 mb-3 me-3 mt-3">Upload</button>
 </form>
 {% if img_obj %}
 <h3>Succesfully uploaded : {{img_obj.title}}</h3>
@@ -13,9 +60,16 @@
 {% endif %}
 <!--    </div>-->
 <!--</div>-->
+
 {% endblock content %}
 
+{% block script %}
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+<script src="{% static 'jquery_city.js' %}"></script>
+<!--<script>$("#id_town").select2()</script>-->
 
+{% endblock script %}
 
 
 
