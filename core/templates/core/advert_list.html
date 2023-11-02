@@ -1,9 +1,43 @@
 {% extends 'core/main.html' %}
+
+
+{% block headerTag %}
+
+<div class="container">
+    <div class="container row row-col-1 justify-content-center mt-3">
+        <form class="d-flex   w-50" role="search"
+              method="get" action="{% url 'advert_list' %}">
+
+            <div class="input-group row me-2">
+
+                <input class="form-control  w-50" type="search" placeholder="Search" name="search_area"
+                       value="{{search_input}}"
+                       aria-label="Search">
+                <select class="form-control" aria-label="Default select example">
+                    <!--                hardcoded category-->
+
+                    <option value="hairdress">Hairdress</option>
+                    <option value="barber">Barber</option>
+                    <option value="tatto">Tatto</option>
+                    <option value="cosmetic">Cosmetic</option>
+                </select>
+            </div>
+            <button class="btn btn-success " type="submit">Search</button>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <h3>Results for {{ search_input }} </h3>
+</div>
+
+
+{% endblock headerTag %}
 {% block content %}
+
+
 {% for item in advert %}
-
-
-<div class="card mb-3 " style="max-width: 1000px; ">
+<!--<div class="container row row-col-1 justify-content-center mt-4">-->
+<div class="card mb-3 mt-4" style="max-width: 1000px; ">
     <a class="text-decoration-none text-body" href="#">
         <div class="row g-0 ">
             <div class="col-md-4" style="">
@@ -22,6 +56,7 @@
 
     </a>
 </div>
+<!--</div>-->
 
 
 <!--<div class="col-md-4">-->
@@ -29,5 +64,8 @@
 <!--    <img src="{{ item.img.url }}" class="img-responsive"-->
 <!--         style="width: 300px; float: left; margin-right: 10px;"/>-->
 <!--</div>-->
+{% empty %}
+<h3 class="container row row-col-1 justify-content-center mt-4">Not found places in this location </h3>
+
 {% endfor %}
 {% endblock content %}

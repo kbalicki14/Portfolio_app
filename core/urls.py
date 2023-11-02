@@ -3,7 +3,7 @@ from django.conf.urls.static import static
 from django.urls import path, include
 from . import views
 from .views import TaskList, TaskDetail, TaskCreate, TaskUpdate, TaskDelete, CustomLoginView, RegisterView, \
-    imageUpload, AdvertList, AdvertiseCreate, AddMultiImage, CreateImageToGallery
+    imageUpload, AdvertList, AdvertiseCreate, AddMultiImage, CreateImageToGallery, WelcomePage
 
 from django.contrib.auth.views import LogoutView
 
@@ -14,6 +14,7 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
     path('register/', RegisterView.as_view(), name='register'),
 
+    path('index/', WelcomePage.as_view(), name='welcome'),
     path('', TaskList.as_view(), name='task'),
     path('task/<int:pk>/', TaskDetail.as_view(), name='task_detail'),
     path('create/', TaskCreate.as_view(), name='task_create'),

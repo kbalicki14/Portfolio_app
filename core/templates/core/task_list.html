@@ -18,13 +18,31 @@
 <!--    <input type="submit" value="search">-->
 <!--</form>-->
 
+<!--<i class="fa-regular fa-magnifying-glass"></i>-->
+<!--<i class="bi bi-search"></i>-->
+
 <div class="container">
     <form class="d-flex" role="search" method="get">
-        <input class="form-control me-2" type="search" placeholder="Search" name="search_area" value="{{search_input}}"
-               aria-label="Search">
+        <div class="input-group ">
+            <input class="form-control " type="text" placeholder="Search" name="search_area"
+                   value="{{search_input}}"
+                   aria-label="Search">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                    aria-expanded="false">Dropdown
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Action</a></li>
+                <li><a class="dropdown-item" href="#">Another action</a></li>
+                <li><a class="dropdown-item" href="#">Something else here</a></li>
+
+                <li><a class="dropdown-item" href="#">Separated link</a></li>
+            </ul>
+
+        </div>
         <button class="btn btn-outline-success" type="submit">Search</button>
     </form>
 </div>
+
 
 <table class="">
     <tr>
@@ -52,5 +70,69 @@
 
     <img src="{% static 'core/mountain.jpg' %}" style="max-height:100px" alt="My image">
 </div>
+
+<div id="carouselExampleIndicators" class="carousel slide " data-mdb-ride="carousel">
+
+    <div class="carousel-indicators">
+        <button
+                type="button"
+                data-mdb-target="#carouselExampleIndicators"
+                data-mdb-slide-to="0"
+                class="active"
+                aria-current="true"
+                aria-label="Slide 1"
+        ></button>
+        <button
+                type="button"
+                data-mdb-target="#carouselExampleIndicators"
+                data-mdb-slide-to="1"
+                aria-label="Slide 2"
+        ></button>
+        <button
+                type="button"
+                data-mdb-target="#carouselExampleIndicators"
+                data-mdb-slide-to="2"
+                aria-label="Slide 3"
+        ></button>
+    </div>
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="https://mdbcdn.b-cdn.net/img/new/slides/041.webp" class="d-block w-100" alt="Wild Landscape"/>
+        </div>
+        <div class="carousel-item">
+            <img src="https://mdbcdn.b-cdn.net/img/new/slides/042.webp" class="d-block w-100" alt="Camera"/>
+        </div>
+        <div class="carousel-item">
+            <img src="https://mdbcdn.b-cdn.net/img/new/slides/043.webp" class="d-block w-100" alt="Exotic Fruits"/>
+        </div>
+    </div>
+    <form class="d-flex justify-content-center position-absolute top-50 start-50 translate-middle w-75" role="search"
+          method="get">
+        <div class="input-group row me-2">
+            <input class="form-control  w-50" type="search" placeholder="Search" name="search_area"
+                   value="{{search_input}}"
+                   aria-label="Search">
+            <select class="form-control" aria-label="Default select example">
+                <option selected>Category</option>
+                <option value="1">Barber</option>
+                <option value="2">Hairdress</option>
+                <option value="3">Three</option>
+            </select>
+        </div>
+        <button class="btn btn-success " type="submit">Search</button>
+    </form>
+
+    <!--    <button class="carousel-control-prev" type="button" data-mdb-target="#carouselExampleIndicators"-->
+    <!--            data-mdb-slide="prev">-->
+    <!--        <span class="carousel-control-prev-icon" aria-hidden="true"></span>-->
+    <!--        <span class="visually-hidden">Previous</span>-->
+    <!--    </button>-->
+    <!--    <button class="carousel-control-next" type="button" data-mdb-target="#carouselExampleIndicators"-->
+    <!--            data-mdb-slide="next">-->
+    <!--        <span class="carousel-control-next-icon" aria-hidden="true"></span>-->
+    <!--        <span class="visually-hidden">Next</span>-->
+    <!--    </button>-->
+</div>
+
 
 {% endblock content %}

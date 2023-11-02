@@ -9,6 +9,7 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
+from django.views.generic import TemplateView
 
 from .forms import AdvertiseForm, MultiImageForm
 from .models import Task, AdvertiseModel, Image, CityList
@@ -91,6 +92,13 @@ class TaskDelete(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('task')
 
 
+class WelcomePage(TemplateView):
+    # model = AdvertiseModel
+    # context_object_name = 'category'
+    # queryset = AdvertiseModel.objects.only('advertise_category')
+    template_name = 'core/index.html'
+
+
 # png not upload
 class AdvertiseCreate(CreateView):
     model = AdvertiseModel
@@ -106,7 +114,6 @@ class AdvertiseCreate(CreateView):
             city_list = list()
             for city in querySet:
                 city_list.append(city.city_name)
-            print(list)
             return JsonResponse(city_list, safe=False)
         return super().get(request, *args, **kwargs)
 
@@ -182,3 +189,13 @@ class AdvertList(ListView):
     model = AdvertiseModel
     context_object_name = 'advert'
     template_name = 'core/advert_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        search_input = self.request.GET.get('search_area') or ''
+        search_category = self.request.GET.get('search_category') or ''
+        context['advert'] = context['advert'].filter(town=search_input)
+        # , advertise_category = search_category
+        context['search_input'] = search_input
+        context['search_category'] = search_category
+        return context
