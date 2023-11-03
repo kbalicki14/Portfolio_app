@@ -27,9 +27,9 @@
                 {% render_field form.password2 placeholder=form.password2.label class+="form-control" %}
 
             </div>
-
-            <input type="submit" class="btn btn-primary col-4 mb-3" value="Register">
-            <p>Already have account <a href="{% url 'login' %}">Login</a></p>
+            
+            <input type="submit" class="btn btn-primary " value="Register">
+            <p class="mt-3">Already have account <a href="{% url 'login' %}">Login</a></p>
 
             {% if form.errors %}
             <small class="help-block">{{ form.errors|striptags }}</small>
