@@ -1,10 +1,20 @@
 {% extends 'core/main.html' %}
 {% block content %}
-
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Add</button>
+    {% load widget_tweaks %}
+
+    <label for="id_title" class="form-label">{{form.title.label}}</label>
+    {% render_field form.title placeholder=form.title.label class+="form-control" %}
+
+    <label for="id_image" class="form-label">{{form.image.label}}</label>
+    {% render_field form.image placeholder=form.image.label class+="form-control" %}
+
+    <label for="id_advertise" class="form-label">{{form.advertise.label}}</label>
+    {% render_field form.advertise placeholder=form.advertise.label class+="form-control" %}
+
+    <!--    {{ form.as_p }}-->
+    <button type="submit" class="btn btn-primary col-1 mb-3 me-3 mt-3">Add</button>
 </form>
 
 {% for item in advert %}

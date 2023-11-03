@@ -1,62 +1,64 @@
 {% extends 'core/main.html' %}
+{% block head %}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/resources/demos/style.css">
 
+{% endblock head %}
 
 {% block headerTag %}
-
+{% load static %}
 <div class="container">
     <div class="container row row-col-1 justify-content-center mt-3">
-        <form class="d-flex   w-50" role="search"
+        <form class="d-flex  col-lg-7 col-md-9 mx-auto" role="search"
               method="get" action="{% url 'advert_list' %}">
-
+            
             <div class="input-group row me-2">
-
-                <input class="form-control  w-50" type="search" placeholder="Search" name="search_area"
+                <input class="form-control w-50 town-search " type="search" placeholder="Search" name="search_area"
                        value="{{search_input}}"
                        aria-label="Search">
-                <select class="form-control" aria-label="Default select example">
-                    <!--                hardcoded category-->
-
-                    <option value="hairdress">Hairdress</option>
-                    <option value="barber">Barber</option>
-                    <option value="tatto">Tatto</option>
-                    <option value="cosmetic">Cosmetic</option>
+                <select class="form-control " aria-label="Default select example" name="search_category">
+                    {% for item in category %}
+                    {% if search_category == item.id %}
+                    <option value="{{ item.id }}" selected>{{ item.category_name }}</option>
+                    {% else %}
+                    <option value="{{ item.id }}">{{ item.category_name }}</option>
+                    {% endif %}
+                    {% endfor %}
                 </select>
             </div>
             <button class="btn btn-success " type="submit">Search</button>
         </form>
     </div>
 </div>
-<div class="container">
+<div class="container mt-4">
     <h3>Results for {{ search_input }} </h3>
 </div>
 
-
 {% endblock headerTag %}
+
 {% block content %}
-
-
 {% for item in advert %}
-<!--<div class="container row row-col-1 justify-content-center mt-4">-->
-<div class="card mb-3 mt-4" style="max-width: 1000px; ">
-    <a class="text-decoration-none text-body" href="#">
-        <div class="row g-0 ">
-            <div class="col-md-4" style="">
-                <img src="{{ item.img.url }}"
-                     class="img-fluid  w-100 mx-auto d-block rounded-start " style="max-height:295px"
-                     alt="advert image">
-            </div>
-            <div class="col-md-8">
-                <div class="card-body">
-                    <h5 class="card-title">{{ item.title }}</h5>
-                    <p class="card-text">{{ item.description }} {% lorem 20 w random %}</p>
-                    <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+<div class="d-flex align-items-center justify-content-center">
+    <div class="card mb-3 mt-4 " style="max-width: 1000px; ">
+        <a class="text-decoration-none text-body" href="#">
+            <div class="row g-0 ">
+                <div class="col-md-4" style="">
+                    <img src="{{ item.img.url }}"
+                         class="img-fluid  w-100 mx-auto d-block rounded-start " style="max-height:295px"
+                         alt="advert image">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ item.title }}</h5>
+                        <p class="card-text">{{ item.description }} {% lorem 20 w random %}</p>
+                        <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                    </div>
                 </div>
             </div>
-        </div>
 
-    </a>
+        </a>
+    </div>
 </div>
-<!--</div>-->
 
 
 <!--<div class="col-md-4">-->
@@ -69,3 +71,10 @@
 
 {% endfor %}
 {% endblock content %}
+
+{% block script %}
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+<script src="{% static 'jquery_city.js' %}"></script>
+
+{% endblock script %}

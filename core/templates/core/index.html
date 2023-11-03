@@ -1,17 +1,13 @@
 {% extends 'core/main.html' %}
-
 {% block head %}
-
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 <link rel="stylesheet" href="/resources/demos/style.css">
 
 {% endblock head %}
+
 {% block index %}
-
-
 {% load static %}
 <div id="carouselExampleIndicators" class="carousel slide " data-mdb-ride="carousel">
-
     <div class="carousel-indicators">
         <button
                 type="button"
@@ -49,22 +45,24 @@
     <form class="d-flex justify-content-center position-absolute top-50 start-50 translate-middle w-75"
           role="search"
           method="get" action="{% url 'advert_list' %}">
+
         <div class="input-group row me-2 ">
-            <!--            autocomplete bug id-->
-            <input class="form-control  w-50 " id="id_town" type="search" placeholder="Search" name="search_area"
+            <input class="form-control w-50 town-search" type="search" placeholder="Search"
+                   name="search_area"
                    value="{{search_input}}"
                    aria-label="Search">
-            <select class="form-control" aria-label="Default select example" name="search_category">
-                <!--                hardcoded category-->
-                <option value="hairdress" selected>Hairdress</option>
-                <option value="barber">Barber</option>
-                <option value="tatto">Tatto</option>
-                <option value="cosmetic">Cosmetic</option>
+            <select class="form-control w-25" aria-label="Default select example" name="search_category">
+
+                {% for item in category %}
+                <option value="{{ item.id }}">{{ item.category_name }}</option>
+                {% endfor %}
+
             </select>
         </div>
-        <button class="btn btn-success " type="submit">Search</button>
-    </form>
 
+        <button class="btn btn-success " type="submit">Search</button>
+
+    </form>
 </div>
 {% endblock index %}
 
@@ -72,6 +70,5 @@
 <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 <script src="{% static 'jquery_city.js' %}"></script>
-
 
 {% endblock script %}

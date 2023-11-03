@@ -3,7 +3,7 @@
 {% block head %}
 
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-<link rel="stylesheet" href="/resources/demos/style.css">
+
 
 <!--select2-->
 <!--<script src="https://code.jquery.com/jquery-3.7.1.min.js"-->
@@ -43,7 +43,7 @@
     {% render_field form.apartment_number placeholder=form.apartment_number.label class+="form-control" %}
 
     <label for="id_town" class="form-label">{{form.town.label}}</label>
-    {% render_field form.town placeholder=form.town.label class+="form-control"%}
+    {% render_field form.town placeholder=form.town.label class+="form-control town-search" %}
 
     <label for="id_zip_code" class="form-label">{{form.zip_code.label}}</label>
     {% render_field form.zip_code placeholder=form.zip_code.label class+="form-control" %}
@@ -51,8 +51,7 @@
     <label for="id_img" class="form-label">{{form.img.label}}</label>
     {% render_field form.img placeholder=form.img.label class+="form-control" %}
 
-
-    <button type="submit" class="btn btn-primary col-3 mb-3 me-3 mt-3">Upload</button>
+    <button type="submit" class="btn btn-primary col-1 mb-3 me-3 mt-3">Create</button>
 </form>
 {% if img_obj %}
 <h3>Succesfully uploaded : {{img_obj.title}}</h3>
@@ -60,7 +59,6 @@
 {% endif %}
 <!--    </div>-->
 <!--</div>-->
-
 {% endblock content %}
 
 {% block script %}

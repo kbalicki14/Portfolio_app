@@ -9,10 +9,16 @@ class AdvertiseForm(forms.ModelForm):
 
     class Meta:
         model = AdvertiseModel
-        fields = ('user',
-                  'title', 'description', 'advertise_category', 'street', 'street_number', 'apartment_number', 'town',
-                  'zip_code',
-                  'img')
+        fields = (
+            'title', 'description', 'advertise_category', 'street', 'street_number', 'apartment_number', 'town',
+            'zip_code',
+            'img')
+
+
+class ImageForm(forms.ModelForm):
+    class Meta:
+        model = Image
+        fields = ['title', 'image', 'advertise']
 
 
 class MultiImageForm(forms.ModelForm):
