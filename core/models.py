@@ -33,13 +33,20 @@ class Task(models.Model):
         ordering = ['complete']
 
 
+class AdvertiseCategory(models.Model):
+    category_name = models.CharField(max_length=40)
+
+    def __str__(self):
+        return self.category_name
+
+
 # without Model next migrate
 class AdvertiseModel(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=50)
     description = models.TextField(max_length=100, null=True, blank=True)
     advertise_status = models.CharField(choices=Advertise_status, max_length=40, default='accepted')
-    advertise_category = models.CharField(choices=Advertise_category, max_length=40, default='none')
+    advertise_category = models.ForeignKey(AdvertiseCategory, on_delete=models.CASCADE)
     rating_sum = models.IntegerField(default=0)
     rating_count = models.IntegerField(default=0)
     street = models.CharField(max_length=50)
@@ -55,11 +62,6 @@ class AdvertiseModel(models.Model):
         return self.title
 
 
-# class ImageGallery(models.Model):
-#     advertise = models.ForeignKey(AdvertiseModel, related_name='advertise', on_delete=models.CASCADE)
-#     # gallery = models.ForeignKey(Image, on_delete=models.CASCADE)
-
-
 class Image(models.Model):
     title = models.CharField(max_length=50, default='No title')
     image = models.ImageField(upload_to='images')
@@ -69,15 +71,18 @@ class Image(models.Model):
         return self.title
 
 
-# class Address(models.Model):
-#     pass
-
-
 class CityList(models.Model):
     city_name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.city_name
+
+# class ImageGallery(models.Model):
+#     advertise = models.ForeignKey(AdvertiseModel, related_name='advertise', on_delete=models.CASCADE)
+#     # gallery = models.ForeignKey(Image, on_delete=models.CASCADE)
+
+# class Address(models.Model):
+#     pass
 
 # class ImageTags(models.Model):
 #     pass
