@@ -4,7 +4,7 @@ from django.urls import path, include
 from . import views
 from .views import TaskList, TaskDetail, TaskCreate, TaskUpdate, TaskDelete, CustomLoginView, RegisterView, \
     imageUpload, AdvertList, AdvertiseCreate, AddMultiImage, CreateImagesToGallery, WelcomePage, AdvertiseUpdate, \
-    AddImageToGallery
+    AddImageToGallery, AdvertiseDetails
 
 from django.contrib.auth.views import LogoutView
 
@@ -24,6 +24,7 @@ urlpatterns = [
     # path('upload/', imageUpload, name='upload'),
     path('advert/', AdvertList.as_view(), name='advert_list'),
     path('advertise_create/', AdvertiseCreate.as_view(), name='advertise'),
+    path('advertise_details/<int:pk>/', AdvertiseDetails.as_view(), name='advertise_details'),
     path('advertise_update/<int:pk>/', AdvertiseUpdate.as_view(), name='advertise_update'),
     path('multi_image/', CreateImagesToGallery.as_view(), name='multi_image'),
     path('add_image/', AddImageToGallery.as_view(), name='add_image'),

@@ -49,18 +49,19 @@ class TaskList(LoginRequiredMixin, ListView):
     model = Task
     # login_url = 'login'
     context_object_name = 'tasks'
+    paginate_by = 3
+
+    def get_queryset(self):
+        search_input = self.request.GET.get('search_area') or ''
+        tasks = super().get_queryset().filter(user=self.request.user)
+        if search_input:
+            tasks = tasks.filter(title__startswith=search_input)
+        return tasks
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['tasks'] = context['tasks'].filter(user=self.request.user)
-        context['count'] = context['tasks'].filter(complete=False).count()
-
-        search_input = self.request.GET.get('search_area') or ''
-        if search_input:
-            context['tasks'] = context['tasks'].filter(title__startswith=search_input)
-            # title__icontains
-
-        context['search_input'] = search_input
+        context['count'] = self.get_queryset().filter(complete=False).count()
+        context['search_input'] = self.request.GET.get('search_area') or ''
         return context
 
 
@@ -121,6 +122,12 @@ class AdvertiseCreate(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super(AdvertiseCreate, self).form_valid(form)
+
+
+class AdvertiseDetails(LoginRequiredMixin, DetailView):
+    model = AdvertiseModel
+    context_object_name = 'detail'
+    template_name = 'core/advertise_details.html'
 
 
 class AdvertiseUpdate(LoginRequiredMixin, UpdateView):
@@ -210,12 +217,19 @@ class AdvertList(ListView):
     context_object_name = 'advert'
     template_name = 'core/advert_list.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+    paginate_by = 1
+
+    def get_queryset(self):
         search_input = self.request.GET.get('search_area') or ''
         search_category = self.request.GET.get('search_category')
-        context['advert'] = context['advert'].filter(town=search_input, advertise_category=search_category)
-        context['search_input'] = search_input
-        context['search_category'] = int(search_category)
+        print(super().get_queryset().count())
+        advert_qs = super().get_queryset().filter(town=search_input, advertise_category=search_category)
+        print(advert_qs.count())
+        return advert_qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_input'] = self.request.GET.get('search_area') or ''
+        context['search_category'] = int(self.request.GET.get('search_category'))
         context['category'] = AdvertiseCategory.objects.all()
         return context

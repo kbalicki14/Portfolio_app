@@ -11,7 +11,7 @@
     <div class="container row row-col-1 justify-content-center mt-3">
         <form class="d-flex  col-lg-7 col-md-9 mx-auto" role="search"
               method="get" action="{% url 'advert_list' %}">
-            
+
             <div class="input-group row me-2">
                 <input class="form-control w-50 town-search " type="search" placeholder="Search" name="search_area"
                        value="{{search_input}}"
@@ -40,7 +40,7 @@
 {% for item in advert %}
 <div class="d-flex align-items-center justify-content-center">
     <div class="card mb-3 mt-4 " style="max-width: 1000px; ">
-        <a class="text-decoration-none text-body" href="#">
+        <a class="text-decoration-none text-body" href="{% url 'advertise_details' item.id %}">
             <div class="row g-0 ">
                 <div class="col-md-4" style="">
                     <img src="{{ item.img.url }}"
@@ -59,17 +59,47 @@
         </a>
     </div>
 </div>
-
-
-<!--<div class="col-md-4">-->
-<!--    {{ item.title }}-->
-<!--    <img src="{{ item.img.url }}" class="img-responsive"-->
-<!--         style="width: 300px; float: left; margin-right: 10px;"/>-->
-<!--</div>-->
 {% empty %}
 <h3 class="container row row-col-1 justify-content-center mt-4">Not found places in this location </h3>
-
 {% endfor %}
+
+<!--pagination-->
+{% load get_absolute_url %}
+{% if is_paginated %}
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center mt-4   ">
+        {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link" aria-label="Previous"
+                                 href="?{% query_transform page=page_obj.previous_page_number %}"><span
+                aria-hidden="true">&laquo;</span></a></li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">&laquo;</span>
+        </li>
+        {% endif %}
+        {% for index in paginator.page_range %}
+        {% if page_obj.number == index %}
+        <li class="page-item active" aria-current="page"><span class="page-link">{{ index }}<span
+                class="visually-hidden">(current)</span>
+        </span></li>
+        {% else %}
+        <li class="page-item"><a class="page-link" href="?{% query_transform page=index %}">{{ index }}</a></li>
+        {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+        <li><a class="page-link" aria-label="Next" href="?{% query_transform page=page_obj.next_page_number %}"> <span
+                aria-hidden="true">&raquo;</span></a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">&raquo;</span>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+
 {% endblock content %}
 
 {% block script %}
