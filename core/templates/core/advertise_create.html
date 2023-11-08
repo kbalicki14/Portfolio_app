@@ -49,9 +49,13 @@
     {% render_field form.zip_code placeholder=form.zip_code.label class+="form-control" %}
 
     <label for="id_img" class="form-label">{{form.img.label}}</label>
-    {% render_field form.img placeholder=form.img.label class+="form-control" %}
+    {% render_field form.img placeholder=form.img.label class+="form-control mb-3" %}
 
-    <button type="submit" class="btn btn-primary col-1 mb-3 me-3 mt-3">Create</button>
+    <button type="submit" class="btn btn-primary ">Create</button>
+
+    {% if form.errors %}
+    <small class="help-block">{{ form.errors|striptags }}</small>
+    {% endif %}
 </form>
 {% if img_obj %}
 <h3>Succesfully uploaded : {{img_obj.title}}</h3>

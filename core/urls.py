@@ -4,11 +4,9 @@ from django.urls import path, include
 from . import views
 from .views import TaskList, TaskDetail, TaskCreate, TaskUpdate, TaskDelete, CustomLoginView, RegisterView, \
     imageUpload, AdvertList, AdvertiseCreate, AddMultiImage, CreateImagesToGallery, WelcomePage, AdvertiseUpdate, \
-    AddImageToGallery, AdvertiseDetails
+    AddImageToGallery, AdvertiseDetails, CurrentUserAdvertise, AdvertiseDelete
 
 from django.contrib.auth.views import LogoutView
-
-# logout
 
 urlpatterns = [
     path('login/', CustomLoginView.as_view(), name='login'),
@@ -21,16 +19,21 @@ urlpatterns = [
     path('create/', TaskCreate.as_view(), name='task_create'),
     path('update/<int:pk>/', TaskUpdate.as_view(), name='task_update'),
     path('delete/<int:pk>/', TaskDelete.as_view(), name='task_delete'),
+
     # path('upload/', imageUpload, name='upload'),
     path('advert/', AdvertList.as_view(), name='advert_list'),
     path('advertise_create/', AdvertiseCreate.as_view(), name='advertise'),
     path('advertise_details/<int:pk>/', AdvertiseDetails.as_view(), name='advertise_details'),
     path('advertise_update/<int:pk>/', AdvertiseUpdate.as_view(), name='advertise_update'),
+    path('advertise_delete/<int:pk>/', AdvertiseDelete.as_view(), name='advertise_delete'),
+
     path('multi_image/', CreateImagesToGallery.as_view(), name='multi_image'),
-    path('add_image/', AddImageToGallery.as_view(), name='add_image'),
+    path('add_image/<int:advertise_pk>/', AddImageToGallery.as_view(), name='add_image'),
     # path('gallery/', AdvertiseCreate.as_view(), name='advertise'),
     path('multi_image_work/', AddMultiImage, name='multi_image_work'),
+    path('user_advertise/', CurrentUserAdvertise.as_view(), name='user_advertise'),
 
+    # <int:advertiseModel_pk>
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,

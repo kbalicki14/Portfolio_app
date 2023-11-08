@@ -49,7 +49,7 @@
                 </div>
                 <div class="col-md-8">
                     <div class="card-body">
-                        <h5 class="card-title">{{ item.title }}</h5>
+                        <h5 class="card-title">{{ item.title|title }}</h5>
                         <p class="card-text">{{ item.description }} {% lorem 20 w random %}</p>
                         <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
                     </div>
@@ -64,40 +64,7 @@
 {% endfor %}
 
 <!--pagination-->
-{% load get_absolute_url %}
-{% if is_paginated %}
-<nav aria-label="Page navigation example">
-    <ul class="pagination justify-content-center mt-4   ">
-        {% if page_obj.has_previous %}
-        <li class="page-item"><a class="page-link" aria-label="Previous"
-                                 href="?{% query_transform page=page_obj.previous_page_number %}"><span
-                aria-hidden="true">&laquo;</span></a></li>
-        {% else %}
-        <li class="page-item disabled">
-            <span class="page-link">&laquo;</span>
-        </li>
-        {% endif %}
-        {% for index in paginator.page_range %}
-        {% if page_obj.number == index %}
-        <li class="page-item active" aria-current="page"><span class="page-link">{{ index }}<span
-                class="visually-hidden">(current)</span>
-        </span></li>
-        {% else %}
-        <li class="page-item"><a class="page-link" href="?{% query_transform page=index %}">{{ index }}</a></li>
-        {% endif %}
-        {% endfor %}
-        {% if page_obj.has_next %}
-        <li><a class="page-link" aria-label="Next" href="?{% query_transform page=page_obj.next_page_number %}"> <span
-                aria-hidden="true">&raquo;</span></a>
-        </li>
-        {% else %}
-        <li class="page-item disabled">
-            <span class="page-link">&raquo;</span>
-        </li>
-        {% endif %}
-    </ul>
-</nav>
-{% endif %}
+{% include 'core/pagination_comp.html' %}
 
 
 {% endblock content %}

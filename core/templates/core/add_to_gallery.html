@@ -9,13 +9,16 @@
 
     <label for="id_image" class="form-label">{{form.image.label}}</label>
     {% render_field form.image placeholder=form.image.label class+="form-control" %}
+    <div class="mt-3">
+        <a href="{% url 'user_advertise' %}" class="btn btn-primary me-3">Go back</a>
+        <button type="submit" class="btn btn-success  ">Save and add next</button>
+    </div>
 
-    <label for="id_advertise" class="form-label">{{form.advertise.label}}</label>
-    {% render_field form.advertise placeholder=form.advertise.label class+="form-control" %}
-
-    <!--    {{ form.as_p }}-->
-    <button type="submit" class="btn btn-primary col-1 mb-3 me-3 mt-3">Add</button>
+    {% if form.errors %}
+    <small class="help-block">{{ form.errors|striptags }}</small>
+    {% endif %}
 </form>
+
 
 {% for item in advert %}
 <div class="container">

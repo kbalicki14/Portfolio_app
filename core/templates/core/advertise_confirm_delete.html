@@ -1,0 +1,14 @@
+{% extends 'core/main.html' %}
+{% block content %}
+<a href="{% url 'user_advertise' %}" class="btn btn-primary mb-5">Go back </a>
+
+<form method="post">
+    {% csrf_token %}
+    <p>Are sure you delete this advertise? "{{advertise}}"</p>
+    <input type="submit" value="delete" class="btn btn-danger">
+
+    {% if form.errors %}
+    <small class="help-block">{{ form.errors|striptags }}</small>
+    {% endif %}
+</form>
+{% endblock content %}

@@ -20,6 +20,10 @@ class ImageForm(forms.ModelForm):
         model = Image
         fields = ['title', 'image', 'advertise']
 
+    def __init__(self, *args, **kwargs):
+        super(ImageForm, self).__init__(*args, **kwargs)
+        self.fields['advertise'].required = False
+
 
 class MultiImageForm(forms.ModelForm):
     image = forms.ImageField(label='Image', widget=forms.ClearableFileInput(attrs={"multiple": True}))

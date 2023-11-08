@@ -1,0 +1,18 @@
+{% extends 'core/main.html' %}
+{% block content %}
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="jumbotron">
+                <h1 class="display-4">500</h1>
+                <p class="lead">We are sorry, but the server has problem.</p>
+                <hr class="my-4">
+                <p>
+                    Maybe you want to go back to the home page?</p>
+                <a class="btn btn-primary btn-lg" href="{% url 'welcome' %}" role="button">Back to home page</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

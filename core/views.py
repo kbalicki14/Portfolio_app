@@ -1,4 +1,5 @@
-from django.http import HttpResponse, JsonResponse
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponse, JsonResponse, Http404
 from django.shortcuts import render, redirect
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
@@ -23,14 +24,14 @@ class CustomLoginView(LoginView):
     redirect_authenticated_user = True
 
     def get_success_url(self):
-        return reverse_lazy('task')
+        return reverse_lazy('welcome')
 
 
 class RegisterView(FormView):
     template_name = 'core/register.html'
     form_class = UserCreationForm
     redirect_authenticated_user = True
-    success_url = reverse_lazy('task')
+    success_url = reverse_lazy('welcome')
 
     def form_valid(self, form):
         user = form.save()
@@ -41,7 +42,7 @@ class RegisterView(FormView):
     # redirect register page
     def get(self, *args, **kwargs):
         if self.request.user.is_authenticated:
-            return redirect('task')
+            return redirect('welcome')
         return super(RegisterView, self).get(*args, **kwargs)
 
 
@@ -107,7 +108,7 @@ class AdvertiseCreate(LoginRequiredMixin, CreateView):
     template_name = 'core/advertise_create.html'
     # success_url = reverse_lazy('upload')
     context_object_name = 'img_obj'
-    success_url = reverse_lazy('advertise')
+    success_url = reverse_lazy('user_advertise')
 
     # serach bar
     def get(self, request, *args, **kwargs):
@@ -124,7 +125,7 @@ class AdvertiseCreate(LoginRequiredMixin, CreateView):
         return super(AdvertiseCreate, self).form_valid(form)
 
 
-class AdvertiseDetails(LoginRequiredMixin, DetailView):
+class AdvertiseDetails(DetailView):
     model = AdvertiseModel
     context_object_name = 'detail'
     template_name = 'core/advertise_details.html'
@@ -134,15 +135,107 @@ class AdvertiseUpdate(LoginRequiredMixin, UpdateView):
     model = AdvertiseModel
     form_class = AdvertiseForm
     template_name = 'core/advertise_create.html'
-    success_url = reverse_lazy('welcome')
+    success_url = reverse_lazy('user_advertise')
+
+    def get(self, request, *args, **kwargs):
+        advertise_id = self.kwargs['pk']
+        try:
+            advert_object = AdvertiseModel.objects.get(id=advertise_id)
+
+        except ObjectDoesNotExist as e:
+            raise Http404
+
+        if advert_object.user != self.request.user:
+            raise Http404
+        return super().get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        try:
+            advert_object = AdvertiseModel.objects.get(id=form.instance.id)
+
+        except ObjectDoesNotExist as e:
+            form.add_error(None, f"Not found this advertise")
+            return super().form_invalid(form)
+
+        if advert_object.user != self.request.user:
+            form.add_error(None, "Only owner edit advertise")
+            return super().form_invalid(form)
+        form.instance.advertise.set = advert_object
+        return super().form_valid(form)
 
 
-class AddImageToGallery(CreateView):
+class AdvertiseDelete(LoginRequiredMixin, DeleteView):
+    model = AdvertiseModel
+    context_object_name = 'advertise'
+    template_name = 'core/advertise_confirm_delete.html'
+    success_url = reverse_lazy('user_advertise')
+
+    def get(self, request, *args, **kwargs):
+        advertise_id = self.kwargs['pk']
+        try:
+            advert_object = AdvertiseModel.objects.get(id=advertise_id)
+
+        except ObjectDoesNotExist as e:
+            raise Http404
+
+        if advert_object.user != self.request.user:
+            raise Http404
+        return super().get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        delete_id = self.kwargs['pk']
+        try:
+            advert_object = AdvertiseModel.objects.get(id=delete_id)
+
+        except ObjectDoesNotExist as e:
+            form.add_error(None, f"Not found this advertise")
+            return super().form_invalid(form)
+
+        if advert_object.user != self.request.user:
+            form.add_error(None, "Only owner can delete advertise!")
+            return super().form_invalid(form)
+            # raise Http404
+        form.instance.advertise = advert_object
+        return super().form_valid(form)
+
+
+class AddImageToGallery(LoginRequiredMixin, CreateView):
     model = Image
     form_class = ImageForm
     template_name = 'core/add_to_gallery.html'
     context_object_name = 'image'
-    success_url = reverse_lazy('welcome')
+
+    # possible issues in url
+    def get_success_url(self):
+        return self.request.path_info
+
+    def get(self, request, *args, **kwargs):
+        advertise_id = self.kwargs['advertise_pk']
+        try:
+            advert_object = AdvertiseModel.objects.get(id=advertise_id)
+
+        except ObjectDoesNotExist as e:
+            raise Http404
+
+        if advert_object.user != self.request.user:
+            raise Http404
+
+        return super().get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        pk_advertise = self.kwargs['advertise_pk']
+        try:
+            advert_object = AdvertiseModel.objects.get(id=pk_advertise)
+
+        except ObjectDoesNotExist as e:
+            form.add_error(None, f"Not found this advertise")
+            return super().form_invalid(form)
+
+        if advert_object.user != self.request.user:
+            form.add_error(None, "Only owner can add image")
+            return super().form_invalid(form)
+        form.instance.advertise = advert_object
+        return super().form_valid(form)
 
 
 class CreateImagesToGallery(CreateView):
@@ -217,7 +310,7 @@ class AdvertList(ListView):
     context_object_name = 'advert'
     template_name = 'core/advert_list.html'
 
-    paginate_by = 1
+    paginate_by = 2
 
     def get_queryset(self):
         search_input = self.request.GET.get('search_area') or ''
@@ -233,3 +326,22 @@ class AdvertList(ListView):
         context['search_category'] = int(self.request.GET.get('search_category'))
         context['category'] = AdvertiseCategory.objects.all()
         return context
+
+
+class CurrentUserAdvertise(LoginRequiredMixin, ListView):
+    model = AdvertiseModel
+    context_object_name = 'user_adverts'
+    template_name = 'core/user_adverts_list.html'
+    paginate_by = 5
+
+    def get_queryset(self):
+        user_adverts = super().get_queryset().filter(user=self.request.user)
+        return user_adverts
+
+
+def handler404(request, exception):
+    return render(request, 'core/http_status/404.html', status=404)
+
+
+def handler500(request, *args, **argv):
+    return render('core/http_status/500.html', status=500)
