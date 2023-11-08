@@ -77,12 +77,15 @@ class CityList(models.Model):
     def __str__(self):
         return self.city_name
 
-# class ImageGallery(models.Model):
-#     advertise = models.ForeignKey(AdvertiseModel, related_name='advertise', on_delete=models.CASCADE)
-#     # gallery = models.ForeignKey(Image, on_delete=models.CASCADE)
+# class AdvertiseRating(models.Model):
+#     pass
 
 # class Address(models.Model):
 #     pass
+
+# class ImageGallery(models.Model):
+#     advertise = models.ForeignKey(AdvertiseModel, related_name='advertise', on_delete=models.CASCADE)
+#     # gallery = models.ForeignKey(Image, on_delete=models.CASCADE)
 
 # class ImageTags(models.Model):
 #     pass

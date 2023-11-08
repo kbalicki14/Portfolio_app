@@ -19,7 +19,7 @@ from .models import Task, AdvertiseModel, Image, CityList, AdvertiseCategory
 # Create your views here.
 
 class CustomLoginView(LoginView):
-    template_name = 'core/login.html'
+    template_name = 'core/auth/login.html'
     fields = '__all__'
     redirect_authenticated_user = True
 
@@ -28,7 +28,7 @@ class CustomLoginView(LoginView):
 
 
 class RegisterView(FormView):
-    template_name = 'core/register.html'
+    template_name = 'core/auth/register.html'
     form_class = UserCreationForm
     redirect_authenticated_user = True
     success_url = reverse_lazy('welcome')
@@ -105,7 +105,7 @@ class WelcomePage(ListView):
 class AdvertiseCreate(LoginRequiredMixin, CreateView):
     model = AdvertiseModel
     form_class = AdvertiseForm
-    template_name = 'core/advertise_create.html'
+    template_name = 'core/advertise/advertise_create.html'
     # success_url = reverse_lazy('upload')
     context_object_name = 'img_obj'
     success_url = reverse_lazy('user_advertise')
@@ -113,9 +113,9 @@ class AdvertiseCreate(LoginRequiredMixin, CreateView):
     # serach bar
     def get(self, request, *args, **kwargs):
         if 'term' in request.GET:
-            querySet = CityList.objects.filter(city_name__istartswith=request.GET.get('term'))
+            query_set = CityList.objects.filter(city_name__istartswith=request.GET.get('term'))
             city_list = list()
-            for city in querySet:
+            for city in query_set:
                 city_list.append(city.city_name)
             return JsonResponse(city_list, safe=False)
         return super().get(request, *args, **kwargs)
@@ -128,13 +128,13 @@ class AdvertiseCreate(LoginRequiredMixin, CreateView):
 class AdvertiseDetails(DetailView):
     model = AdvertiseModel
     context_object_name = 'detail'
-    template_name = 'core/advertise_details.html'
+    template_name = 'core/advertise/advertise_details.html'
 
 
 class AdvertiseUpdate(LoginRequiredMixin, UpdateView):
     model = AdvertiseModel
     form_class = AdvertiseForm
-    template_name = 'core/advertise_create.html'
+    template_name = 'core/advertise/advertise_create.html'
     success_url = reverse_lazy('user_advertise')
 
     def get(self, request, *args, **kwargs):
@@ -167,14 +167,13 @@ class AdvertiseUpdate(LoginRequiredMixin, UpdateView):
 class AdvertiseDelete(LoginRequiredMixin, DeleteView):
     model = AdvertiseModel
     context_object_name = 'advertise'
-    template_name = 'core/advertise_confirm_delete.html'
+    template_name = 'core/advertise/advertise_confirm_delete.html'
     success_url = reverse_lazy('user_advertise')
 
     def get(self, request, *args, **kwargs):
         advertise_id = self.kwargs['pk']
         try:
             advert_object = AdvertiseModel.objects.get(id=advertise_id)
-
         except ObjectDoesNotExist as e:
             raise Http404
 
@@ -186,7 +185,6 @@ class AdvertiseDelete(LoginRequiredMixin, DeleteView):
         delete_id = self.kwargs['pk']
         try:
             advert_object = AdvertiseModel.objects.get(id=delete_id)
-
         except ObjectDoesNotExist as e:
             form.add_error(None, f"Not found this advertise")
             return super().form_invalid(form)
@@ -202,7 +200,7 @@ class AdvertiseDelete(LoginRequiredMixin, DeleteView):
 class AddImageToGallery(LoginRequiredMixin, CreateView):
     model = Image
     form_class = ImageForm
-    template_name = 'core/add_to_gallery.html'
+    template_name = 'core/advertise/add_to_gallery.html'
     context_object_name = 'image'
 
     # possible issues in url
@@ -213,13 +211,11 @@ class AddImageToGallery(LoginRequiredMixin, CreateView):
         advertise_id = self.kwargs['advertise_pk']
         try:
             advert_object = AdvertiseModel.objects.get(id=advertise_id)
-
         except ObjectDoesNotExist as e:
             raise Http404
 
         if advert_object.user != self.request.user:
             raise Http404
-
         return super().get(request, *args, **kwargs)
 
     def form_valid(self, form):
@@ -241,7 +237,7 @@ class AddImageToGallery(LoginRequiredMixin, CreateView):
 class CreateImagesToGallery(CreateView):
     model = Image
     form_class = MultiImageForm
-    template_name = 'core/add_to_gallery.html'
+    template_name = 'core/advertise/add_to_gallery.html'
     context_object_name = 'image'
     success_url = reverse_lazy('task')
 
@@ -284,7 +280,7 @@ def AddMultiImage(request):
             return redirect('multi_image')
 
     context = {'form': form}
-    return render(request, 'core/add_to_gallery.html', context)
+    return render(request, 'core/advertise/add_to_gallery.html', context)
 
 
 def thanks(request):
@@ -299,25 +295,23 @@ def imageUpload(request):
             form.save()
             # Get the current instance object to display in the template
             img_obj = form.instance
-            return render(request, 'core/advertise_create.html', {'form': form, 'img_obj': img_obj})
+            return render(request, 'core/advertise/advertise_create.html', {'form': form, 'img_obj': img_obj})
     else:
         form = AdvertiseForm()
-        return render(request, 'core/advertise_create.html', {'form': form})
+        return render(request, 'core/advertise/advertise_create.html', {'form': form})
 
 
 class AdvertList(ListView):
     model = AdvertiseModel
     context_object_name = 'advert'
-    template_name = 'core/advert_list.html'
+    template_name = 'core/advertise/advert_list.html'
 
     paginate_by = 2
 
     def get_queryset(self):
         search_input = self.request.GET.get('search_area') or ''
         search_category = self.request.GET.get('search_category')
-        print(super().get_queryset().count())
         advert_qs = super().get_queryset().filter(town=search_input, advertise_category=search_category)
-        print(advert_qs.count())
         return advert_qs
 
     def get_context_data(self, **kwargs):
@@ -331,7 +325,7 @@ class AdvertList(ListView):
 class CurrentUserAdvertise(LoginRequiredMixin, ListView):
     model = AdvertiseModel
     context_object_name = 'user_adverts'
-    template_name = 'core/user_adverts_list.html'
+    template_name = 'core/advertise/user_adverts_list.html'
     paginate_by = 5
 
     def get_queryset(self):
