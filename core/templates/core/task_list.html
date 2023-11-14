@@ -147,6 +147,26 @@
     <!--        <span class="visually-hidden">Next</span>-->
     <!--    </button>-->
 </div>
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="text-center">
+                <img src="https://via.placeholder.com/150" class="rounded-circle" alt="Zdjęcie profilowe">
+                <h1 class="mt-3">Nazwa Użytkownika</h1>
+                <p class="lead">Witaj na swoim profilu!</p>
+                <div class="mt-4">
+                    <a href="/change_password/" class="btn btn-primary ">Zmień hasło</a>
+                    <a href="/change_username/" class="btn btn-primary ">Zmień nazwę użytkownika</a>
+                    <a href="/add_advertise/" class="btn btn-primary ">Dodaj ogłoszenie</a>
+                    <a href="/add_image/" class="btn btn-primary ">Dodaj obrazek do ogłoszenia</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div class="container py-5">
     <div class="row">
         <div class="col-md-12">
@@ -156,6 +176,49 @@
                 <hr class="my-4">
                 <p>Może chcesz wrócić do strony głównej?</p>
                 <a class="btn btn-primary btn-lg" href="/" role="button">Wróć do strony głównej</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-6">
+            <img src="twoje_zdjecie.jpg" class="img-fluid" alt="Zdjęcie salonu">
+        </div>
+        <div class="col-lg-6">
+            <h1 class="display-4">Mister Cut Barbershop</h1>
+            <p class="lead">Opis Twojego salonu fryzjerskiego. Możesz tutaj dodać więcej informacji o swoim salonie,
+                usługach, które oferujesz, i dlaczego klienci powinni wybrać właśnie Ciebie.</p>
+            <h4 class="mt-4">Adres</h4>
+            <p>Ulica, Miasto, Kod pocztowy</p>
+        </div>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-4 mt-2">
+            <div class="card h-100">
+                <!-- Dodajemy atrybut data-bs-toggle i data-bs-target do obrazka -->
+                <img src="https://mdbcdn.b-cdn.net/img/new/slides/041.webp" class="card-img-top p-2 rounded"
+                     alt="Obraz 1" data-bs-toggle="modal"
+                     data-bs-target="#imageModal{{ forloop.counter }}">
+                <div class="card-body">
+                    <h5 class="card-title">Title</h5>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal dla obrazka -->
+        <div class="modal fade" id="imageModal{{ forloop.counter }}" tabindex="-1" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <img src="https://mdbcdn.b-cdn.net/img/new/slides/041.webp" class="img-fluid rounded"
+                             alt="Obraz 1">
+                    </div>
+                </div>
             </div>
         </div>
     </div>

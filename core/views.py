@@ -130,6 +130,26 @@ class AdvertiseDetails(DetailView):
     context_object_name = 'detail'
     template_name = 'core/advertise/advertise_details.html'
 
+    def get_context_data(self, **kwargs):
+        advertise_id = self.kwargs['pk']
+        context = super().get_context_data(**kwargs)
+        context['gallery'] = Image.objects.filter(advertise=advertise_id)[:6]
+        return context
+
+
+class AdvertiseGallery(ListView):
+    model = Image
+    context_object_name = 'gallery'
+    template_name = 'core/advertise/advertise_gallery.html'
+    paginate_by = 2
+
+    def get_queryset(self):
+        id_advertise = self.kwargs['pk']
+
+        object_advertise = AdvertiseModel.objects.get(id=id_advertise)
+        gallery = super().get_queryset().filter(advertise=object_advertise)
+        return gallery
+
 
 class AdvertiseUpdate(LoginRequiredMixin, UpdateView):
     model = AdvertiseModel
@@ -331,6 +351,10 @@ class CurrentUserAdvertise(LoginRequiredMixin, ListView):
     def get_queryset(self):
         user_adverts = super().get_queryset().filter(user=self.request.user)
         return user_adverts
+
+
+class ProfileDetail(LoginRequiredMixin, TemplateView):
+    template_name = 'core/profile_detail.html'
 
 
 def handler404(request, exception):

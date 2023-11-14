@@ -1,4 +1,10 @@
 {% extends 'core/main.html' %}
+
+{% block headerTag %}
+<div class="container mt-4">
+    <h3>Add photo to gallery </h3>
+</div>
+{% endblock headerTag %}
 {% block content %}
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}

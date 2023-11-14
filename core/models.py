@@ -67,6 +67,8 @@ class Image(models.Model):
     image = models.ImageField(upload_to='images')
     advertise = models.ForeignKey(AdvertiseModel, related_name='advertise', on_delete=models.CASCADE)
 
+    # created_at = models.DateTimeField(auto_now_add=True)
+
     def __str__(self):
         return self.title
 

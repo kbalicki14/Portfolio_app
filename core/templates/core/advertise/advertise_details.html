@@ -1,7 +1,71 @@
 {% extends 'core/main.html' %}
 {% block content %}
 
-<h1>{{detail.title}}</h1>
-<h2>{{detail.description}}</h2>
-<h2>{{detail.town}}</h2>
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-5">
+            <img src="{{detail.img.url}}" class="img-fluid rounded" alt="Zdjęcie salonu">
+        </div>
+        <div class="col-lg-7 ">
+            <h1 class="display-4 text-break">{{detail.title|title}}</h1>
+            <p class="lead text-break">Opis Twojego salonu fryzjerskiego. Możesz tutaj dodać więcej informacji o swoim
+                salonie,
+                usługach, które oferujesz, i dlaczego klienci powinni wybrać właśnie Ciebie.</p>
+            <h4 class="mt-4">Usługi</h4>
+            <p class="text-break">Specjalizujemy się w usługach barberskich, oferując szeroki zakres usług, w tym
+                strzyżenie, golenie,
+                stylizację brody i wiele innych. Nasz zespół doświadczonych barberów jest gotowy, aby pomóc Ci osiągnąć
+                swój idealny wygląd.</p>
+            <h4 class="mt-4">{{detail.town}}</h4>
+            <p>Ulica, Miasto, Kod pocztowy</p>
+            <h4 class="mt-4">Kontakt </h4>
+            <p>tel.502-303-230</p>
+
+        </div>
+    </div>
+</div>
+<div class="container mt-4 ms-10">
+    <h3>Portfolio </h3>
+</div>
+
+<div class="container py-5">
+    <div class="row">
+        {% for image in gallery %}
+        <div class="col-md-4 mt-2">
+            <div class="card h-100 " data-bs-toggle="modal" data-bs-target="#imageModal{{ forloop.counter }}">
+                <img src="{{image.image.url}}" class="card-img-top p-2 rounded" alt="Obraz 1">
+                <div class="card-body">
+                    <h5 class="card-title">{{ image.title }}</h5>
+                </div>
+            </div>
+        </div>
+        <!-- Modal dla obrazka -->
+        <div class="modal fade" id="imageModal{{ forloop.counter }}" tabindex="-1" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <img src="{{image.image.url}}" class="img-fluid rounded" alt="Obraz 1">
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <h3 class="container row row-col-1 justify-content-center mt-4">Not found images in gallery </h3>
+        {% endfor %}
+
+    </div>
+</div>
+{% if gallery %}
+<div class="row mt-4">
+    <div class="col text-center">
+        <a href="{% url 'gallery' detail.id %}" class="btn btn-outline-dark">See whole gallery</a>
+
+    </div>
+</div>
+{% endif %}
+
+<!-- Gallery -->
+
+
 {% endblock content %}

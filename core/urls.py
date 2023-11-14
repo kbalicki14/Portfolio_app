@@ -4,7 +4,7 @@ from django.urls import path, include
 from . import views
 from .views import TaskList, TaskDetail, TaskCreate, TaskUpdate, TaskDelete, CustomLoginView, RegisterView, \
     imageUpload, AdvertList, AdvertiseCreate, AddMultiImage, CreateImagesToGallery, WelcomePage, AdvertiseUpdate, \
-    AddImageToGallery, AdvertiseDetails, CurrentUserAdvertise, AdvertiseDelete
+    AddImageToGallery, AdvertiseDetails, CurrentUserAdvertise, AdvertiseDelete, AdvertiseGallery, ProfileDetail
 
 from django.contrib.auth.views import LogoutView
 
@@ -27,14 +27,17 @@ urlpatterns = [
     path('advertise_update/<int:pk>/', AdvertiseUpdate.as_view(), name='advertise_update'),
     path('advertise_delete/<int:pk>/', AdvertiseDelete.as_view(), name='advertise_delete'),
 
+    path('advertise_details/<int:pk>/gallery/', AdvertiseGallery.as_view(), name='gallery'),
     path('multi_image/', CreateImagesToGallery.as_view(), name='multi_image'),
     path('add_image/<int:advertise_pk>/', AddImageToGallery.as_view(), name='add_image'),
     # path('gallery/', AdvertiseCreate.as_view(), name='advertise'),
     path('multi_image_work/', AddMultiImage, name='multi_image_work'),
     path('user_advertise/', CurrentUserAdvertise.as_view(), name='user_advertise'),
+    path('user_profile/', ProfileDetail.as_view(), name='profile_detail'),
 
     # <int:advertiseModel_pk>
 ]
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,
                           document_root=settings.MEDIA_ROOT)
