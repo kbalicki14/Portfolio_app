@@ -18,14 +18,16 @@
                         Zmień
                         nazwę użytkownika</a></li>
 
-                    <li class="list-group-item mb-3"><a href="/add_advertise/"><i
+                    <li class="list-group-item mb-3"><a href="{% url 'advertise' %}"><i
                             class="fa-solid fa-square-plus me-2"></i>
                         Dodaj
                         ogłoszenie</a></li>
-                    <li class="list-group-item mb-3"><a href="/add_image/"><i class="fa-solid fa-images me-2"></i> Dodaj
-                        obrazek do ogłoszenia</a></li>
-                    <li class="list-group-item mb-3"><a href="/add_image/"><i class="fa-solid fa-images me-2"></i> Moja
-                        galeria</a></li>
+                    <li class="list-group-item mb-3"><a href="{% url 'user_advertise' %}"><i
+                            class="fa-solid fa-images me-2"></i> Moje ogłoszenia</a></li>
+                    <li class="list-group-item mb-3 mt-5"><a href="{% url 'logout' %}"><i
+                            class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+                    <!--                    <li class="list-group-item mb-3"><a href="/add_image/"><i class="fa-solid fa-images me-2"></i> Moja-->
+                    <!--                        galeria</a></li>-->
                 </ul>
             </div>
 

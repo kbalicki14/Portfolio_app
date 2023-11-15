@@ -20,5 +20,5 @@ class Command(BaseCommand):
                 for row in reader:
                     AdvertiseCategory.objects.get_or_create(category_name=row[0])
                 self.stdout.write(self.style.SUCCESS('Data imported successfully'))
-        except Exception:
-            self.stdout.write(self.style.SUCCESS('Data imported successfully'))
+        except Exception as e:
+            self.stdout.write(self.style.SUCCESS('Data imported fail ' + e.__str__()))

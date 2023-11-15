@@ -11,9 +11,14 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.views.generic import TemplateView
+from django.db.models import Avg
+from django.core.paginator import Paginator
+from PIL import Image as PilImage
+from io import BytesIO
+from django.core.files import File
 
-from .forms import AdvertiseForm, MultiImageForm, ImageForm
-from .models import Task, AdvertiseModel, Image, CityList, AdvertiseCategory
+from .forms import AdvertiseForm, MultiImageForm, ImageForm, RatingForm
+from .models import Task, AdvertiseModel, Image, CityList, AdvertiseCategory, AdvertiseRating
 
 
 # Create your views here.
@@ -121,6 +126,12 @@ class AdvertiseCreate(LoginRequiredMixin, CreateView):
         return super().get(request, *args, **kwargs)
 
     def form_valid(self, form):
+        # compression
+        pil_image = PilImage.open(form.instance.img)
+        output_io = BytesIO()
+        pil_image.save(output_io, format='JPEG', quality=60)
+        form.instance.img = File(output_io, name=form.instance.img.name)
+
         form.instance.user = self.request.user
         return super(AdvertiseCreate, self).form_valid(form)
 
@@ -130,10 +141,23 @@ class AdvertiseDetails(DetailView):
     context_object_name = 'detail'
     template_name = 'core/advertise/advertise_details.html'
 
+    # def get_queryset(self):
+    #     tasks = super().get_queryset()
+    #     rating = AdvertiseRating.objects.filter(advertise=self.object)
+    #     return rating
+
     def get_context_data(self, **kwargs):
         advertise_id = self.kwargs['pk']
         context = super().get_context_data(**kwargs)
-        context['gallery'] = Image.objects.filter(advertise=advertise_id)[:6]
+        context['gallery'] = Image.objects.filter(advertise=advertise_id).order_by("-created_at")[:6]
+        context['average_rating'] = AdvertiseRating.objects.filter(advertise=self.object).aggregate(Avg('rating'))[
+            'rating__avg']
+        context['ratings'] = AdvertiseRating.objects.filter(advertise=self.object).order_by("-created_at")[:5]
+
+        # ratings_list = AdvertiseRating.objects.filter(advertise=self.object)
+        # paginator = Paginator(ratings_list, 2)
+        # page = self.request.GET.get('page')
+        # context['ratings'] = paginator.get_page(page)
         return context
 
 
@@ -145,10 +169,57 @@ class AdvertiseGallery(ListView):
 
     def get_queryset(self):
         id_advertise = self.kwargs['pk']
+        try:
+            object_advertise = AdvertiseModel.objects.get(id=id_advertise)
+        except ObjectDoesNotExist as e:
+            raise Http404
 
-        object_advertise = AdvertiseModel.objects.get(id=id_advertise)
-        gallery = super().get_queryset().filter(advertise=object_advertise)
+        gallery = super().get_queryset().filter(advertise=object_advertise).order_by("-created_at")
         return gallery
+
+    def get_context_data(self, **kwargs):
+        id_advertise = self.kwargs['pk']
+        context = super().get_context_data(**kwargs)
+        try:
+            object_advertise = AdvertiseModel.objects.get(id=id_advertise)
+        except ObjectDoesNotExist as e:
+            raise Http404
+        context['id_advertise'] = id_advertise
+        # context['user'] = object_advertise.user
+        context['is_owner'] = self.request.user == object_advertise.user
+
+        print(context['is_owner'])
+        return context
+
+
+class AdvertiseRatingList(ListView):
+    model = AdvertiseRating
+    context_object_name = 'ratings'
+    template_name = 'core/advertise/advertise_rating_list.html'
+    paginate_by = 4
+
+    def get_queryset(self):
+        id_advertise = self.kwargs['pk']
+        try:
+            object_advertise = AdvertiseModel.objects.get(id=id_advertise)
+        except ObjectDoesNotExist as e:
+            raise Http404
+
+        rating = super().get_queryset().filter(advertise=object_advertise).order_by("-created_at")
+        return rating
+
+    def get_context_data(self, **kwargs):
+        id_advertise = self.kwargs['pk']
+        context = super().get_context_data(**kwargs)
+        try:
+            advert_object = AdvertiseModel.objects.get(id=id_advertise)
+
+        except ObjectDoesNotExist as e:
+            raise Http404
+        context['average_rating'] = AdvertiseRating.objects.filter(advertise=advert_object).aggregate(Avg('rating'))[
+            'rating__avg']
+        context['id_advertise'] = id_advertise
+        return context
 
 
 class AdvertiseUpdate(LoginRequiredMixin, UpdateView):
@@ -161,7 +232,6 @@ class AdvertiseUpdate(LoginRequiredMixin, UpdateView):
         advertise_id = self.kwargs['pk']
         try:
             advert_object = AdvertiseModel.objects.get(id=advertise_id)
-
         except ObjectDoesNotExist as e:
             raise Http404
 
@@ -172,7 +242,6 @@ class AdvertiseUpdate(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         try:
             advert_object = AdvertiseModel.objects.get(id=form.instance.id)
-
         except ObjectDoesNotExist as e:
             form.add_error(None, f"Not found this advertise")
             return super().form_invalid(form)
@@ -250,7 +319,79 @@ class AddImageToGallery(LoginRequiredMixin, CreateView):
         if advert_object.user != self.request.user:
             form.add_error(None, "Only owner can add image")
             return super().form_invalid(form)
+        # imgage compress, do it in model?
+        pil_image = PilImage.open(form.instance.image)
+        output_io = BytesIO()
+        pil_image.save(output_io, format='JPEG', quality=60)
+        form.instance.image = File(output_io, name=form.instance.image.name)
+
         form.instance.advertise = advert_object
+        return super().form_valid(form)
+
+
+class ImageInGalleryUpdate(UpdateView):
+    model = Image
+    form_class = ImageForm
+    template_name = 'core/advertise/add_to_gallery.html'
+    context_object_name = 'image'
+    success_url = reverse_lazy('user_advertise')
+
+    def get(self, request, *args, **kwargs):
+        advertise_id = self.kwargs['advertise_pk']
+        try:
+            advert_object = AdvertiseModel.objects.get(id=advertise_id)
+        except ObjectDoesNotExist as e:
+            raise Http404
+
+        if advert_object.user != self.request.user:
+            raise Http404
+        return super().get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        pk_advertise = self.kwargs['advertise_pk']
+        try:
+            advert_object = AdvertiseModel.objects.get(id=pk_advertise)
+
+        except ObjectDoesNotExist as e:
+            form.add_error(None, f"Not found this advertise")
+            return super().form_invalid(form)
+
+        if advert_object.user != self.request.user:
+            form.add_error(None, "Only owner can add image")
+            return super().form_invalid(form)
+        # imgage compress, do it in model?
+        pil_image = PilImage.open(form.instance.image)
+        output_io = BytesIO()
+        pil_image.save(output_io, format='JPEG', quality=60)
+        form.instance.image = File(output_io, name=form.instance.image.name)
+        
+        form.instance.advertise = advert_object
+        return super().form_valid(form)
+
+
+class ImageInGalleryDelete(DeleteView):
+    model = Image
+    context_object_name = 'image'
+    template_name = 'core/advertise/image_gallery_confirm_delete.html'
+    success_url = reverse_lazy('user_advertise')
+
+    def get(self, request, *args, **kwargs):
+        advertise_id = self.kwargs['advertise_pk']
+        cutomsRestrictedGet(self.request.user, advertise_id)
+        return super().get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        delete_id = self.kwargs['advertise_pk']
+        try:
+            advertise_object = AdvertiseModel.objects.get(id=delete_id)
+        except ObjectDoesNotExist as e:
+            form.add_error(None, f"Not found this advertise")
+            return super().form_invalid(form)
+
+        if advertise_object.user != self.request.user:
+            form.add_error(None, "Only owner can delete rating!")
+            return super().form_invalid(form)
+
         return super().form_valid(form)
 
 
@@ -355,6 +496,129 @@ class CurrentUserAdvertise(LoginRequiredMixin, ListView):
 
 class ProfileDetail(LoginRequiredMixin, TemplateView):
     template_name = 'core/profile_detail.html'
+
+
+class RatingAdvertise(CreateView):
+    model = AdvertiseRating
+    form_class = RatingForm
+    template_name = 'core/advertise/rating_form.html'
+    context_object_name = 'rating'
+
+    def get_success_url(self):
+        advertise_id = self.kwargs['pk']
+        return reverse_lazy('advertise_details', kwargs={'pk': advertise_id})
+
+    def form_valid(self, form):
+        advertise_id = self.kwargs['pk']
+        try:
+            advert_object = AdvertiseModel.objects.get(id=advertise_id)
+        except ObjectDoesNotExist as e:
+            raise Http404
+        form.instance.user = self.request.user
+        form.instance.advertise = advert_object
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        advertise_id = self.kwargs['pk']
+        context = super().get_context_data(**kwargs)
+        context['id_advertise'] = advertise_id
+        return context
+
+
+class RatingUpdate(UpdateView):
+    model = AdvertiseRating
+    form_class = RatingForm
+    context_object_name = 'rating'
+    template_name = 'core/advertise/rating_form.html'
+
+    def get_success_url(self):
+        # advertise_pk in url is pk in detail url
+        advertise_id = self.kwargs['advertise_pk']
+        return reverse_lazy('advertise_details', kwargs={'pk': advertise_id})
+
+    def get(self, request, *args, **kwargs):
+        # advertise_id = self.kwargs['advertise_pk']
+        try:
+            rating_object = AdvertiseRating.objects.get(id=self.kwargs['pk'])
+        except ObjectDoesNotExist as e:
+            raise Http404
+
+        if rating_object.user != self.request.user:
+            raise Http404
+        return super().get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        try:
+            rating_object = AdvertiseRating.objects.get(id=form.instance.id)
+        except ObjectDoesNotExist as e:
+            form.add_error(None, f"Not found this rating")
+            return super().form_invalid(form)
+
+        if rating_object.user != self.request.user:
+            form.add_error(None, "Only owner can edit rating")
+            return super().form_invalid(form)
+        form.instance.advertise.set = rating_object
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        advertise_id = self.kwargs['advertise_pk']
+        context = super().get_context_data(**kwargs)
+        context['id_advertise'] = advertise_id
+        return context
+
+
+class RatingDelete(DeleteView):
+    model = AdvertiseRating
+    context_object_name = 'rating'
+    template_name = 'core/advertise/rating_confirm_delete.html'
+
+    def get_success_url(self):
+        # advertise_pk in url is pk in detail url
+        advertise_id = self.kwargs['advertise_pk']
+        return reverse_lazy('advertise_details', kwargs={'pk': advertise_id})
+
+    def get(self, request, *args, **kwargs):
+        # advertise_id = self.kwargs['advertise_pk']
+        try:
+            rating_object = AdvertiseRating.objects.get(id=self.kwargs['pk'])
+        except ObjectDoesNotExist as e:
+            raise Http404
+
+        if rating_object.user != self.request.user:
+            raise Http404
+        return super().get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        delete_id = self.kwargs['pk']
+        try:
+            rating_object = AdvertiseRating.objects.get(id=delete_id)
+        except ObjectDoesNotExist as e:
+            form.add_error(None, f"Not found this rating")
+            return super().form_invalid(form)
+
+        if rating_object.user != self.request.user:
+            form.add_error(None, "Only owner can delete rating!")
+            return super().form_invalid(form)
+            # raise Http404
+        # form.instance.rating = rating_object
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        advertise_id = self.kwargs['advertise_pk']
+        context = super().get_context_data(**kwargs)
+        context['id_advertise'] = advertise_id
+        return context
+
+
+def cutomsRestrictedGet(user, id):
+    try:
+        advert_object = AdvertiseModel.objects.get(id=id)
+    except ObjectDoesNotExist as e:
+        raise Http404
+
+    if advert_object.user != user:
+        raise Http404
+    return advert_object
 
 
 def handler404(request, exception):

@@ -4,7 +4,8 @@ from django.urls import path, include
 from . import views
 from .views import TaskList, TaskDetail, TaskCreate, TaskUpdate, TaskDelete, CustomLoginView, RegisterView, \
     imageUpload, AdvertList, AdvertiseCreate, AddMultiImage, CreateImagesToGallery, WelcomePage, AdvertiseUpdate, \
-    AddImageToGallery, AdvertiseDetails, CurrentUserAdvertise, AdvertiseDelete, AdvertiseGallery, ProfileDetail
+    AddImageToGallery, AdvertiseDetails, CurrentUserAdvertise, AdvertiseDelete, AdvertiseGallery, ProfileDetail, \
+    RatingAdvertise, AdvertiseRatingList, RatingUpdate, RatingDelete, ImageInGalleryUpdate, ImageInGalleryDelete
 
 from django.contrib.auth.views import LogoutView
 
@@ -26,10 +27,18 @@ urlpatterns = [
     path('advertise_details/<int:pk>/', AdvertiseDetails.as_view(), name='advertise_details'),
     path('advertise_update/<int:pk>/', AdvertiseUpdate.as_view(), name='advertise_update'),
     path('advertise_delete/<int:pk>/', AdvertiseDelete.as_view(), name='advertise_delete'),
-
     path('advertise_details/<int:pk>/gallery/', AdvertiseGallery.as_view(), name='gallery'),
+    path('advertise_details/<int:pk>/add_rating', RatingAdvertise.as_view(), name='rating'),
+    path('advertise_details/<int:advertise_pk>/rating_update/<int:pk>', RatingUpdate.as_view(), name='rating_update'),
+    path('advertise_details/<int:advertise_pk>/rating_delete/<int:pk>', RatingDelete.as_view(), name='rating_delete'),
+    path('advertise_details/<int:pk>/ratings', AdvertiseRatingList.as_view(), name='rating_list'),
+
     path('multi_image/', CreateImagesToGallery.as_view(), name='multi_image'),
     path('add_image/<int:advertise_pk>/', AddImageToGallery.as_view(), name='add_image'),
+    path('advertise_details/<int:advertise_pk>/image_update/<int:pk>', ImageInGalleryUpdate.as_view(),
+         name='image_update'),
+    path('advertise_details/<int:advertise_pk>/image_delete/<int:pk>', ImageInGalleryDelete.as_view(),
+         name='image_delete'),
     # path('gallery/', AdvertiseCreate.as_view(), name='advertise'),
     path('multi_image_work/', AddMultiImage, name='multi_image_work'),
     path('user_advertise/', CurrentUserAdvertise.as_view(), name='user_advertise'),
@@ -37,7 +46,6 @@ urlpatterns = [
 
     # <int:advertiseModel_pk>
 ]
-
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,
                           document_root=settings.MEDIA_ROOT)

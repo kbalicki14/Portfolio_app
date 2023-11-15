@@ -1,0 +1,33 @@
+{% extends 'core/main.html' %}
+{% block headerTag %}
+<div class="container mt-4">
+    <a href="{% url 'advertise_details' id_advertise %}" class="btn btn-primary mb-4">Go back</a>
+    <h3>Add rating </h3>
+</div>
+{% endblock headerTag %}
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% load widget_tweaks %}
+            
+            <label for="id_rating" class="form-label"> {{form.rating.label}} <i class="fa-solid fa-star ms-2"
+                                                                                style="color: #f3ed35;"></i></label>
+            <div class="range">
+                {% render_field form.rating placeholder=form.rating.label type="range" step="0.5" class+="form-range" %}
+            </div>
+            <label for="id_comment" class="form-label">{{form.comment.label}}</label>
+            {% render_field form.comment placeholder=form.comment.label class+="form-control" %}
+            <div class="mt-3">
+                <button type="submit" class="btn btn-success">Save and add next</button>
+            </div>
+
+            {% if form.errors %}
+            <small class="help-block">{{ form.errors|striptags }}</small>
+            {% endif %}
+        </form>
+    </div>
+</div>
+{% endblock content %}

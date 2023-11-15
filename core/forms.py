@@ -1,18 +1,28 @@
 from django import forms
 from django.forms import ClearableFileInput
-
-from .models import AdvertiseModel, Image, CityList
+from phonenumber_field.formfields import PhoneNumberField
+from .models import AdvertiseModel, Image, CityList, AdvertiseRating
 
 
 class AdvertiseForm(forms.ModelForm):
     # town = forms.ModelChoiceField(queryset=CityList.objects.all())
+    phone_number = PhoneNumberField(region="PL")
 
     class Meta:
         model = AdvertiseModel
         fields = (
-            'title', 'description', 'advertise_category', 'street', 'street_number', 'apartment_number', 'town',
+            'title', 'description', 'phone_number', 'advertise_category', 'street', 'street_number', 'apartment_number',
+            'town',
             'zip_code',
             'img')
+
+
+class RatingForm(forms.ModelForm):
+    rating = forms.FloatField(max_value=5.0, min_value=1.0)
+
+    class Meta:
+        model = AdvertiseRating
+        fields = ['rating', 'comment']
 
 
 class ImageForm(forms.ModelForm):

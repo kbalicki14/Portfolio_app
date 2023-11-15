@@ -3,28 +3,39 @@
 {% block headerTag %}
 <div class="container mt-4">
     <h3>Add photo to gallery </h3>
+
 </div>
 {% endblock headerTag %}
 {% block content %}
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {% load widget_tweaks %}
+<!--<div class="row col-6 mx-auto">-->
 
-    <label for="id_title" class="form-label">{{form.title.label}}</label>
-    {% render_field form.title placeholder=form.title.label class+="form-control" %}
+<!--    <div class="alert alert-info" role="alert">-->
+<!--        Use title name for visitors for better understanding you image.-->
+<!--        Note that users can serach your portfolio by title, name it wisely-->
+<!--    </div>-->
+<!--</div>-->
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% load widget_tweaks %}
 
-    <label for="id_image" class="form-label">{{form.image.label}}</label>
-    {% render_field form.image placeholder=form.image.label class+="form-control" %}
-    <div class="mt-3">
-        <a href="{% url 'user_advertise' %}" class="btn btn-primary me-3">Go back</a>
-        <button type="submit" class="btn btn-success  ">Save and add next</button>
+            <label for="id_title" class="form-label">{{form.title.label}}</label>
+            {% render_field form.title placeholder=form.title.label class+="form-control" %}
+
+            <label for="id_image" class="form-label">{{form.image.label}}</label>
+            {% render_field form.image placeholder=form.image.label class+="form-control" %}
+            <div class="mt-3">
+                <a href="{% url 'user_advertise' %}" class="btn btn-primary me-3">Go back</a>
+                <button type="submit" class="btn btn-success  ">Save and add next</button>
+            </div>
+
+            {% if form.errors %}
+            <small class="help-block">{{ form.errors|striptags }}</small>
+            {% endif %}
+        </form>
     </div>
-
-    {% if form.errors %}
-    <small class="help-block">{{ form.errors|striptags }}</small>
-    {% endif %}
-</form>
-
+</div>
 
 {% for item in advert %}
 <div class="container">

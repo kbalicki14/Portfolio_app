@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'core',
     'widget_tweaks',
     'bootstrap5',
+    "phonenumber_field",
 ]
 
 MIDDLEWARE = [

@@ -20,5 +20,5 @@ class Command(BaseCommand):
                 for row in reader:
                     CityList.objects.get_or_create(city_name=row[0])
                 self.stdout.write(self.style.SUCCESS('Data imported successfully'))
-        except Exception:
-            self.stdout.write(self.style.SUCCESS('Data imported successfully'))
+        except Exception as e:
+            self.stdout.write(self.style.SUCCESS('Data imported Fail ' + e.__str__()))
