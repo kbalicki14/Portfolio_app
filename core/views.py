@@ -5,6 +5,7 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 from django.urls import reverse_lazy
+from django.contrib import messages
 
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -133,6 +134,7 @@ class AdvertiseCreate(LoginRequiredMixin, CreateView):
         form.instance.img = File(output_io, name=form.instance.img.name)
 
         form.instance.user = self.request.user
+        messages.success(self.request, "Advertise created.")
         return super(AdvertiseCreate, self).form_valid(form)
 
 
@@ -250,6 +252,7 @@ class AdvertiseUpdate(LoginRequiredMixin, UpdateView):
             form.add_error(None, "Only owner edit advertise")
             return super().form_invalid(form)
         form.instance.advertise.set = advert_object
+        messages.success(self.request, "Advertise details updated.")
         return super().form_valid(form)
 
 
@@ -282,7 +285,8 @@ class AdvertiseDelete(LoginRequiredMixin, DeleteView):
             form.add_error(None, "Only owner can delete advertise!")
             return super().form_invalid(form)
             # raise Http404
-        form.instance.advertise = advert_object
+        # form.instance.advertise = advert_object
+        messages.error(self.request, "Advertise deleted", extra_tags="danger")
         return super().form_valid(form)
 
 
@@ -325,6 +329,7 @@ class AddImageToGallery(LoginRequiredMixin, CreateView):
         pil_image.save(output_io, format='JPEG', quality=60)
         form.instance.image = File(output_io, name=form.instance.image.name)
 
+        messages.success(self.request, "Image successfully added")
         form.instance.advertise = advert_object
         return super().form_valid(form)
 
@@ -364,7 +369,8 @@ class ImageInGalleryUpdate(UpdateView):
         output_io = BytesIO()
         pil_image.save(output_io, format='JPEG', quality=60)
         form.instance.image = File(output_io, name=form.instance.image.name)
-        
+
+        messages.success(self.request, "Image details updated.")
         form.instance.advertise = advert_object
         return super().form_valid(form)
 
@@ -391,7 +397,7 @@ class ImageInGalleryDelete(DeleteView):
         if advertise_object.user != self.request.user:
             form.add_error(None, "Only owner can delete rating!")
             return super().form_invalid(form)
-
+        messages.error(self.request, "Image deleted.", extra_tags="danger")
         return super().form_valid(form)
 
 
@@ -467,7 +473,7 @@ class AdvertList(ListView):
     context_object_name = 'advert'
     template_name = 'core/advertise/advert_list.html'
 
-    paginate_by = 2
+    paginate_by = 4
 
     def get_queryset(self):
         search_input = self.request.GET.get('search_area') or ''
@@ -516,6 +522,7 @@ class RatingAdvertise(CreateView):
             raise Http404
         form.instance.user = self.request.user
         form.instance.advertise = advert_object
+        messages.success(self.request, "Rating added.")
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
@@ -558,6 +565,7 @@ class RatingUpdate(UpdateView):
             form.add_error(None, "Only owner can edit rating")
             return super().form_invalid(form)
         form.instance.advertise.set = rating_object
+        messages.success(self.request, "Rating details updated.")
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
@@ -586,6 +594,7 @@ class RatingDelete(DeleteView):
 
         if rating_object.user != self.request.user:
             raise Http404
+
         return super().get(request, *args, **kwargs)
 
     def form_valid(self, form):
@@ -601,6 +610,8 @@ class RatingDelete(DeleteView):
             return super().form_invalid(form)
             # raise Http404
         # form.instance.rating = rating_object
+
+        messages.error(self.request, "Rating deleted.", extra_tags="danger")
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):

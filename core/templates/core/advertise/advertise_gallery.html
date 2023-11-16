@@ -40,12 +40,10 @@
                 <div class="card-body">
                     <h5 class="card-title ">{{ image.title }}</h5>
                     {% if is_owner %}
-                    <div class="d-flex justify-content-between">
-                        <a href="{% url 'image_update' advertise_pk=id_advertise pk=image.id %}"
-                           class="btn btn-primary ">Edit</a>
-                        <a href="{% url 'image_delete' advertise_pk=id_advertise pk=image.id %}"
-                           class="btn btn-danger ">Delete</a>
-                    </div>
+                    <a href="{% url 'image_update' advertise_pk=id_advertise pk=image.id %}"
+                       class="btn btn-primary ">Edit</a>
+                    <a href="{% url 'image_delete' advertise_pk=id_advertise pk=image.id %}"
+                       class="btn btn-danger ">Delete</a>
                     {% endif %}
                 </div>
             </div>

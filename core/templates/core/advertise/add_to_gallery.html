@@ -14,8 +14,19 @@
 <!--        Note that users can serach your portfolio by title, name it wisely-->
 <!--    </div>-->
 <!--</div>-->
+
 <div class="row">
     <div class="col-lg-8 mx-auto">
+        {% if messages %}
+        <div class="alert alert-success" role="alert">
+            <h4 class="alert-heading">Well done!</h4>
+            {% for message in messages %}
+            <p>{{ message }}</p>
+
+            <p>{% if message.tags %} {{ message.tags }} {% endif %}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {% load widget_tweaks %}
