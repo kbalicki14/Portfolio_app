@@ -127,12 +127,6 @@ class AdvertiseCreate(LoginRequiredMixin, CreateView):
         return super().get(request, *args, **kwargs)
 
     def form_valid(self, form):
-        # compression
-        pil_image = PilImage.open(form.instance.img)
-        output_io = BytesIO()
-        pil_image.save(output_io, format='JPEG', quality=60)
-        form.instance.img = File(output_io, name=form.instance.img.name)
-
         form.instance.user = self.request.user
         messages.success(self.request, "Advertise created.")
         return super(AdvertiseCreate, self).form_valid(form)
@@ -323,11 +317,6 @@ class AddImageToGallery(LoginRequiredMixin, CreateView):
         if advert_object.user != self.request.user:
             form.add_error(None, "Only owner can add image")
             return super().form_invalid(form)
-        # imgage compress, do it in model?
-        pil_image = PilImage.open(form.instance.image)
-        output_io = BytesIO()
-        pil_image.save(output_io, format='JPEG', quality=60)
-        form.instance.image = File(output_io, name=form.instance.image.name)
 
         messages.success(self.request, "Image successfully added")
         form.instance.advertise = advert_object
@@ -364,11 +353,6 @@ class ImageInGalleryUpdate(UpdateView):
         if advert_object.user != self.request.user:
             form.add_error(None, "Only owner can add image")
             return super().form_invalid(form)
-        # imgage compress, do it in model?
-        pil_image = PilImage.open(form.instance.image)
-        output_io = BytesIO()
-        pil_image.save(output_io, format='JPEG', quality=60)
-        form.instance.image = File(output_io, name=form.instance.image.name)
 
         messages.success(self.request, "Image details updated.")
         form.instance.advertise = advert_object

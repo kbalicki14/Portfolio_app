@@ -2,6 +2,10 @@ from django.db import models
 from django.contrib.auth.models import User
 from phonenumber_field.modelfields import PhoneNumberField
 
+from django.core.files import File
+from PIL import Image as PilImage
+from io import BytesIO
+
 # Create your models here.
 
 Advertise_status = (
@@ -41,6 +45,14 @@ class AdvertiseCategory(models.Model):
         return self.category_name
 
 
+def image_compression(image):
+    pil_image = PilImage.open(image)
+    output_io = BytesIO()
+    pil_image.save(output_io, 'JPEG', quality=60)
+    new_image = File(output_io, name=image.name)
+    return new_image
+
+
 # without Model next migrate
 class AdvertiseModel(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -56,20 +68,30 @@ class AdvertiseModel(models.Model):
     zip_code = models.CharField(max_length=6)
     updated = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    img = models.ImageField(upload_to='images/', default='default_images/mountain.jpg', null=True, blank=True)
+    img = models.ImageField(upload_to='images/advertise', default='default_images/mountain.jpg', null=True, blank=True)
 
     def __str__(self):
         return self.title
 
+    def save(self, *args, **kwargs):
+        new_image = image_compression(self.image)
+        self.image = new_image
+        super().save(*args, **kwargs)
+
 
 class Image(models.Model):
     title = models.CharField(max_length=50, default='No title')
-    image = models.ImageField(upload_to='images/gallery/')
+    image = models.ImageField(upload_to='images/gallery')
     advertise = models.ForeignKey(AdvertiseModel, related_name='advertise', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        new_image = image_compression(self.image)
+        self.image = new_image
+        super().save(*args, **kwargs)
 
 
 # commnet null
@@ -77,7 +99,7 @@ class AdvertiseRating(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     advertise = models.ForeignKey(AdvertiseModel, on_delete=models.CASCADE)
     rating = models.FloatField(default=0.0)
-    comment = models.TextField(max_length=450)
+    comment = models.TextField(max_length=450, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -92,6 +114,7 @@ class CityList(models.Model):
 
 # class Address(models.Model):
 #     pass
+
 
 # class ImageGallery(models.Model):
 #     advertise = models.ForeignKey(AdvertiseModel, related_name='advertise', on_delete=models.CASCADE)
