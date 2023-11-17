@@ -1,11 +1,13 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, JsonResponse, Http404
 from django.shortcuts import render, redirect
+from django.views import View
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 from django.urls import reverse_lazy
 from django.contrib import messages
+from django.shortcuts import get_object_or_404
 
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -18,8 +20,8 @@ from PIL import Image as PilImage
 from io import BytesIO
 from django.core.files import File
 
-from .forms import AdvertiseForm, MultiImageForm, ImageForm, RatingForm
-from .models import Task, AdvertiseModel, Image, CityList, AdvertiseCategory, AdvertiseRating
+from .forms import AdvertiseForm, MultiImageForm, ImageForm, RatingForm, AddressForm
+from .models import Task, AdvertiseModel, Image, CityList, AdvertiseCategory, AdvertiseRating, Address
 
 
 # Create your views here.
@@ -107,29 +109,52 @@ class WelcomePage(ListView):
     template_name = 'core/index.html'
 
 
-# png not upload
-class AdvertiseCreate(LoginRequiredMixin, CreateView):
-    model = AdvertiseModel
-    form_class = AdvertiseForm
-    template_name = 'core/advertise/advertise_create.html'
-    # success_url = reverse_lazy('upload')
-    context_object_name = 'img_obj'
-    success_url = reverse_lazy('user_advertise')
-
-    # serach bar
+class SerachBarAutoComplete(View):
     def get(self, request, *args, **kwargs):
+        # serach bar
         if 'term' in request.GET:
             query_set = CityList.objects.filter(city_name__istartswith=request.GET.get('term'))
             city_list = list()
             for city in query_set:
                 city_list.append(city.city_name)
             return JsonResponse(city_list, safe=False)
-        return super().get(request, *args, **kwargs)
+        else:
+            return HttpResponse('<p>null</p>')
+
+
+# png not upload
+class AdvertiseCreate(LoginRequiredMixin, CreateView):
+    model = AdvertiseModel
+    form_class = AdvertiseForm
+    template_name = 'core/advertise/advertise_create.html'
+    context_object_name = 'advertise'
+    success_url = reverse_lazy('user_advertise')
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        if self.request.POST:
+            data['address'] = AddressForm(self.request.POST)
+        else:
+            data['address'] = AddressForm()
+        return data
 
     def form_valid(self, form):
-        form.instance.user = self.request.user
+        # form is advertiseForm
+        context = self.get_context_data()
+        address = context['address']
+        if address.is_valid():
+            address = address.save()  # zapisz najpierw formularz adresu
+            form.instance.address = address  # ustaw adres na formularzu AdvertiseModel
+        if form.is_valid():
+            form.instance.user = self.request.user
+            form.save()
         messages.success(self.request, "Advertise created.")
-        return super(AdvertiseCreate, self).form_valid(form)
+        # compression
+        # pil_image = PilImage.open(form.instance.img)
+        # output_io = BytesIO()
+        # pil_image.save(output_io, format='JPEG', quality=60)
+        # form.instance.img = File(output_io, name=form.instance.img.name)
+        return super().form_valid(form)
 
 
 class AdvertiseDetails(DetailView):
@@ -149,6 +174,7 @@ class AdvertiseDetails(DetailView):
         context['average_rating'] = AdvertiseRating.objects.filter(advertise=self.object).aggregate(Avg('rating'))[
             'rating__avg']
         context['ratings'] = AdvertiseRating.objects.filter(advertise=self.object).order_by("-created_at")[:5]
+        # context['address'] = Addres
 
         # ratings_list = AdvertiseRating.objects.filter(advertise=self.object)
         # paginator = Paginator(ratings_list, 2)
@@ -165,21 +191,15 @@ class AdvertiseGallery(ListView):
 
     def get_queryset(self):
         id_advertise = self.kwargs['pk']
-        try:
-            object_advertise = AdvertiseModel.objects.get(id=id_advertise)
-        except ObjectDoesNotExist as e:
-            raise Http404
-
+        object_advertise = get_object_or_404(AdvertiseModel, id=id_advertise)
         gallery = super().get_queryset().filter(advertise=object_advertise).order_by("-created_at")
         return gallery
 
     def get_context_data(self, **kwargs):
         id_advertise = self.kwargs['pk']
         context = super().get_context_data(**kwargs)
-        try:
-            object_advertise = AdvertiseModel.objects.get(id=id_advertise)
-        except ObjectDoesNotExist as e:
-            raise Http404
+        object_advertise = get_object_or_404(AdvertiseModel, id=id_advertise)
+
         context['id_advertise'] = id_advertise
         # context['user'] = object_advertise.user
         context['is_owner'] = self.request.user == object_advertise.user
@@ -196,10 +216,7 @@ class AdvertiseRatingList(ListView):
 
     def get_queryset(self):
         id_advertise = self.kwargs['pk']
-        try:
-            object_advertise = AdvertiseModel.objects.get(id=id_advertise)
-        except ObjectDoesNotExist as e:
-            raise Http404
+        object_advertise = get_object_or_404(AdvertiseModel, id=id_advertise)
 
         rating = super().get_queryset().filter(advertise=object_advertise).order_by("-created_at")
         return rating
@@ -207,12 +224,9 @@ class AdvertiseRatingList(ListView):
     def get_context_data(self, **kwargs):
         id_advertise = self.kwargs['pk']
         context = super().get_context_data(**kwargs)
-        try:
-            advert_object = AdvertiseModel.objects.get(id=id_advertise)
+        object_advertise = get_object_or_404(AdvertiseModel, id=id_advertise)
 
-        except ObjectDoesNotExist as e:
-            raise Http404
-        context['average_rating'] = AdvertiseRating.objects.filter(advertise=advert_object).aggregate(Avg('rating'))[
+        context['average_rating'] = AdvertiseRating.objects.filter(advertise=object_advertise).aggregate(Avg('rating'))[
             'rating__avg']
         context['id_advertise'] = id_advertise
         return context
@@ -226,14 +240,16 @@ class AdvertiseUpdate(LoginRequiredMixin, UpdateView):
 
     def get(self, request, *args, **kwargs):
         advertise_id = self.kwargs['pk']
-        try:
-            advert_object = AdvertiseModel.objects.get(id=advertise_id)
-        except ObjectDoesNotExist as e:
-            raise Http404
-
-        if advert_object.user != self.request.user:
-            raise Http404
+        cutomRestrictedGetAdvertise(self.request.user, advertise_id)
         return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        if self.request.POST:
+            data['address'] = AddressForm(self.request.POST, instance=self.object.address)
+        else:
+            data['address'] = AddressForm(instance=self.object.address)
+        return data
 
     def form_valid(self, form):
         try:
@@ -243,34 +259,45 @@ class AdvertiseUpdate(LoginRequiredMixin, UpdateView):
             return super().form_invalid(form)
 
         if advert_object.user != self.request.user:
-            form.add_error(None, "Only owner edit advertise")
+            form.add_error(None, "Only owner can edit advertise")
             return super().form_invalid(form)
-        form.instance.advertise.set = advert_object
+
+        context = self.get_context_data()
+        address = context['address']
+        if address.is_valid():
+            address.save()  # zapisz najpierw formularz adresu
+            form.instance.address = address.instance  # ustaw adres na formularzu AdvertiseModel
+        if form.is_valid():
+            form.instance.advertise.set = advert_object
+            form.save()
         messages.success(self.request, "Advertise details updated.")
+        # compression
+        # pil_image = PilImage.open(form.instance.img)
+        # output_io = BytesIO()
+        # pil_image.save(output_io, format='JPEG', quality=60)
+        # form.instance.img = File(output_io, name=form.instance.img.name)
         return super().form_valid(form)
 
 
 class AdvertiseDelete(LoginRequiredMixin, DeleteView):
-    model = AdvertiseModel
-    context_object_name = 'advertise'
+    # its Addres model deltete casacde!!
+    model = Address
+    context_object_name = 'address_delete'
     template_name = 'core/advertise/advertise_confirm_delete.html'
     success_url = reverse_lazy('user_advertise')
 
     def get(self, request, *args, **kwargs):
-        advertise_id = self.kwargs['pk']
-        try:
-            advert_object = AdvertiseModel.objects.get(id=advertise_id)
-        except ObjectDoesNotExist as e:
-            raise Http404
-
+        address_id = self.kwargs['pk']
+        # cutomRestrictedGetAdvertise(self.request.user, address_id)
+        advert_object = get_object_or_404(AdvertiseModel, address=address_id)
         if advert_object.user != self.request.user:
-            raise Http404
+            raise 404
         return super().get(request, *args, **kwargs)
 
     def form_valid(self, form):
         delete_id = self.kwargs['pk']
         try:
-            advert_object = AdvertiseModel.objects.get(id=delete_id)
+            advert_object = AdvertiseModel.objects.get(address=delete_id)
         except ObjectDoesNotExist as e:
             form.add_error(None, f"Not found this advertise")
             return super().form_invalid(form)
@@ -278,10 +305,16 @@ class AdvertiseDelete(LoginRequiredMixin, DeleteView):
         if advert_object.user != self.request.user:
             form.add_error(None, "Only owner can delete advertise!")
             return super().form_invalid(form)
-            # raise Http404
+
         # form.instance.advertise = advert_object
         messages.error(self.request, "Advertise deleted", extra_tags="danger")
         return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        advert_object = get_object_or_404(AdvertiseModel, address=self.kwargs['pk'])
+        context['advertise'] = advert_object
+        return context
 
 
 class AddImageToGallery(LoginRequiredMixin, CreateView):
@@ -291,18 +324,13 @@ class AddImageToGallery(LoginRequiredMixin, CreateView):
     context_object_name = 'image'
 
     # possible issues in url
+    # redirect to gallery by kwargs id
     def get_success_url(self):
         return self.request.path_info
 
     def get(self, request, *args, **kwargs):
         advertise_id = self.kwargs['advertise_pk']
-        try:
-            advert_object = AdvertiseModel.objects.get(id=advertise_id)
-        except ObjectDoesNotExist as e:
-            raise Http404
-
-        if advert_object.user != self.request.user:
-            raise Http404
+        cutomRestrictedGetAdvertise(self.request.user, advertise_id)
         return super().get(request, *args, **kwargs)
 
     def form_valid(self, form):
@@ -328,17 +356,14 @@ class ImageInGalleryUpdate(UpdateView):
     form_class = ImageForm
     template_name = 'core/advertise/add_to_gallery.html'
     context_object_name = 'image'
-    success_url = reverse_lazy('user_advertise')
+
+    def get_success_url(self):
+        advertise_id = self.kwargs['advertise_pk']
+        return reverse_lazy('gallery', kwargs={'pk': advertise_id})
 
     def get(self, request, *args, **kwargs):
         advertise_id = self.kwargs['advertise_pk']
-        try:
-            advert_object = AdvertiseModel.objects.get(id=advertise_id)
-        except ObjectDoesNotExist as e:
-            raise Http404
-
-        if advert_object.user != self.request.user:
-            raise Http404
+        cutomRestrictedGetAdvertise(self.request.user, advertise_id)
         return super().get(request, *args, **kwargs)
 
     def form_valid(self, form):
@@ -363,11 +388,14 @@ class ImageInGalleryDelete(DeleteView):
     model = Image
     context_object_name = 'image'
     template_name = 'core/advertise/image_gallery_confirm_delete.html'
-    success_url = reverse_lazy('user_advertise')
+
+    def get_success_url(self):
+        advertise_id = self.kwargs['advertise_pk']
+        return reverse_lazy('gallery', kwargs={'pk': advertise_id})
 
     def get(self, request, *args, **kwargs):
         advertise_id = self.kwargs['advertise_pk']
-        cutomsRestrictedGet(self.request.user, advertise_id)
+        cutomRestrictedGetAdvertise(self.request.user, advertise_id)
         return super().get(request, *args, **kwargs)
 
     def form_valid(self, form):
@@ -462,7 +490,12 @@ class AdvertList(ListView):
     def get_queryset(self):
         search_input = self.request.GET.get('search_area') or ''
         search_category = self.request.GET.get('search_category')
-        advert_qs = super().get_queryset().filter(town=search_input, advertise_category=search_category)
+        # addres_qs = Address.objects.filter(town=search_input)
+        # print(addres_qs)
+        advert_qs = super().get_queryset().filter(address__town=search_input,
+                                                  advertise_category=search_category,
+                                                  advertise_status='accepted')
+        # __startswith
         return advert_qs
 
     def get_context_data(self, **kwargs):
@@ -480,7 +513,7 @@ class CurrentUserAdvertise(LoginRequiredMixin, ListView):
     paginate_by = 5
 
     def get_queryset(self):
-        user_adverts = super().get_queryset().filter(user=self.request.user)
+        user_adverts = super().get_queryset().filter(user=self.request.user).select_related('address')
         return user_adverts
 
 
@@ -500,10 +533,7 @@ class RatingAdvertise(CreateView):
 
     def form_valid(self, form):
         advertise_id = self.kwargs['pk']
-        try:
-            advert_object = AdvertiseModel.objects.get(id=advertise_id)
-        except ObjectDoesNotExist as e:
-            raise Http404
+        advert_object = get_object_or_404(AdvertiseModel, id=advertise_id)
         form.instance.user = self.request.user
         form.instance.advertise = advert_object
         messages.success(self.request, "Rating added.")
@@ -529,11 +559,7 @@ class RatingUpdate(UpdateView):
 
     def get(self, request, *args, **kwargs):
         # advertise_id = self.kwargs['advertise_pk']
-        try:
-            rating_object = AdvertiseRating.objects.get(id=self.kwargs['pk'])
-        except ObjectDoesNotExist as e:
-            raise Http404
-
+        rating_object = get_object_or_404(AdvertiseRating, id=self.kwargs['pk'])
         if rating_object.user != self.request.user:
             raise Http404
         return super().get(request, *args, **kwargs)
@@ -571,11 +597,8 @@ class RatingDelete(DeleteView):
 
     def get(self, request, *args, **kwargs):
         # advertise_id = self.kwargs['advertise_pk']
-        try:
-            rating_object = AdvertiseRating.objects.get(id=self.kwargs['pk'])
-        except ObjectDoesNotExist as e:
-            raise Http404
 
+        rating_object = get_object_or_404(AdvertiseRating, id=self.kwargs['pk'])
         if rating_object.user != self.request.user:
             raise Http404
 
@@ -605,7 +628,7 @@ class RatingDelete(DeleteView):
         return context
 
 
-def cutomsRestrictedGet(user, id):
+def cutomRestrictedGetAdvertise(user, id):
     try:
         advert_object = AdvertiseModel.objects.get(id=id)
     except ObjectDoesNotExist as e:

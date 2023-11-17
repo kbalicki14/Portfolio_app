@@ -44,36 +44,31 @@
             <label for="id_advertise_category" class="form-label">{{form.advertise_category.label}}</label>
             {% render_field form.advertise_category placeholder=form.advertise_category.label class+="form-control" %}
 
-            <label for="id_street" class="form-label">{{form.street.label}}</label>
-            {% render_field form.street placeholder=form.street.label class+="form-control" %}
+            <label for="id_street" class="form-label">{{address.street.label}}</label>
+            {% render_field address.street placeholder=address.street.label class+="form-control" %}
 
-            <label for="id_street_number" class="form-label">{{form.street_number.label}}</label>
-            {% render_field form.street_number placeholder=form.street_number.label class+="form-control" %}
+            <label for="id_street_number" class="form-label">{{address.street_number.label}}</label>
+            {% render_field address.street_number placeholder=address.street_number.label class+="form-control" %}
 
-            <label for="id_apartment_number" class="form-label">{{form.apartment_number.label}}</label>
-            {% render_field form.apartment_number placeholder=form.apartment_number.label class+="form-control" %}
+            <label for="id_apartment_number" class="form-label">{{address.apartment_number.label}}</label>
+            {% render_field address.apartment_number placeholder=address.apartment_number.label class+="form-control" %}
 
-            <label for="id_town" class="form-label">{{form.town.label}}</label>
-            {% render_field form.town placeholder=form.town.label class+="form-control town-search" %}
+            <label for="id_town" class="form-label">{{address.town.label}}</label>
+            {% render_field address.town placeholder=address.town.label class+="form-control town-search" %}
 
-            <label for="id_zip_code" class="form-label">{{form.zip_code.label}}</label>
-            {% render_field form.zip_code placeholder=form.zip_code.label class+="form-control" %}
+            <label for="id_zip_code" class="form-label">{{address.zip_code.label}}</label>
+            {% render_field address.zip_code placeholder=address.zip_code.label class+="form-control" %}
 
             <label for="id_img" class="form-label">{{form.img.label}}</label>
             {% render_field form.img placeholder=form.img.label class+="form-control mb-3" %}
-
+            <!--            {{ form.as_p }}-->
+            <!--            {{ address.as_p }}-->
             <button type="submit" class="btn btn-primary ">Create</button>
 
             {% if form.errors %}
             <small class="help-block">{{ form.errors|striptags }}</small>
             {% endif %}
         </form>
-        {% if img_obj %}
-        <h3>Succesfully uploaded : {{img_obj.title}}</h3>
-        <img src="{{ img_obj.img.url}}" alt="connect" style="max-height:300px">
-        {% endif %}
-        <!--    </div>-->
-        <!--</div>-->
     </div>
 </div>
 {% endblock content %}

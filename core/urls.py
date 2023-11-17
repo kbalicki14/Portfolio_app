@@ -5,7 +5,8 @@ from . import views
 from .views import TaskList, TaskDetail, TaskCreate, TaskUpdate, TaskDelete, CustomLoginView, RegisterView, \
     imageUpload, AdvertList, AdvertiseCreate, AddMultiImage, CreateImagesToGallery, WelcomePage, AdvertiseUpdate, \
     AddImageToGallery, AdvertiseDetails, CurrentUserAdvertise, AdvertiseDelete, AdvertiseGallery, ProfileDetail, \
-    RatingAdvertise, AdvertiseRatingList, RatingUpdate, RatingDelete, ImageInGalleryUpdate, ImageInGalleryDelete
+    RatingAdvertise, AdvertiseRatingList, RatingUpdate, RatingDelete, ImageInGalleryUpdate, ImageInGalleryDelete, \
+    SerachBarAutoComplete
 
 from django.contrib.auth.views import LogoutView
 
@@ -34,6 +35,7 @@ urlpatterns = [
     path('advertise_details/<int:pk>/ratings', AdvertiseRatingList.as_view(), name='rating_list'),
 
     path('multi_image/', CreateImagesToGallery.as_view(), name='multi_image'),
+    path('search_tooltip/', SerachBarAutoComplete.as_view(), name='search_auto_comp'),
     path('add_image/<int:advertise_pk>/', AddImageToGallery.as_view(), name='add_image'),
     path('advertise_details/<int:advertise_pk>/image_update/<int:pk>', ImageInGalleryUpdate.as_view(),
          name='image_update'),

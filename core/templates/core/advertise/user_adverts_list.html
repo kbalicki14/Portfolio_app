@@ -29,15 +29,15 @@
                      alt="Advertise image" style="height: 200px; object-fit: cover;">
                 <div class=" card-body ">
                     <h5 class="card-title">{{ user_item.title|title }}</h5>
-                    <p class="card-text">{{ user_item.town|title }} {{user_item.street}}</p>
+                    <p class="card-text">{{ user_item.address.town|title }} {{user_item.address.street}}</p>
                     <!--                    <p class="card-text">{{ user_item.advertise_category }}</p>-->
-
+                    <p>addres id {{user_item.address.id}}</p>
 
                 </div>
                 <div class="card-footer bg-transparent text-center mb-2 ">
                     <a href="{% url 'advertise_update' user_item.id %}" class="btn btn-primary ">Edit</a>
                     <a href="{% url 'gallery' user_item.id  %}" class="btn btn-primary ">Gallery</a>
-                    <a href="{% url 'advertise_delete' user_item.id  %}" class="btn btn-danger ">Delete</a>
+                    <a href="{% url 'advertise_delete' user_item.address.id  %}" class="btn btn-danger ">Delete</a>
 
                 </div>
             </div>

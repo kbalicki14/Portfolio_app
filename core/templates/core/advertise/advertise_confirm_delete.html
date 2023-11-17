@@ -6,7 +6,7 @@
     <div class="col-lg-8 mx-auto">
         <form method="post">
             {% csrf_token %}
-            <h4>Are you sure you want to delete this advertise? <b>{{advertise}}</b></h4>
+            <h4>Are you sure you want to delete this advertise? <b>{{advertise.title}}</b></h4>
             <div class="mb-4"></div>
             <input type="submit" value="delete" class="btn btn-danger">
 

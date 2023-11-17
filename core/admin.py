@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Task, AdvertiseModel, Image, CityList, AdvertiseCategory, AdvertiseRating
+from .models import Task, AdvertiseModel, Image, CityList, AdvertiseCategory, AdvertiseRating, Address
 
 # Register your models here.
 
@@ -10,6 +10,9 @@ admin.site.register(Task)
 
 
 # admin.site.register(AdvertiseModel)
+# admin.site.register(Address)
+
+
 # admin.site.register(Image)
 # admin.site.register(CityList)
 # admin.site.register(AdvertiseCategory)
@@ -17,9 +20,20 @@ admin.site.register(Task)
 
 @admin.register(AdvertiseModel)
 class AdvertiseAdmin(admin.ModelAdmin):
-    list_display = ('title', 'advertise_category', 'advertise_status', 'town')
-    search_fields = ('title', 'town', 'user__username')
+    list_display = ('title', 'advertise_category', 'advertise_status', 'get_town')
+    search_fields = ('title', 'user__username', 'address__town')
     list_filter = ['advertise_category', 'advertise_status', 'created_at']
+
+    def get_town(self, obj):
+        return obj.address.town
+
+    get_town.short_description = 'Town'
+
+
+@admin.register(Address)
+class AddressAdmin(admin.ModelAdmin):
+    list_display = ('street', 'town', 'zip_code')
+    search_fields = ('street', 'town', 'zip_code')
 
 
 @admin.register(Image)

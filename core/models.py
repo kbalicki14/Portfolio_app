@@ -51,6 +51,23 @@ def image_compression(image):
     pil_image.save(output_io, 'JPEG', quality=60)
     new_image = File(output_io, name=image.name)
     return new_image
+    # with open(image.path, 'wb') as f:
+    #     pil_image = PilImage.open(image)
+    #     pil_image.save(f, 'JPEG', quality=60)
+    # return image
+
+
+# advertise address
+class Address(models.Model):
+    street = models.CharField(max_length=50)
+    street_number = models.CharField(max_length=4)
+    apartment_number = models.CharField(max_length=4)
+    town = models.CharField(max_length=50)
+    zip_code = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return "%s %s %s" % (self.street, self.street_number, self.town)
 
 
 # without Model next migrate
@@ -61,40 +78,38 @@ class AdvertiseModel(models.Model):
     phone_number = PhoneNumberField(null=True, blank=True)
     advertise_status = models.CharField(choices=Advertise_status, max_length=40, default='accepted')
     advertise_category = models.ForeignKey(AdvertiseCategory, on_delete=models.CASCADE)
-    street = models.CharField(max_length=50)
-    street_number = models.CharField(max_length=4)
-    apartment_number = models.CharField(max_length=4)
-    town = models.CharField(max_length=40)
-    zip_code = models.CharField(max_length=6)
+    address = models.OneToOneField(Address, on_delete=models.CASCADE)
     updated = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    img = models.ImageField(upload_to='images/advertise', default='default_images/mountain.jpg', null=True, blank=True)
+    img = models.ImageField(upload_to='images/', default='default_images/mountain.jpg', null=True, blank=True)
 
     def __str__(self):
         return self.title
 
-    def save(self, *args, **kwargs):
-        new_image = image_compression(self.image)
-        self.image = new_image
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     instance = super(AdvertiseModel, self).save(*args, **kwargs)
+    #     image = PilImage.open(instance.photo.path)
+    #     if self.img.path == image.path:
+    #         new_image = image_compression(self.img)
+    #         self.img = new_image
+    #         super().save(*args, **kwargs)
 
 
 class Image(models.Model):
     title = models.CharField(max_length=50, default='No title')
-    image = models.ImageField(upload_to='images/gallery')
+    image = models.ImageField(upload_to='images')
     advertise = models.ForeignKey(AdvertiseModel, related_name='advertise', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title
 
-    def save(self, *args, **kwargs):
-        new_image = image_compression(self.image)
-        self.image = new_image
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     new_image = image_compression(self.image)
+    #     self.image = new_image
+    #     super().save(*args, **kwargs)
 
 
-# commnet null
 class AdvertiseRating(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     advertise = models.ForeignKey(AdvertiseModel, on_delete=models.CASCADE)
@@ -111,10 +126,6 @@ class CityList(models.Model):
 
     def __str__(self):
         return self.city_name
-
-# class Address(models.Model):
-#     pass
-
 
 # class ImageGallery(models.Model):
 #     advertise = models.ForeignKey(AdvertiseModel, related_name='advertise', on_delete=models.CASCADE)
