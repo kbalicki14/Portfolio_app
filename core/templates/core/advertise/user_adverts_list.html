@@ -31,13 +31,19 @@
                     <h5 class="card-title">{{ user_item.title|title }}</h5>
                     <p class="card-text">{{ user_item.address.town|title }} {{user_item.address.street}}</p>
                     <!--                    <p class="card-text">{{ user_item.advertise_category }}</p>-->
-                   
+
 
                 </div>
                 <div class="card-footer bg-transparent text-center mb-2 ">
                     <a href="{% url 'advertise_update' user_item.id %}" class="btn btn-primary ">Edit</a>
                     <a href="{% url 'gallery' user_item.id  %}" class="btn btn-primary ">Gallery</a>
                     <a href="{% url 'advertise_delete' user_item.address.id  %}" class="btn btn-danger ">Delete</a>
+                    {% if not user_item.advertise_status == 'accepted' %}
+                    <hr class="opacity-15">
+                    <small class="text-muted">Status: <b>{{user_item.advertise_status}}</b>, for more info contact
+                        administration</small>
+
+                    {% endif %}
 
                 </div>
             </div>

@@ -27,7 +27,7 @@
             <p class=" mt-3">Dont have account <a href="{% url 'register' %}">Register now</a></p>
 
             {% if form.errors %}
-            <small class="help-block">{{ form.errors|striptags }}</small>
+            <small class="help-block text-danger">{{ form.errors|striptags }}</small>
             {% endif %}
         </div>
 

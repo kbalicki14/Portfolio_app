@@ -70,7 +70,7 @@
             <button type="submit" class="btn btn-primary ">Create</button>
 
             {% if form.errors %}
-            <small class="help-block">{{ form.errors|striptags }}</small>
+            <small class="help-block text-danger">{{ form.errors|striptags }}</small>
             {% endif %}
         </form>
     </div>
