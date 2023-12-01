@@ -14,13 +14,27 @@ Advertise_status = (
     ('deleted', 'Deleted'),
     ('suspend', 'Temporary suspended'),  # zawieszony
 )
-
+Report_status = (
+    ('pending', 'Wait for review'),
+    ('accepted', 'Accepted'),
+    ('rejected', 'Rejected'),
+    ('deleted', 'Deleted'),
+)
 Advertise_category = (
     ('none', 'none'),
     ('hairdress', 'Hairdress'),
     ('barber', 'Barber Shop'),
     ('tatto', 'Tatto Studio'),
     ('cosmetic', 'Cosmetic'),
+)
+Report_category = (
+    ('scam', 'Scam'),
+    ('impersonation', 'Impersonation'),
+    ('false_information', 'False information'),
+    ('copyright', 'Copyright'),
+    ('spam', 'Spam'),
+    ('other', 'Other'),
+
 )
 
 
@@ -127,6 +141,20 @@ class CityList(models.Model):
 
     def __str__(self):
         return self.city_name
+
+
+class ReportAdvertise(models.Model):
+    email = models.EmailField(null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    advertise = models.ForeignKey(AdvertiseModel, on_delete=models.CASCADE)
+    message = models.TextField(max_length=300)
+    category = models.CharField(choices=Report_category, max_length=50, default='other')
+    status = models.CharField(choices=Report_status, max_length=50, default='pending')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.message
 
 # class ImageGallery(models.Model):
 #     advertise = models.ForeignKey(AdvertiseModel, related_name='advertise', on_delete=models.CASCADE)

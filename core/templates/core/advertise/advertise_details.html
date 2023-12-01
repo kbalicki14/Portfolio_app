@@ -128,6 +128,13 @@
     </div>
 </div>
 {% endif %}
+
+<div class="d-flex justify-content-end">
+    <a href="{% url 'report_advertise' advertise_pk=detail.id %}" class="text-danger"> <i class="fa-solid fa-flag"
+                                                                                          style="color: #c81414;"></i>
+        Report</a>
+</div>
+
 <!--pagination-->
 <!--<nav aria-label="Page navigation example">-->
 <!--    <ul class="pagination justify-content-center mt-4   ">-->

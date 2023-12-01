@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ClearableFileInput
 from phonenumber_field.formfields import PhoneNumberField
-from .models import AdvertiseModel, Image, CityList, AdvertiseRating, Address
+from .models import AdvertiseModel, Image, CityList, AdvertiseRating, Address, ReportAdvertise
 
 
 class AdvertiseForm(forms.ModelForm):
@@ -44,3 +44,9 @@ class MultiImageForm(forms.ModelForm):
     class Meta:
         model = Image
         fields = ['title', 'image', 'advertise']
+
+
+class ReportAdvertiseForm(forms.ModelForm):
+    class Meta:
+        model = ReportAdvertise
+        fields = ['email', 'message', 'category']

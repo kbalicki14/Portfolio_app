@@ -1,9 +1,12 @@
 from django.contrib import admin
-from .models import Task, AdvertiseModel, Image, CityList, AdvertiseCategory, AdvertiseRating, Address
+from .models import Task, AdvertiseModel, Image, CityList, AdvertiseCategory, AdvertiseRating, Address, ReportAdvertise
 
 # Register your models here.
 
 admin.site.register(Task)
+
+
+# admin.site.register(ReportAdvertise)
 
 
 # admin.site.register(AdvertiseRating)
@@ -69,6 +72,18 @@ class AdvertiseRatingAdmin(admin.ModelAdmin):
         return obj.comment[:100]
 
     short_comment.short_description = 'Comment'
+
+    def get_advertise_title(self, obj):
+        return obj.advertise.title
+
+    get_advertise_title.short_description = 'Advertise Title'
+
+
+@admin.register(ReportAdvertise)
+class ReportAdvertise(admin.ModelAdmin):
+    list_display = ('category', 'get_advertise_title', 'status')
+    search_fields = ('advertise__title',)
+    list_filter = ['category', 'status', 'created_at', ]
 
     def get_advertise_title(self, obj):
         return obj.advertise.title

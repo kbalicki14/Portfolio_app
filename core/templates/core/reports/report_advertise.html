@@ -1,0 +1,43 @@
+{% extends 'core/main.html' %}
+
+{% block headerTag %}
+<div class="container mt-4">
+    <h3>Report advertise </h3>
+
+</div>
+{% endblock headerTag %}
+{% block content %}
+
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% load widget_tweaks %}
+
+            {% if not request.user.is_authenticated %}
+            <label for="id_email" class="form-label">{{form.email.label}}</label>
+            {% render_field form.email placeholder=form.email.label class+="form-control" %}
+            {% endif %}
+
+            <label for="id_category" class="form-label">{{form.category.label}}</label>
+            {% render_field form.category placeholder=form.category.label class+="form-control" %}
+
+
+            <label for="id_message" class="form-label">{{form.message.label}}</label>
+            {% render_field form.message placeholder=form.message.label class+="form-control" %}
+
+
+            <div class="mt-3">
+                <button type="submit" class="btn btn-danger  ">Send report</button>
+            </div>
+
+            {% if form.errors %}
+            <small class="help-block">{{ form.errors|striptags }}</small>
+            {% endif %}
+        </form>
+    </div>
+</div>
+
+
+{% endblock content %}
+

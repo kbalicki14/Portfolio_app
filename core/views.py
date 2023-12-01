@@ -20,8 +20,8 @@ from PIL import Image as PilImage
 from io import BytesIO
 from django.core.files import File
 
-from .forms import AdvertiseForm, MultiImageForm, ImageForm, RatingForm, AddressForm
-from .models import Task, AdvertiseModel, Image, CityList, AdvertiseCategory, AdvertiseRating, Address
+from .forms import AdvertiseForm, MultiImageForm, ImageForm, RatingForm, AddressForm, ReportAdvertiseForm
+from .models import Task, AdvertiseModel, Image, CityList, AdvertiseCategory, AdvertiseRating, Address, ReportAdvertise
 
 
 # Create your views here.
@@ -388,7 +388,7 @@ class ImageInGalleryUpdate(UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['current_img'] = self.object.image
-        
+
         return context
 
 
@@ -645,6 +645,32 @@ def cutomRestrictedGetAdvertise(user, id):
     if advert_object.user != user:
         raise Http404
     return advert_object
+
+
+class ReportAdvertise(CreateView):
+    model = ReportAdvertise
+    form_class = ReportAdvertiseForm
+    context_object_name = 'report'
+    template_name = 'core/reports/report_advertise.html'
+
+    def get_success_url(self):
+        advertise_id = self.kwargs['advertise_pk']
+        return reverse_lazy('advertise_details', kwargs={'pk': advertise_id})
+
+    def form_valid(self, form):
+        advertise_id = self.kwargs['advertise_pk']
+        try:
+            advertise_object = AdvertiseModel.objects.get(id=advertise_id)
+        except ObjectDoesNotExist as e:
+            form.add_error(None, f"Not found this advertise")
+            return super().form_invalid(form)
+
+        if self.request.user.is_authenticated:
+            form.instance.user = self.request.user
+            
+        form.instance.advertise = advertise_object
+        messages.success(self.request, "Report send")
+        return super().form_valid(form)
 
 
 def handler404(request, exception):

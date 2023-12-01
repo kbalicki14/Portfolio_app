@@ -5,4 +5,5 @@ migrations/
 *.env
 pull_code.sh
 media/images
+core/static/admin
 
