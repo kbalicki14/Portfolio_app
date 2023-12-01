@@ -17,16 +17,15 @@
         </div>
         <div class="col-lg-7 ">
             <h1 class="display-4 text-break">{{detail.title|title}}</h1>
-            <p class="lead text-break">Opis Twojego salonu fryzjerskiego. Możesz tutaj dodać więcej informacji o swoim
-                salonie,
-                usługach, które oferujesz, i dlaczego klienci powinni wybrać właśnie Ciebie.</p>
-            <h4 class="mt-4">Usługi</h4>
-            <p class="text-break">Specjalizujemy się w usługach barberskich, oferując szeroki zakres usług, w tym
-                strzyżenie, golenie,
-                stylizację brody i wiele innych. Nasz zespół doświadczonych barberów jest gotowy, aby pomóc Ci osiągnąć
-                swój idealny wygląd.</p>
-            <h4 class="mt-4">{{detail.town}}</h4>
-            <p>Ulica, Miasto, Kod pocztowy</p>
+            <p class="lead text-break">{{detail.description}} {% lorem 20 w random %}</p>
+            <!--            <h4 class="mt-4">Usługi</h4>-->
+            <!--            <p class="text-break">Specjalizujemy się w usługach barberskich, oferując szeroki zakres usług, w tym-->
+            <!--                strzyżenie, golenie,-->
+            <!--                stylizację brody i wiele innych. Nasz zespół doświadczonych barberów jest gotowy, aby pomóc Ci osiągnąć-->
+            <!--                swój idealny wygląd.</p>-->
+            <h4 class="mt-4">{{address.town}}</h4>
+            <p>{{address.street}}, {{address.street_number}}, {% if address.apartment_number %}
+                {{address.apartment_number}} {% endif %}, {{address.zip_code}}</p>
             {% if detail.phone_number %}
             <h4 class="mt-4">Kontakt </h4>
             <p>tel. {{detail.phone_number.as_international}}</p>
@@ -117,11 +116,7 @@
         </div>
     </div>
     {% empty %}
-    <div class="row mt-4">
-        <div class="col-lg-12">
-            <p>No ratings yet</p>
-        </div>
-    </div>
+    <h3 class="container row row-col-1 justify-content-center mt-4">No ratings yet</h3>
     {% endfor %}
 </div>
 

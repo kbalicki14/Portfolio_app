@@ -17,14 +17,6 @@
 
 <div class="row">
     <div class="col-lg-8 mx-auto">
-        {% if messages %}
-        {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} col-md-6 mx-auto mt-2" role="alert">
-            <h4 class="alert-heading">Well done!</h4>
-            <p>{{ message }}</p>
-            {% endfor %}
-        </div>
-        {% endif %}
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {% load widget_tweaks %}
@@ -32,8 +24,12 @@
             <label for="id_title" class="form-label">{{form.title.label}}</label>
             {% render_field form.title placeholder=form.title.label class+="form-control" %}
 
+
             <label for="id_image" class="form-label">{{form.image.label}}</label>
             {% render_field form.image placeholder=form.image.label class+="form-control" %}
+
+            <img id="current" src="{{ current_img.url }}" class="img-fluid rounded h-25 w-25 mt-3" alt="Current image">
+
             <div class="mt-3">
                 <a href="{% url 'user_advertise' %}" class="btn btn-primary me-3">Go back</a>
                 <button type="submit" class="btn btn-success  ">Save and add next</button>
@@ -57,3 +53,11 @@
 
 {% endfor %}
 {% endblock content %}
+
+{% load static %}
+<!--add to static-->
+{% block script %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="{% static 'image_placeholder.js' %}"></script>
+
+{% endblock script %}

@@ -63,6 +63,10 @@
             {% render_field form.img placeholder=form.img.label class+="form-control mb-3" %}
             <!--            {{ form.as_p }}-->
             <!--            {{ address.as_p }}-->
+
+            <!--            change img to image model-->
+            <img id="current" src="#" class="img-fluid rounded h-25 w-25 mt-3 mb-3" alt="Current image">
+            <br>
             <button type="submit" class="btn btn-primary ">Create</button>
 
             {% if form.errors %}
@@ -78,6 +82,9 @@
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 <script src="{% static 'jquery_city.js' %}"></script>
 <!--<script>$("#id_town").select2()</script>-->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="{% static 'image_placeholder.js' %}"></script>
 
 {% endblock script %}
 

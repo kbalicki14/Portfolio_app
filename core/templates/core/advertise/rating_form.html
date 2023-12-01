@@ -12,7 +12,7 @@
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {% load widget_tweaks %}
-            
+
             <label for="id_rating" class="form-label"> {{form.rating.label}} <i class="fa-solid fa-star ms-2"
                                                                                 style="color: #f3ed35;"></i></label>
             <div class="range">
@@ -21,7 +21,7 @@
             <label for="id_comment" class="form-label">{{form.comment.label}}</label>
             {% render_field form.comment placeholder=form.comment.label class+="form-control" %}
             <div class="mt-3">
-                <button type="submit" class="btn btn-success">Save and add next</button>
+                <button type="submit" class="btn btn-success">Save</button>
             </div>
 
             {% if form.errors %}

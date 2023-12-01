@@ -126,6 +126,11 @@ LOGIN_URL = 'login'
 
 STATIC_URL = 'static/'
 
+STATICFILES_DIRS = [
+    BASE_DIR / "core/static/",
+]
+STATIC_ROOT = BASE_DIR / "static/"
+
 # Base url to serve media files
 MEDIA_URL = '/media/'
 # Path where media is stored

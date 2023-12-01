@@ -174,8 +174,7 @@ class AdvertiseDetails(DetailView):
         context['average_rating'] = AdvertiseRating.objects.filter(advertise=self.object).aggregate(Avg('rating'))[
             'rating__avg']
         context['ratings'] = AdvertiseRating.objects.filter(advertise=self.object).order_by("-created_at")[:5]
-        # context['address'] = Addres
-
+        context['address'] = self.object.address
         # ratings_list = AdvertiseRating.objects.filter(advertise=self.object)
         # paginator = Paginator(ratings_list, 2)
         # page = self.request.GET.get('page')
@@ -325,8 +324,11 @@ class AddImageToGallery(LoginRequiredMixin, CreateView):
 
     # possible issues in url
     # redirect to gallery by kwargs id
+    # def get_success_url(self):
+    #     return self.request.path_info
     def get_success_url(self):
-        return self.request.path_info
+        advertise_id = self.kwargs['advertise_pk']
+        return reverse_lazy('gallery', kwargs={'pk': advertise_id})
 
     def get(self, request, *args, **kwargs):
         advertise_id = self.kwargs['advertise_pk']
@@ -382,6 +384,12 @@ class ImageInGalleryUpdate(UpdateView):
         messages.success(self.request, "Image details updated.")
         form.instance.advertise = advert_object
         return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['current_img'] = self.object.image
+        
+        return context
 
 
 class ImageInGalleryDelete(DeleteView):

@@ -57,7 +57,7 @@ def image_compression(image):
     # return image
 
 
-# advertise address
+# apartment_number null
 class Address(models.Model):
     street = models.CharField(max_length=50)
     street_number = models.CharField(max_length=4)
@@ -71,6 +71,7 @@ class Address(models.Model):
 
 
 # without Model next migrate
+# change img to image
 class AdvertiseModel(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=60)
@@ -78,7 +79,7 @@ class AdvertiseModel(models.Model):
     phone_number = PhoneNumberField(null=True, blank=True)
     advertise_status = models.CharField(choices=Advertise_status, max_length=40, default='accepted')
     advertise_category = models.ForeignKey(AdvertiseCategory, on_delete=models.CASCADE)
-    address = models.OneToOneField(Address, on_delete=models.CASCADE)
+    address = models.OneToOneField(Address, related_name='address', on_delete=models.CASCADE)
     updated = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
     img = models.ImageField(upload_to='images/', default='default_images/mountain.jpg', null=True, blank=True)

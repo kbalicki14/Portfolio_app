@@ -4,6 +4,7 @@
 
 <div class="container mt-4">
     <a href="{% url 'advertise_details' id_advertise %}" class="btn btn-primary mb-4">Go to advertise</a>
+
     <div class="container">
         <div class="container row row-col-1 justify-content-center mt-3">
             <form class="d-flex  col-lg-7 col-md-9 mx-auto" role="search"
@@ -29,6 +30,14 @@
 {% if is_owner %}
 <div class="container">
     <a href="{% url 'add_image' id_advertise  %}" class="btn btn-primary ">Add photo</a>
+</div>
+{% endif %}
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }} col-md-6 mx-auto mt-2" role="alert">
+    <h4 class="alert-heading">Well done!</h4>
+    <p>{{ message }}</p>
+    {% endfor %}
 </div>
 {% endif %}
 <div class="container py-5">
