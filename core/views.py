@@ -190,8 +190,10 @@ class AdvertiseGallery(ListView):
 
     def get_queryset(self):
         id_advertise = self.kwargs['pk']
+        search_input = self.request.GET.get('search_image') or ''
         object_advertise = get_object_or_404(AdvertiseModel, id=id_advertise)
-        gallery = super().get_queryset().filter(advertise=object_advertise).order_by("-created_at")
+        gallery = super().get_queryset().filter(advertise=object_advertise, title__startswith=search_input).order_by(
+            "-created_at")
         return gallery
 
     def get_context_data(self, **kwargs):
@@ -202,6 +204,7 @@ class AdvertiseGallery(ListView):
         context['id_advertise'] = id_advertise
         # context['user'] = object_advertise.user
         context['is_owner'] = self.request.user == object_advertise.user
+        context['search_input'] = self.request.GET.get('search_image') or ''
 
         print(context['is_owner'])
         return context
@@ -667,7 +670,7 @@ class ReportAdvertise(CreateView):
 
         if self.request.user.is_authenticated:
             form.instance.user = self.request.user
-            
+
         form.instance.advertise = advertise_object
         messages.success(self.request, "Report send")
         return super().form_valid(form)

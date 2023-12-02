@@ -41,27 +41,33 @@
             <img src="{% static 'images/slider-4.jpg' %}" class="d-block w-100" alt="Tatto Artis"/>
         </div>
     </div>
-    <form class="d-flex justify-content-center position-absolute top-50 start-50 translate-middle w-75"
+    <form class="justify-content-center position-absolute top-50 start-50 translate-middle w-75"
           role="search"
           method="get" action="{% url 'advert_list' %}">
 
-        <div class="input-group row me-2 ">
-            <input class="form-control w-50 town-search" type="search" placeholder="Search"
-                   name="search_area"
-                   value="{{search_input}}"
-                   aria-label="Search">
-            <select class="form-control w-25" aria-label="Default select example" name="search_category">
+        <div class="row">
+            <div class="col-12 col-lg-8 col-xl-9 mb-2 mb-lg-0">
+                <div class="input-group">
+                    <input class="form-control w-50 town-search" type="search" placeholder="Search"
+                           name="search_area"
+                           value="{{search_input}}"
+                           aria-label="Search">
+                    <select class="form-control w-25" aria-label="Default select example" name="search_category">
 
-                {% for item in category %}
-                <option value="{{ item.id }}">{{ item.category_name }}</option>
-                {% endfor %}
+                        {% for item in category %}
+                        <option value="{{ item.id }}">{{ item.category_name }}</option>
+                        {% endfor %}
 
-            </select>
+                    </select>
+                </div>
+            </div>
+            <div class="col-12 col-lg-2 ">
+                <button class="btn btn-success w-100" type="submit">Search</button>
+            </div>
         </div>
-
-        <button class="btn btn-success " type="submit">Search</button>
-
     </form>
+
+
 </div>
 {% endblock index %}
 
