@@ -36,8 +36,22 @@
         </form>
     </div>
 </div>
+{% load get_absolute_url %}
 <div class="container mt-4">
-    <h3>Results for {{ search_input }} </h3>
+    <div class="row">
+        <h3>Results for {{ search_input }} </h3>
+        <!--        <div class="d-flex col-2 justify-content-end"></div>-->
+        <!--        <form method="get" id="filterForm"-->
+        <!--              action="{% query_transform %}"-->
+        <!--              class="">-->
+        <!--            <select class="form-select" aria-label="Default select example" name="filter_search">-->
+        <!--                <option value="latest" selected>Latest</option>-->
+        <!--                <option value="best_rating">Best rating</option>-->
+
+        <!--            </select>-->
+        <!--            <input type="submit" value="Filter">-->
+        <!--        </form>-->
+    </div>
 </div>
 
 {% endblock headerTag %}
@@ -49,7 +63,7 @@
         <a class="text-decoration-none text-body" href="{% url 'advertise_details' item.id %}">
             <div class="row g-0 ">
                 <div class="col-md-4" style="">
-                    <img src="{{ item.img.url }}"
+                    <img src="{{ item.image.url }}"
                          class="img-fluid  w-100 mx-auto d-block rounded-start " style="max-height:295px"
                          alt="advert image">
                 </div>
@@ -80,5 +94,43 @@
 <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 <script src="{% static 'jquery_city.js' %}"></script>
+
+<script>
+document.getElementById('filterForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var filterOption = document.querySelector('select[name="filter_search"]').value;
+    var currentUrl = window.location.href;
+
+    if (currentUrl.includes('filter_search')){
+        var newUrl = currentUrl.includes('?') ? currentUrl + filterOption
+    }
+    else {
+        var newUrl = currentUrl.includes('?') ? currentUrl + '&filter_search=' + filterOption : currentUrl + '?filter_search=' + 'duap';
+ }
+    window.location.href = newUrl;
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
 
 {% endblock script %}

@@ -59,13 +59,14 @@
             <label for="id_zip_code" class="form-label">{{address.zip_code.label}}</label>
             {% render_field address.zip_code placeholder=address.zip_code.label class+="form-control" %}
 
-            <label for="id_img" class="form-label">{{form.img.label}}</label>
-            {% render_field form.img placeholder=form.img.label class+="form-control mb-3" %}
+            <label for="id_img" class="form-label">{{form.image.label}}</label>
+            {% render_field form.image placeholder=form.image.label class+="form-control mb-3" %}
             <!--            {{ form.as_p }}-->
             <!--            {{ address.as_p }}-->
 
             <!--            change img to image model-->
-            <img id="current" src="#" class="img-fluid rounded h-25 w-25 mt-3 mb-3" alt="Current image">
+            <img id="current" src="{{ current_img.url }}" class="img-fluid rounded h-25 w-25 mt-3 mb-3 border"
+                 alt="Current image">
             <br>
             <button type="submit" class="btn btn-primary ">Create</button>
 
@@ -83,9 +84,8 @@
 <script src="{% static 'jquery_city.js' %}"></script>
 <!--<script>$("#id_town").select2()</script>-->
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="{% static 'image_placeholder.js' %}"></script>
 
+<script src="{% static 'image_placeholder.js' %}"></script>
 {% endblock script %}
 
 

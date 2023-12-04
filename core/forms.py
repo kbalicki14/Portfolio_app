@@ -11,7 +11,7 @@ class AdvertiseForm(forms.ModelForm):
     class Meta:
         model = AdvertiseModel
         fields = (
-            'title', 'description', 'phone_number', 'advertise_category', 'img')
+            'title', 'description', 'phone_number', 'advertise_category', 'image')
 
 
 class AddressForm(forms.ModelForm):

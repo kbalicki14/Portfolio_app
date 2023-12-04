@@ -96,7 +96,7 @@ class AdvertiseModel(models.Model):
     address = models.OneToOneField(Address, related_name='address', on_delete=models.CASCADE)
     updated = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    img = models.ImageField(upload_to='images/', default='default_images/mountain.jpg', null=True, blank=True)
+    image = models.ImageField(upload_to='images/', default='default_images/mountain.jpg', null=True, blank=True)
 
     def __str__(self):
         return self.title

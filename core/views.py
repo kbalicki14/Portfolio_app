@@ -251,6 +251,7 @@ class AdvertiseUpdate(LoginRequiredMixin, UpdateView):
             data['address'] = AddressForm(self.request.POST, instance=self.object.address)
         else:
             data['address'] = AddressForm(instance=self.object.address)
+        data['current_img'] = self.object.image
         return data
 
     def form_valid(self, form):
@@ -501,11 +502,18 @@ class AdvertList(ListView):
     def get_queryset(self):
         search_input = self.request.GET.get('search_area') or ''
         search_category = self.request.GET.get('search_category')
+        filter_search = self.request.GET.get('filter_search') or ''
         # addres_qs = Address.objects.filter(town=search_input)
         # print(addres_qs)
         advert_qs = super().get_queryset().filter(address__town=search_input,
                                                   advertise_category=search_category,
                                                   advertise_status='accepted')
+        # filter_by_rating = advert_qs.annotate(avg_rating=Avg('advertiserating__rating'))
+        #
+        # if filter_search == 'best_rating':
+        #     filter_by_rating = filter_by_rating.order_by('-avg_rating')
+        #     return filter_by_rating
+
         # __startswith
         return advert_qs
 
