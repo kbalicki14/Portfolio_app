@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'bootstrap5',
     "phonenumber_field",
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [
