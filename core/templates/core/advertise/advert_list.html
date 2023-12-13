@@ -95,42 +95,21 @@
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 <script src="{% static 'jquery_city.js' %}"></script>
 
-<script>
-document.getElementById('filterForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    var filterOption = document.querySelector('select[name="filter_search"]').value;
-    var currentUrl = window.location.href;
+<!--<script>-->
+<!--document.getElementById('filterForm').addEventListener('submit', function(e) {-->
+<!--    e.preventDefault();-->
+<!--    var filterOption = document.querySelector('select[name="filter_search"]').value;-->
+<!--    var currentUrl = window.location.href;-->
 
-    if (currentUrl.includes('filter_search')){
-        var newUrl = currentUrl.includes('?') ? currentUrl + filterOption
-    }
-    else {
-        var newUrl = currentUrl.includes('?') ? currentUrl + '&filter_search=' + filterOption : currentUrl + '?filter_search=' + 'duap';
- }
-    window.location.href = newUrl;
-});
+<!--    if (currentUrl.includes('filter_search')){-->
+<!--        var newUrl = currentUrl.includes('?') ? currentUrl + filterOption-->
+<!--    }-->
+<!--    else {-->
+<!--        var newUrl = currentUrl.includes('?') ? currentUrl + '&filter_search=' + filterOption : currentUrl + '?filter_search=' + 'duap';-->
+<!-- }-->
+<!--    window.location.href = newUrl;-->
+<!--});-->
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</script>
+<!--</script>-->
 
 {% endblock script %}
