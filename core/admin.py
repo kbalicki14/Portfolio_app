@@ -32,6 +32,14 @@ class AdvertiseAdmin(admin.ModelAdmin):
 
     get_town.short_description = 'Town'
 
+    # delete many adverts by admin panel
+    def delete_queryset(self, request, queryset):
+        for item in queryset:
+            if item.address:
+                item.address.delete()
+
+        queryset.delete()
+
 
 @admin.register(Address)
 class AddressAdmin(admin.ModelAdmin):

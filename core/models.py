@@ -6,6 +6,9 @@ from django.core.files import File
 from PIL import Image as PilImage
 from io import BytesIO
 
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
+
 # Create your models here.
 
 Advertise_status = (
@@ -71,6 +74,15 @@ def image_compression(image):
     # return image
 
 
+def custom_save_image(image_file):
+    img = PilImage.open(image_file)  # Open image using self
+
+    if img.width > 1350 or img.height > 1080:
+        new_img = (1350, 1080)
+        img.thumbnail(new_img)
+        img.save(image_file, quality=60, format='JPEG')
+
+
 # apartment_number null
 class Address(models.Model):
     street = models.CharField(max_length=50)
@@ -101,6 +113,10 @@ class AdvertiseModel(models.Model):
     def __str__(self):
         return self.title
 
+    def save(self, *args, **kwargs):
+        super().save()  # saving image first
+        custom_save_image(self.image.path)
+
     # def save(self, *args, **kwargs):
     #     instance = super(AdvertiseModel, self).save(*args, **kwargs)
     #     image = PilImage.open(instance.photo.path)
@@ -123,6 +139,10 @@ class Image(models.Model):
     #     new_image = image_compression(self.image)
     #     self.image = new_image
     #     super().save(*args, **kwargs)
+
+    def save(self, *args, **kwargs):
+        super().save()  # saving image first
+        custom_save_image(self.image.path)
 
 
 class AdvertiseRating(models.Model):
@@ -155,6 +175,11 @@ class ReportAdvertise(models.Model):
 
     def __str__(self):
         return self.message
+
+# @receiver(post_delete, sender=AdvertiseModel)
+# def delete_related_address(sender, instance, **kwargs):
+#     if instance.address:
+#         instance.address.delete()
 
 # class ImageGallery(models.Model):
 #     advertise = models.ForeignKey(AdvertiseModel, related_name='advertise', on_delete=models.CASCADE)
