@@ -50,7 +50,7 @@
             <div class="card h-100" data-bs-toggle="modal" data-bs-target="#imageModal{{ forloop.counter }}">
                 <img src="{{image.image.url}}" class="card-img-top p-2 rounded" alt="Obraz 1">
                 <div class="card-body">
-                    <h5 class="card-title ">{{ image.title }}</h5>
+                    <h5 class="card-title ">{{ image.title|title }}</h5>
                     {% if is_owner %}
                     <a href="{% url 'image_update' advertise_pk=id_advertise pk=image.id %}"
                        class="btn btn-primary ">Edit</a>

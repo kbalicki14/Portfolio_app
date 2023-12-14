@@ -186,13 +186,13 @@ class AdvertiseGallery(ListView):
     model = Image
     context_object_name = 'gallery'
     template_name = 'core/advertise/advertise_gallery.html'
-    paginate_by = 6
+    paginate_by = 3
 
     def get_queryset(self):
         id_advertise = self.kwargs['pk']
         search_input = self.request.GET.get('search_image') or ''
         object_advertise = get_object_or_404(AdvertiseModel, id=id_advertise)
-        gallery = super().get_queryset().filter(advertise=object_advertise, title__startswith=search_input).order_by(
+        gallery = super().get_queryset().filter(advertise=object_advertise, title__icontains=search_input).order_by(
             "-created_at")
         return gallery
 
