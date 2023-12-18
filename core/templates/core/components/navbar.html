@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
+<nav class="navbar navbar-expand-lg  bg-light">
     <div class="container">
         <a class="navbar-brand" href="{% url 'welcome' %}">Dyplom APP</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
@@ -14,7 +14,7 @@
                     <a class="nav-link" href="{% url 'task' %}">Features</a>
                 </li>
                 <li class="nav-item me-3">
-                    <a class="nav-link" href="{% url 'multi_image_work' %}">About us</a>
+                    <a class="nav-link" href="{% url 'about_us' %}">About us</a>
                 </li>
                 {% if request.user.is_authenticated %}
                 <li class="nav-item dropdown ">
@@ -22,7 +22,7 @@
                        aria-expanded="false">
                         Profile
                     </a>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu bg-light">
                         <li><a class="dropdown-item" href="{% url 'profile_detail' %}">Profile</a></li>
                         <li><a class="dropdown-item" href="{% url 'advertise' %}">Add advertise</a></li>
                         <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>

@@ -684,6 +684,10 @@ class ReportAdvertise(CreateView):
         return super().form_valid(form)
 
 
+class AboutUsPage(TemplateView):
+    template_name = 'core/about_us.html'
+
+
 def handler404(request, exception):
     return render(request, 'core/http_status/404.html', status=404)
 

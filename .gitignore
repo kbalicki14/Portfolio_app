@@ -6,4 +6,5 @@ migrations/
 pull_code.sh
 media/images
 core/static/admin
+static
 
