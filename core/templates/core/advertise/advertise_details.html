@@ -126,43 +126,11 @@
 </div>
 {% endif %}
 
-<div class="d-flex container justify-content-end">
+<div class="d-flex container justify-content-end mb-4">
     <a href="{% url 'report_advertise' advertise_pk=detail.id %}" class="text-danger"> <i class="fa-solid fa-flag"
                                                                                           style="color: #c81414;"></i>
         Report</a>
 </div>
 
-<!--pagination-->
-<!--<nav aria-label="Page navigation example">-->
-<!--    <ul class="pagination justify-content-center mt-4   ">-->
-<!--        {% if ratings.has_previous %}-->
-<!--        <li class="page-item"><a class="page-link" aria-label="Previous"-->
-<!--                                 href="?page={{ ratings.previous_page_number }}"><span-->
-<!--                aria-hidden="true">&laquo;</span></a></li>-->
-<!--        {% else %}-->
-<!--        <li class="page-item disabled">-->
-<!--            <span class="page-link">&laquo;</span>-->
-<!--        </li>-->
-<!--        {% endif %}-->
-<!--        {% for index in ratings.paginator.page_range %}-->
-<!--        {% if ratings.page_obj.number == index %}-->
-<!--        <li class="page-item active" aria-current="page"><span class="page-link">{{ index }}<span-->
-<!--                class="visually-hidden">(current)</span>-->
-<!--        </span></li>-->
-<!--        {% else %}-->
-<!--        <li class="page-item"><a class="page-link" href="?page={{index}}">{{ index }}</a></li>-->
-<!--        {% endif %}-->
-<!--        {% endfor %}-->
-<!--        {% if page_obj.has_next %}-->
-<!--        <li><a class="page-link" aria-label="Next" href="?page={{ ratings.next_page_number }}"> <span-->
-<!--                aria-hidden="true">&raquo;</span></a>-->
-<!--        </li>-->
-<!--        {% else %}-->
-<!--        <li class="page-item disabled">-->
-<!--            <span class="page-link">&raquo;</span>-->
-<!--        </li>-->
-<!--        {% endif %}-->
-<!--    </ul>-->
-<!--</nav>-->
 
 {% endblock content %}
