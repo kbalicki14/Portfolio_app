@@ -15,8 +15,8 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
     path('register/', RegisterView.as_view(), name='register'),
 
-    path('index/', WelcomePage.as_view(), name='welcome'),
-    path('', TaskList.as_view(), name='task'),
+    path('', WelcomePage.as_view(), name='welcome'),
+    path('task', TaskList.as_view(), name='task'),
     path('task/<int:pk>/', TaskDetail.as_view(), name='task_detail'),
     path('create/', TaskCreate.as_view(), name='task_create'),
     path('update/<int:pk>/', TaskUpdate.as_view(), name='task_update'),
