@@ -247,11 +247,14 @@ class AdvertiseUpdate(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
+
         if self.request.POST:
             data['address'] = AddressForm(self.request.POST, instance=self.object.address)
         else:
             data['address'] = AddressForm(instance=self.object.address)
         data['current_img'] = self.object.image
+        data['is_edit_page'] = True
+        
         return data
 
     def form_valid(self, form):

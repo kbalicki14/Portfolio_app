@@ -75,7 +75,7 @@ def image_compression(image):
 
 
 def custom_save_image(image_file):
-    img = PilImage.open(image_file)  # Open image using self
+    img = PilImage.open(image_file)
 
     if img.width > 1350 or img.height > 1080:
         new_img = (1350, 1080)
@@ -135,11 +135,6 @@ class Image(models.Model):
     def __str__(self):
         return self.title
 
-    # def save(self, *args, **kwargs):
-    #     new_image = image_compression(self.image)
-    #     self.image = new_image
-    #     super().save(*args, **kwargs)
-
     def save(self, *args, **kwargs):
         super().save()  # saving image first
         custom_save_image(self.image.path)
@@ -163,6 +158,7 @@ class CityList(models.Model):
         return self.city_name
 
 
+# zmiana kolejnosci
 class ReportAdvertise(models.Model):
     email = models.EmailField(null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)

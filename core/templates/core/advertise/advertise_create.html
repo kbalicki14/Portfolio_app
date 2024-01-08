@@ -1,7 +1,11 @@
 {% extends 'core/main.html' %}
 {% block headerTag %}
 <div class="container mt-4">
+    {% if is_edit_page %}
+    <h3>Edit Advertise </h3>
+    {% else %}
     <h3>Create Advertise </h3>
+    {% endif %}
 </div>
 {% endblock headerTag %}
 
@@ -68,7 +72,12 @@
             <img id="current" src="{{ current_img.url }}" class="img-fluid rounded h-25 w-25 mt-3 mb-3 border"
                  alt="Current image">
             <br>
+            {% if is_edit_page %}
+            <button type="submit" class="btn btn-primary ">Edit</button>
+            {% else %}
             <button type="submit" class="btn btn-primary ">Create</button>
+            {% endif %}
+
 
             {% if form.errors %}
             <small class="help-block text-danger">{{ form.errors|striptags }}</small>

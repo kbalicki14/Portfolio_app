@@ -89,7 +89,7 @@ class AdvertiseRatingAdmin(admin.ModelAdmin):
 
 @admin.register(ReportAdvertise)
 class ReportAdvertise(admin.ModelAdmin):
-    list_display = ('category', 'get_advertise_title', 'status')
+    list_display = ('category', 'get_advertise_title', 'status', 'created_at')
     search_fields = ('advertise__title',)
     list_filter = ['category', 'status', 'created_at', ]
 

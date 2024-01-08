@@ -49,4 +49,4 @@ class MultiImageForm(forms.ModelForm):
 class ReportAdvertiseForm(forms.ModelForm):
     class Meta:
         model = ReportAdvertise
-        fields = ['email', 'message', 'category']
+        fields = ['email', 'category', 'message']
