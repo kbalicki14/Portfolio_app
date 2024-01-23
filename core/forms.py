@@ -1,7 +1,14 @@
 from django import forms
 from django.forms import ClearableFileInput
+from django.contrib.auth.models import User
 from phonenumber_field.formfields import PhoneNumberField
 from .models import AdvertiseModel, Image, CityList, AdvertiseRating, Address, ReportAdvertise
+
+
+class UsernameChangeForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username']
 
 
 class AdvertiseForm(forms.ModelForm):

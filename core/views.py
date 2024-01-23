@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, JsonResponse, Http404
 from django.shortcuts import render, redirect
@@ -12,7 +13,9 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import login
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.forms import UserChangeForm
+from django.contrib.auth import login, update_session_auth_hash
 from django.views.generic import TemplateView
 from django.db.models import Avg
 from django.core.paginator import Paginator
@@ -20,7 +23,8 @@ from PIL import Image as PilImage
 from io import BytesIO
 from django.core.files import File
 
-from .forms import AdvertiseForm, MultiImageForm, ImageForm, RatingForm, AddressForm, ReportAdvertiseForm
+from .forms import AdvertiseForm, MultiImageForm, ImageForm, RatingForm, AddressForm, ReportAdvertiseForm, \
+    UsernameChangeForm
 from .models import Task, AdvertiseModel, Image, CityList, AdvertiseCategory, AdvertiseRating, Address, ReportAdvertise
 
 
@@ -52,6 +56,33 @@ class RegisterView(FormView):
         if self.request.user.is_authenticated:
             return redirect('welcome')
         return super(RegisterView, self).get(*args, **kwargs)
+
+
+class ChangePassword(FormView):
+    template_name = 'core/auth/change_password.html'
+    success_url = reverse_lazy('profile_detail')
+    form_class = PasswordChangeForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    # def form_valid(self, form):
+    #     user = form.save()
+    #     # Aktualizacja sesji, aby użytkownik nie został wylogowany
+    #     update_session_auth_hash(self.request, user)
+    #     return super().form_valid(form)
+
+
+class ChangeUsername(UpdateView):
+    model = User
+    template_name = 'core/auth/change_username.html'
+    success_url = reverse_lazy('profile_detail')
+    form_class = UsernameChangeForm
+
+    def get_object(self, queryset=None):
+        return self.request.user
 
 
 class TaskList(LoginRequiredMixin, ListView):
@@ -254,7 +285,7 @@ class AdvertiseUpdate(LoginRequiredMixin, UpdateView):
             data['address'] = AddressForm(instance=self.object.address)
         data['current_img'] = self.object.image
         data['is_edit_page'] = True
-        
+
         return data
 
     def form_valid(self, form):

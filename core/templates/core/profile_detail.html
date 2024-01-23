@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-md-12 ">
             <div class="text-center">
-                
+
                 <div class="bg-secondary rounded-circle d-inline-flex justify-content-center align-items-center"
                      style="width: 150px; height: 150px;">
                     <i class="fas fa-user fa-5x text-white"></i>
@@ -16,14 +16,14 @@
             </div>
             <div class="col-lg-6 mx-auto">
                 <ul class="list-group list-group-flush mt-4 ">
-                    <li class="list-group-item mb-3 "><a href="#"><i class="fa-solid fa-key me-2"></i>
-                        Change
-                        password</a></li>
-                    <li class="list-group-item mb-3"><a href="#"> <i
+                    <li class="list-group-item mb-3"><a href="{% url 'change_username' %}"> <i
                             class="fa-solid fa-pen-to-square me-2"></i>
                         Change
                         username</a></li>
-
+                    <li class="list-group-item mb-3 "><a href="{% url 'change_password' %}"><i
+                            class="fa-solid fa-key me-2"></i>
+                        Change
+                        password</a></li>
                     <li class="list-group-item mb-3"><a href="{% url 'advertise' %}"><i
                             class="fa-solid fa-square-plus me-2"></i>
                         Add

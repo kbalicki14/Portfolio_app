@@ -6,7 +6,7 @@ from .views import TaskList, TaskDetail, TaskCreate, TaskUpdate, TaskDelete, Cus
     imageUpload, AdvertList, AdvertiseCreate, AddMultiImage, CreateImagesToGallery, WelcomePage, AdvertiseUpdate, \
     AddImageToGallery, AdvertiseDetails, CurrentUserAdvertise, AdvertiseDelete, AdvertiseGallery, ProfileDetail, \
     RatingAdvertise, AdvertiseRatingList, RatingUpdate, RatingDelete, ImageInGalleryUpdate, ImageInGalleryDelete, \
-    SerachBarAutoComplete, ReportAdvertise, AboutUsPage
+    SerachBarAutoComplete, ReportAdvertise, AboutUsPage, ChangePassword, ChangeUsername
 
 from django.contrib.auth.views import LogoutView
 
@@ -14,6 +14,8 @@ urlpatterns = [
     path('login/', CustomLoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
     path('register/', RegisterView.as_view(), name='register'),
+    path('change_password/', ChangePassword.as_view(), name='change_password'),
+    path('change_username/', ChangeUsername.as_view(), name='change_username'),
 
     path('', WelcomePage.as_view(), name='welcome'),
     path('task', TaskList.as_view(), name='task'),
