@@ -68,10 +68,6 @@ def image_compression(image):
     pil_image.save(output_io, 'JPEG', quality=60)
     new_image = File(output_io, name=image.name)
     return new_image
-    # with open(image.path, 'wb') as f:
-    #     pil_image = PilImage.open(image)
-    #     pil_image.save(f, 'JPEG', quality=60)
-    # return image
 
 
 def custom_save_image(image_file):
@@ -116,14 +112,6 @@ class AdvertiseModel(models.Model):
     def save(self, *args, **kwargs):
         super().save()  # saving image first
         custom_save_image(self.image.path)
-
-    # def save(self, *args, **kwargs):
-    #     instance = super(AdvertiseModel, self).save(*args, **kwargs)
-    #     image = PilImage.open(instance.photo.path)
-    #     if self.img.path == image.path:
-    #         new_image = image_compression(self.img)
-    #         self.img = new_image
-    #         super().save(*args, **kwargs)
 
 
 class Image(models.Model):
