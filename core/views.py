@@ -727,4 +727,4 @@ def handler404(request, exception):
 
 
 def handler500(request, *args, **argv):
-    return render('core/http_status/500.html', status=500)
+    return render(request, 'core/http_status/500.html', status=500)
