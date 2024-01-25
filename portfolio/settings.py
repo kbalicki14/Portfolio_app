@@ -32,7 +32,8 @@ DEBUG = False
 
 # ALLOWED_HOSTS = ['*']
 # ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,[::1]").split(",")
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+# ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'dyplom-app-projects-django.koyeb.app']
 
 # Application definition
 
