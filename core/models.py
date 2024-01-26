@@ -7,6 +7,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from django.core.files import File
 from PIL import Image as PilImage
 from io import BytesIO
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
@@ -72,19 +73,33 @@ def image_compression(image):
     return new_image
 
 
-def custom_save_image(image_file):
-    # with default_storage.open(image_file.name, 'rb') as f:
+# def custom_save_image(image_file):
+#     img = PilImage.open(image_file)
+#
+#     if img.width > 1350 or img.height > 1080:
+#         new_resoluton = (1350, 1080)
+#         new_image = img.convert('RGB')
+#         new_image.thumbnail(new_resoluton)
+#         img_io = BytesIO()
+#         new_image.save(img_io, quality=60, format='JPEG')
+#         img_file = ContentFile(img_io.getvalue(), image_file.name.rsplit('.', 1)[0] + '.jpg')
+#         img = img_file
+#     return img
+
+
+def custom_image_compress(image_file):
     img = PilImage.open(image_file)
 
     if img.width > 1350 or img.height > 1080:
-        new_resoluton = (1350, 1080)
-        new_image = img
-        new_image.thumbnail(new_resoluton)
-        img_io = BytesIO()
-        new_image.save(img_io, quality=60, format='JPEG')
-        img_file = ContentFile(img_io.getvalue(), image_file.name)
-        return img_file
-    return img
+        new_resolution = (1350, 1080)
+        img.thumbnail(new_resolution)
+
+    img_io = BytesIO()
+    img = img.convert('RGB')
+    img.save(img_io, quality=60, format='JPEG')
+    image_file = ContentFile(img_io.getvalue(), image_file.name.rsplit('.', 1)[0] + '.jpeg')
+
+    return image_file
 
 
 # apartment_number null
@@ -117,9 +132,9 @@ class AdvertiseModel(models.Model):
     def __str__(self):
         return self.title
 
-    # def save(self, *args, **kwargs):
-    #     super().save()  # saving image first
-    #     custom_save_image(self.image.path)
+    def save(self, *args, **kwargs):
+        self.image = custom_image_compress(self.image)
+        super().save(*args, **kwargs)
 
 
 class Image(models.Model):
@@ -132,8 +147,7 @@ class Image(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
-        self.image = custom_save_image(self.image)
-        # przekazać obraz do save?
+        self.image = custom_image_compress(self.image)
         super().save(*args, **kwargs)
 
 
