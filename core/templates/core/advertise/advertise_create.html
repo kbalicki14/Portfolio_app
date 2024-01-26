@@ -69,8 +69,10 @@
             <!--            {{ address.as_p }}-->
 
             <!--            change img to image model-->
-            <img id="current" src="{{ current_img.url }}" class="img-fluid rounded h-25 w-25 mt-3 mb-3 border"
-                 alt="Current image">
+            <div class="col-8 col-lg-5">
+                <img id="current" src="{{ current_img.url }}" class="img-fluid rounded h-25 mt-3 mb-3 border"
+                     alt="Current image">
+            </div>
             <br>
             {% if is_edit_page %}
             <button type="submit" class="btn btn-primary ">Edit</button>

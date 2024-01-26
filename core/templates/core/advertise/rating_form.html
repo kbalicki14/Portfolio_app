@@ -22,7 +22,6 @@
             <label for="id_comment" class="form-label">{{form.comment.label}} </label>
             {% render_field form.comment placeholder=form.comment.label class+="form-control" %}
             <div class="mt-3">
-                <a href="{% url 'advertise_details' id_advertise %}" class="btn btn-primary me-3">Go back</a>
                 <button type="submit" class="btn btn-success">Save</button>
             </div>
 
