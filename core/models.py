@@ -73,31 +73,16 @@ def image_compression(image):
     return new_image
 
 
-# def custom_save_image(image_file):
-#     img = PilImage.open(image_file)
-#
-#     if img.width > 1350 or img.height > 1080:
-#         new_resoluton = (1350, 1080)
-#         new_image = img.convert('RGB')
-#         new_image.thumbnail(new_resoluton)
-#         img_io = BytesIO()
-#         new_image.save(img_io, quality=60, format='JPEG')
-#         img_file = ContentFile(img_io.getvalue(), image_file.name.rsplit('.', 1)[0] + '.jpg')
-#         img = img_file
-#     return img
-
-
 def custom_image_compress(image_file):
-    img = PilImage.open(image_file)
+    with PilImage.open(image_file) as img:
+        if img.width > 1350 or img.height > 1080:
+            new_resolution = (1350, 1080)
+            img.thumbnail(new_resolution)
 
-    if img.width > 1350 or img.height > 1080:
-        new_resolution = (1350, 1080)
-        img.thumbnail(new_resolution)
-
-    img_io = BytesIO()
-    img = img.convert('RGB')
-    img.save(img_io, quality=60, format='JPEG')
-    image_file = ContentFile(img_io.getvalue(), image_file.name.rsplit('.', 1)[0] + '.jpeg')
+        img_io = BytesIO()
+        img = img.convert('RGB')
+        img.save(img_io, quality=60, format='JPEG')
+        image_file = ContentFile(img_io.getvalue(), image_file.name.rsplit('.', 1)[0] + '.jpeg')
 
     return image_file
 
