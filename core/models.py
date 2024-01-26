@@ -1,3 +1,5 @@
+from django.core.files.base import ContentFile
+from django.core.files.storage import default_storage
 from django.db import models
 from django.contrib.auth.models import User
 from phonenumber_field.modelfields import PhoneNumberField
@@ -71,12 +73,18 @@ def image_compression(image):
 
 
 def custom_save_image(image_file):
+    # with default_storage.open(image_file.name, 'rb') as f:
     img = PilImage.open(image_file)
 
     if img.width > 1350 or img.height > 1080:
-        new_img = (1350, 1080)
-        img.thumbnail(new_img)
-        img.save(image_file, quality=60, format='JPEG')
+        new_resoluton = (1350, 1080)
+        new_image = img
+        new_image.thumbnail(new_resoluton)
+        img_io = BytesIO()
+        new_image.save(img_io, quality=60, format='JPEG')
+        img_file = ContentFile(img_io.getvalue(), image_file.name)
+        return img_file
+    return img
 
 
 # apartment_number null
@@ -109,9 +117,9 @@ class AdvertiseModel(models.Model):
     def __str__(self):
         return self.title
 
-    def save(self, *args, **kwargs):
-        super().save()  # saving image first
-        custom_save_image(self.image.path)
+    # def save(self, *args, **kwargs):
+    #     super().save()  # saving image first
+    #     custom_save_image(self.image.path)
 
 
 class Image(models.Model):
@@ -124,8 +132,9 @@ class Image(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
-        super().save()  # saving image first
-        custom_save_image(self.image.path)
+        self.image = custom_save_image(self.image)
+        # przekazać obraz do save?
+        super().save(*args, **kwargs)
 
 
 class AdvertiseRating(models.Model):
