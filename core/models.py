@@ -1,5 +1,4 @@
 from django.core.files.base import ContentFile
-from django.core.files.storage import default_storage
 from django.db import models
 from django.contrib.auth.models import User
 from phonenumber_field.modelfields import PhoneNumberField
@@ -44,20 +43,6 @@ Report_category = (
 )
 
 
-class Task(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    title = models.CharField(max_length=50, null=True, blank=True)
-    description = models.TextField(null=True, blank=True)
-    complete = models.BooleanField(default=False)
-    create = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.title
-
-    class Meta:
-        ordering = ['complete']
-
-
 class AdvertiseCategory(models.Model):
     category_name = models.CharField(max_length=40)
 
@@ -91,7 +76,7 @@ def custom_image_compress(image_file):
 class Address(models.Model):
     street = models.CharField(max_length=50)
     street_number = models.CharField(max_length=4)
-    apartment_number = models.CharField(max_length=4)
+    apartment_number = models.CharField(max_length=4, null=True, blank=True)
     town = models.CharField(max_length=50)
     zip_code = models.CharField(max_length=6)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -153,19 +138,31 @@ class CityList(models.Model):
         return self.city_name
 
 
-# zmiana kolejnosci
 class ReportAdvertise(models.Model):
     email = models.EmailField(null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    advertise = models.ForeignKey(AdvertiseModel, on_delete=models.CASCADE)
-    message = models.TextField(max_length=300)
     category = models.CharField(choices=Report_category, max_length=50, default='other')
+    message = models.TextField(max_length=300)
+    advertise = models.ForeignKey(AdvertiseModel, on_delete=models.CASCADE)
     status = models.CharField(choices=Report_status, max_length=50, default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.message
+
+# class Task(models.Model):
+#     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+#     title = models.CharField(max_length=50, null=True, blank=True)
+#     description = models.TextField(null=True, blank=True)
+#     complete = models.BooleanField(default=False)
+#     create = models.DateTimeField(auto_now_add=True)
+#
+#     def __str__(self):
+#         return self.title
+#
+#     class Meta:
+#         ordering = ['complete']
 
 # @receiver(post_delete, sender=AdvertiseModel)
 # def delete_related_address(sender, instance, **kwargs):

@@ -1,21 +1,14 @@
 from django.contrib import admin
-from .models import Task, AdvertiseModel, Image, CityList, AdvertiseCategory, AdvertiseRating, Address, ReportAdvertise
+from .models import AdvertiseModel, Image, CityList, AdvertiseCategory, AdvertiseRating, Address, ReportAdvertise
+
 
 # Register your models here.
 
-admin.site.register(Task)
-
-
+# admin.site.register(Task)
 # admin.site.register(ReportAdvertise)
-
-
 # admin.site.register(AdvertiseRating)
-
-
 # admin.site.register(AdvertiseModel)
 # admin.site.register(Address)
-
-
 # admin.site.register(Image)
 # admin.site.register(CityList)
 # admin.site.register(AdvertiseCategory)

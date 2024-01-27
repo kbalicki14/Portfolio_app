@@ -89,10 +89,21 @@ WSGI_APPLICATION = 'portfolio.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ.get('DB_NAME_KOYEB'),
+        'USER': os.environ.get('DB_USER_KOYEB'),
+        'PASSWORD': os.environ.get('DB_PASSWORD_KOYEB'),
+        'HOST': os.environ.get('DB_HOST_KOYEB'),
+        # 'PORT': os.environ.get('DB_PORT'),
+        'OPTIONS': {'sslmode': 'require'},
     }
 }
 

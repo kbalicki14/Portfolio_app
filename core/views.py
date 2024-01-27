@@ -25,7 +25,7 @@ from django.core.files import File
 
 from .forms import AdvertiseForm, MultiImageForm, ImageForm, RatingForm, AddressForm, ReportAdvertiseForm, \
     UsernameChangeForm
-from .models import Task, AdvertiseModel, Image, CityList, AdvertiseCategory, AdvertiseRating, Address, ReportAdvertise
+from .models import AdvertiseModel, Image, CityList, AdvertiseCategory, AdvertiseRating, Address, ReportAdvertise
 
 
 # Create your views here.
@@ -83,54 +83,6 @@ class ChangeUsername(UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user
-
-
-class TaskList(LoginRequiredMixin, ListView):
-    model = Task
-    # login_url = 'login'
-    context_object_name = 'tasks'
-    paginate_by = 3
-
-    def get_queryset(self):
-        search_input = self.request.GET.get('search_area') or ''
-        tasks = super().get_queryset().filter(user=self.request.user)
-        if search_input:
-            tasks = tasks.filter(title__startswith=search_input)
-        return tasks
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['count'] = self.get_queryset().filter(complete=False).count()
-        context['search_input'] = self.request.GET.get('search_area') or ''
-        return context
-
-
-class TaskDetail(LoginRequiredMixin, DetailView):
-    model = Task
-    context_object_name = 'detail'
-    template_name = 'core/task_detail_name.html'
-
-
-class TaskCreate(LoginRequiredMixin, CreateView):
-    model = Task
-    fields = ['title', 'description', 'complete']
-    success_url = reverse_lazy('task')
-
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super(TaskCreate, self).form_valid(form)
-
-
-class TaskUpdate(LoginRequiredMixin, UpdateView):
-    model = Task
-    fields = ['title', 'description', 'complete']
-    success_url = reverse_lazy('task')
-
-
-class TaskDelete(LoginRequiredMixin, DeleteView):
-    model = Task
-    context_object_name = 'task'
-    success_url = reverse_lazy('task')
 
 
 class WelcomePage(ListView):
@@ -728,3 +680,50 @@ def handler404(request, exception):
 
 def handler500(request, *args, **argv):
     return render(request, 'core/http_status/500.html', status=500)
+
+# class TaskList(LoginRequiredMixin, ListView):
+#     model = Task
+#     # login_url = 'login'
+#     context_object_name = 'tasks'
+#     paginate_by = 3
+#
+#     def get_queryset(self):
+#         search_input = self.request.GET.get('search_area') or ''
+#         tasks = super().get_queryset().filter(user=self.request.user)
+#         if search_input:
+#             tasks = tasks.filter(title__startswith=search_input)
+#         return tasks
+#
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['count'] = self.get_queryset().filter(complete=False).count()
+#         context['search_input'] = self.request.GET.get('search_area') or ''
+#         return context
+#
+#
+# class TaskDetail(LoginRequiredMixin, DetailView):
+#     model = Task
+#     context_object_name = 'detail'
+#     template_name = 'core/task_detail_name.html'
+#
+#
+# class TaskCreate(LoginRequiredMixin, CreateView):
+#     model = Task
+#     fields = ['title', 'description', 'complete']
+#     success_url = reverse_lazy('task')
+#
+#     def form_valid(self, form):
+#         form.instance.user = self.request.user
+#         return super(TaskCreate, self).form_valid(form)
+#
+#
+# class TaskUpdate(LoginRequiredMixin, UpdateView):
+#     model = Task
+#     fields = ['title', 'description', 'complete']
+#     success_url = reverse_lazy('task')
+#
+#
+# class TaskDelete(LoginRequiredMixin, DeleteView):
+#     model = Task
+#     context_object_name = 'task'
+#     success_url = reverse_lazy('task')
