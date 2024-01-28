@@ -1,3 +1,6 @@
+import os
+import uuid
+
 from django.core.files.base import ContentFile
 from django.db import models
 from django.contrib.auth.models import User
@@ -66,7 +69,11 @@ def custom_image_compress(image_file):
 
         img_io = BytesIO()
         img = img.convert('RGB')
-        img.save(img_io, quality=60, format='JPEG')
+        img.save(img_io, quality=60, format='JPEG', save=False)
+        # replace name to uuid
+        # image_name = image_file.name
+        # ext = image_name.split(".")[-1]
+        # filename = "%s.%s" % (uuid.uuid4(), ext)
         image_file = ContentFile(img_io.getvalue(), image_file.name.rsplit('.', 1)[0] + '.jpeg')
 
     return image_file
@@ -96,12 +103,13 @@ class AdvertiseModel(models.Model):
     address = models.OneToOneField(Address, related_name='address', on_delete=models.CASCADE)
     updated = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    image = models.ImageField(upload_to='images/', default='default_images/mountain.jpg', null=True, blank=True)
+    image = models.ImageField(upload_to='images', default='default_images/mountain.jpg', null=True, blank=True)
 
     def __str__(self):
         return self.title
 
     def save(self, *args, **kwargs):
+        # issue save 2 times
         self.image = custom_image_compress(self.image)
         super().save(*args, **kwargs)
 
@@ -117,6 +125,7 @@ class Image(models.Model):
 
     def save(self, *args, **kwargs):
         self.image = custom_image_compress(self.image)
+        print(self)
         super().save(*args, **kwargs)
 
 
