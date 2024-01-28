@@ -71,11 +71,11 @@ def custom_image_compress(image_file):
         img = img.convert('RGB')
         img.save(img_io, quality=60, format='JPEG', save=False)
         # replace name to uuid
-        # image_name = image_file.name
-        # ext = image_name.split(".")[-1]
-        # filename = "%s.%s" % (uuid.uuid4(), ext)
-        image_file = ContentFile(img_io.getvalue(), image_file.name.rsplit('.', 1)[0] + '.jpeg')
-
+        image_name = image_file.name
+        ext = image_name.split(".")[-1]
+        filename = "%s.%s" % (uuid.uuid4(), ext)
+        image_file = ContentFile(img_io.getvalue(), filename + '.jpeg')
+    # image_file.name.rsplit('.', 1)[0]
     return image_file
 
 
@@ -111,7 +111,8 @@ class AdvertiseModel(models.Model):
     def save(self, *args, **kwargs):
         # issue save 2 times
         self.image = custom_image_compress(self.image)
-        super().save(*args, **kwargs)
+        print(self)
+        super(AdvertiseModel, self).save(*args, **kwargs)
 
 
 class Image(models.Model):
