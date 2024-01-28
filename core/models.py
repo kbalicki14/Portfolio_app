@@ -89,7 +89,7 @@ class Address(models.Model):
 class AdvertiseModel(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=60)
-    description = models.TextField(max_length=200, null=True, blank=True)
+    description = models.TextField(max_length=600, null=True, blank=True)
     phone_number = PhoneNumberField(null=True, blank=True)
     advertise_status = models.CharField(choices=Advertise_status, max_length=40, default='accepted')
     advertise_category = models.ForeignKey(AdvertiseCategory, on_delete=models.CASCADE)

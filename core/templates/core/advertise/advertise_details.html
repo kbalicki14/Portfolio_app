@@ -18,14 +18,15 @@
         </div>
         <div class="col-lg-7 ">
             <h1 class="display-4 text-break">{{detail.title|title}}</h1>
-            <p class="lead text-break">{{detail.description}} {% lorem 20 w random %}</p>
+            <p class="lead text-break">{{detail.description}} </p>
+            <!--            {% lorem 20 w random %}-->
             <!--            <h4 class="mt-4">Usługi</h4>-->
             <!--            <p class="text-break">Specjalizujemy się w usługach barberskich, oferując szeroki zakres usług, w tym-->
             <!--                strzyżenie, golenie,-->
             <!--                stylizację brody i wiele innych. Nasz zespół doświadczonych barberów jest gotowy, aby pomóc Ci osiągnąć-->
             <!--                swój idealny wygląd.</p>-->
             <h4 class="mt-4">{{address.town}}</h4>
-            <p>{{address.street}} {{address.street_number}} / {% if address.apartment_number %}
+            <p>{{address.street}} {{address.street_number}} {% if address.apartment_number %} /
                 {{address.apartment_number}} {% endif %}, {{address.zip_code}}</p>
             {% if detail.phone_number %}
             <h4 class="mt-4">Contact </h4>
