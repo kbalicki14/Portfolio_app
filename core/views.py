@@ -169,7 +169,7 @@ class AdvertiseGallery(ListView):
     model = Image
     context_object_name = 'gallery'
     template_name = 'core/advertise/advertise_gallery.html'
-    paginate_by = 9
+    paginate_by = 6
 
     def get_queryset(self):
         id_advertise = self.kwargs['pk']
