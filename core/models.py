@@ -66,7 +66,7 @@ def custom_image_compress(image_file):
         if img.width > 1350 or img.height > 1080:
             new_resolution = (1350, 1080)
             img.thumbnail(new_resolution)
-            
+
         if img.mode != 'RGB':
             img = img.convert('RGB')
 
@@ -74,9 +74,9 @@ def custom_image_compress(image_file):
         # replace name to uuid|
         ext = 'jpeg'
         filename = "%s.%s" % (uuid.uuid4(), ext)
-        # image_file = ContentFile(img_io.getvalue(), filename)
         img.save(img_io, quality=60, format='JPEG')
-        image_file = InMemoryUploadedFile(img_io, 'ImageField', filename, 'image/jpeg', img_io.tell(), None)
+        image_file = ContentFile(img_io.getvalue(), filename)
+        # image_file = InMemoryUploadedFile(img_io, 'ImageField', filename, 'image/jpeg', img_io.tell(), None)
 
     return image_file
 
