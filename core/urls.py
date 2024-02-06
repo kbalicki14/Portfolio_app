@@ -1,12 +1,11 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, include
-from . import views
 from .views import CustomLoginView, RegisterView, \
     imageUpload, AdvertList, AdvertiseCreate, AddMultiImage, CreateImagesToGallery, WelcomePage, AdvertiseUpdate, \
     AddImageToGallery, AdvertiseDetails, CurrentUserAdvertise, AdvertiseDelete, AdvertiseGallery, ProfileDetail, \
     RatingAdvertise, AdvertiseRatingList, RatingUpdate, RatingDelete, ImageInGalleryUpdate, ImageInGalleryDelete, \
-    SerachBarAutoComplete, ReportAdvertise, AboutUsPage, ChangePassword, ChangeUsername
+    SerachBarAutoComplete, ReportAdvertiseView, AboutUsPage, ChangePassword, ChangeUsername
 
 from django.contrib.auth.views import LogoutView
 
@@ -24,6 +23,7 @@ urlpatterns = [
     path('advertise_details/<int:pk>/', AdvertiseDetails.as_view(), name='advertise_details'),
     path('advertise_update/<int:pk>/', AdvertiseUpdate.as_view(), name='advertise_update'),
     path('advertise_delete/<int:pk>/', AdvertiseDelete.as_view(), name='advertise_delete'),
+
     path('advertise_details/<int:pk>/gallery/', AdvertiseGallery.as_view(), name='gallery'),
     path('advertise_details/<int:pk>/add_rating', RatingAdvertise.as_view(), name='rating'),
     path('advertise_details/<int:advertise_pk>/rating_update/<int:pk>', RatingUpdate.as_view(), name='rating_update'),
@@ -37,11 +37,11 @@ urlpatterns = [
     path('advertise_details/<int:advertise_pk>/image_delete/<int:pk>', ImageInGalleryDelete.as_view(),
          name='image_delete'),
 
-    path('advertise/<int:advertise_pk>/report/', ReportAdvertise.as_view(),
+    path('advertise/<int:advertise_pk>/report/', ReportAdvertiseView.as_view(),
          name='report_advertise'),
 
-    path('multi_image/', CreateImagesToGallery.as_view(), name='multi_image'),
-    path('multi_image_work/', AddMultiImage, name='multi_image_work'),
+    # path('multi_image/', CreateImagesToGallery.as_view(), name='multi_image'),
+    # path('multi_image_work/', AddMultiImage, name='multi_image_work'),
     path('user_advertise/', CurrentUserAdvertise.as_view(), name='user_advertise'),
     path('user_profile/', ProfileDetail.as_view(), name='profile_detail'),
     path('about_us/', AboutUsPage.as_view(), name='about_us'),

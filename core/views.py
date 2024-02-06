@@ -1,7 +1,8 @@
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, JsonResponse, Http404
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, resolve_url
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.views import View
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
@@ -36,7 +37,14 @@ class CustomLoginView(LoginView):
     redirect_authenticated_user = True
 
     def get_success_url(self):
-        return reverse_lazy('welcome')
+        next_url = self.request.GET.get('next')
+        if next_url and url_has_allowed_host_and_scheme(
+                url=next_url,
+                allowed_hosts={self.request.get_host()},
+        ):
+            return resolve_url(next_url)
+        else:
+            return reverse_lazy('welcome')
 
 
 class RegisterView(FormView):
@@ -58,7 +66,7 @@ class RegisterView(FormView):
         return super(RegisterView, self).get(*args, **kwargs)
 
 
-class ChangePassword(FormView):
+class ChangePassword(LoginRequiredMixin, FormView):
     template_name = 'core/auth/change_password.html'
     success_url = reverse_lazy('profile_detail')
     form_class = PasswordChangeForm
@@ -75,7 +83,7 @@ class ChangePassword(FormView):
     #     return super().form_valid(form)
 
 
-class ChangeUsername(UpdateView):
+class ChangeUsername(LoginRequiredMixin, UpdateView):
     model = User
     template_name = 'core/auth/change_username.html'
     success_url = reverse_lazy('profile_detail')
@@ -130,7 +138,7 @@ class AdvertiseCreate(LoginRequiredMixin, CreateView):
             form.instance.address = address  # ustaw adres na formularzu AdvertiseModel
         if form.is_valid():
             form.instance.user = self.request.user
-           
+
         messages.success(self.request, "Advertise created.")
         return super().form_valid(form)
 
@@ -333,7 +341,7 @@ class AddImageToGallery(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class ImageInGalleryUpdate(UpdateView):
+class ImageInGalleryUpdate(LoginRequiredMixin, UpdateView):
     model = Image
     form_class = ImageForm
     template_name = 'core/advertise/add_to_gallery.html'
@@ -372,7 +380,7 @@ class ImageInGalleryUpdate(UpdateView):
         return context
 
 
-class ImageInGalleryDelete(DeleteView):
+class ImageInGalleryDelete(LoginRequiredMixin, DeleteView):
     model = Image
     context_object_name = 'image'
     template_name = 'core/advertise/image_gallery_confirm_delete.html'
@@ -401,7 +409,7 @@ class ImageInGalleryDelete(DeleteView):
         return super().form_valid(form)
 
 
-class CreateImagesToGallery(CreateView):
+class CreateImagesToGallery(LoginRequiredMixin, CreateView):
     model = Image
     form_class = MultiImageForm
     template_name = 'core/advertise/add_to_gallery.html'
@@ -516,7 +524,7 @@ class ProfileDetail(LoginRequiredMixin, TemplateView):
     template_name = 'core/profile_detail.html'
 
 
-class RatingAdvertise(CreateView):
+class RatingAdvertise(LoginRequiredMixin, CreateView):
     model = AdvertiseRating
     form_class = RatingForm
     template_name = 'core/advertise/rating_form.html'
@@ -541,7 +549,7 @@ class RatingAdvertise(CreateView):
         return context
 
 
-class RatingUpdate(UpdateView):
+class RatingUpdate(LoginRequiredMixin, UpdateView):
     model = AdvertiseRating
     form_class = RatingForm
     context_object_name = 'rating'
@@ -580,7 +588,7 @@ class RatingUpdate(UpdateView):
         return context
 
 
-class RatingDelete(DeleteView):
+class RatingDelete(LoginRequiredMixin, DeleteView):
     model = AdvertiseRating
     context_object_name = 'rating'
     template_name = 'core/advertise/rating_confirm_delete.html'
@@ -634,7 +642,7 @@ def cutomRestrictedGetAdvertise(user, id):
     return advert_object
 
 
-class ReportAdvertise(CreateView):
+class ReportAdvertiseView(CreateView):
     model = ReportAdvertise
     form_class = ReportAdvertiseForm
     context_object_name = 'report'
