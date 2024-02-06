@@ -130,13 +130,8 @@ class AdvertiseCreate(LoginRequiredMixin, CreateView):
             form.instance.address = address  # ustaw adres na formularzu AdvertiseModel
         if form.is_valid():
             form.instance.user = self.request.user
-            form.save()
+           
         messages.success(self.request, "Advertise created.")
-        # compression
-        # pil_image = PilImage.open(form.instance.img)
-        # output_io = BytesIO()
-        # pil_image.save(output_io, format='JPEG', quality=60)
-        # form.instance.img = File(output_io, name=form.instance.img.name)
         return super().form_valid(form)
 
 
@@ -258,13 +253,8 @@ class AdvertiseUpdate(LoginRequiredMixin, UpdateView):
             form.instance.address = address.instance  # ustaw adres na formularzu AdvertiseModel
         if form.is_valid():
             form.instance.advertise.set = advert_object
-            form.save()
+
         messages.success(self.request, "Advertise details updated.")
-        # compression
-        # pil_image = PilImage.open(form.instance.img)
-        # output_io = BytesIO()
-        # pil_image.save(output_io, format='JPEG', quality=60)
-        # form.instance.img = File(output_io, name=form.instance.img.name)
         return super().form_valid(form)
 
 

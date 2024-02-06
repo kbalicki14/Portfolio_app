@@ -10,7 +10,7 @@ from django.core.files import File
 from PIL import Image as PilImage
 from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
-
+from datetime import datetime
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 
@@ -66,16 +66,18 @@ def custom_image_compress(image_file):
         if img.width > 1350 or img.height > 1080:
             new_resolution = (1350, 1080)
             img.thumbnail(new_resolution)
+            
+        if img.mode != 'RGB':
+            img = img.convert('RGB')
 
         img_io = BytesIO()
-        img = img.convert('RGB')
-        img.save(img_io, quality=60, format='JPEG', save=False)
-        # replace name to uuid
-        image_name = image_file.name
-        ext = image_name.split(".")[-1]
+        # replace name to uuid|
+        ext = 'jpeg'
         filename = "%s.%s" % (uuid.uuid4(), ext)
-        image_file = ContentFile(img_io.getvalue(), filename + '.jpeg')
-    # image_file.name.rsplit('.', 1)[0]
+        # image_file = ContentFile(img_io.getvalue(), filename)
+        img.save(img_io, quality=60, format='JPEG')
+        image_file = InMemoryUploadedFile(img_io, 'ImageField', filename, 'image/jpeg', img_io.tell(), None)
+
     return image_file
 
 
@@ -110,9 +112,9 @@ class AdvertiseModel(models.Model):
 
     def save(self, *args, **kwargs):
         # issue save 2 times
-        self.image = custom_image_compress(self.image)
-        print(self)
-        super(AdvertiseModel, self).save(*args, **kwargs)
+        if self.image:
+            self.image = custom_image_compress(self.image)
+        super().save(*args, **kwargs)
 
 
 class Image(models.Model):
@@ -126,7 +128,6 @@ class Image(models.Model):
 
     def save(self, *args, **kwargs):
         self.image = custom_image_compress(self.image)
-        print(self)
         super().save(*args, **kwargs)
 
 
