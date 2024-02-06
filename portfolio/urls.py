@@ -24,5 +24,4 @@ handler500 = 'core.views.handler500'
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('core.urls')),
-    # test1212121
 ]
