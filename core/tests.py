@@ -44,15 +44,16 @@ class AuthTest(TestCase):
         self.assertEqual(user.username, change_username)
 
     # def test_change_user_password(self):
-    #     change_password = 'changepassword123!'
+    #     change_password = 'Changepassword123!'
     #     self.client.login(username=self.username, password=self.password)
     #     response = self.client.post(reverse('change_password'),
     #                                 {'old_password': self.password,
     #                                  'new_password1': change_password,
     #                                  'new_password2': change_password})
     #     self.assertEqual(response.status_code, 302)
+    #     # self.user.refresh_from_db()
     #     user = User.objects.get(username=self.username)
-    #     self.assertTrue(user.check_password(change_password))
+    #     self.assertTrue(user.check_password('change_password'))
 
 
 class AdvertiseTest(TestCase):

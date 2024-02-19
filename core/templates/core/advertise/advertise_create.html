@@ -37,31 +37,31 @@
             <!--            {% render_field form.user placeholder=form.user.label class+="form-control" %}-->
 
             <label for="id_title" class="form-label">{{form.title.label}} <b>*</b> </label>
-            {% render_field form.title placeholder=form.title.label class+="form-control" %}
+            {% render_field form.title placeholder='Enter title' class+="form-control" %}
 
             <label for="id_description" class="form-label">{{form.description.label}} <b>*</b></label>
             {% render_field form.description placeholder='Enter a few words about your company' class+="form-control" %}
 
             <label for="id_phone_number" class="form-label">{{form.phone_number.label}}</label>
-            {% render_field form.phone_number placeholder=form.phone_number.label class+="form-control" %}
+            {% render_field form.phone_number placeholder='Enter phone number' class+="form-control" %}
 
             <label for="id_advertise_category" class="form-label">{{form.advertise_category.label}} <b>*</b></label>
             {% render_field form.advertise_category placeholder=form.advertise_category.label class+="form-control" %}
 
             <label for="id_street" class="form-label">{{address.street.label}} <b>*</b></label>
-            {% render_field address.street placeholder=address.street.label class+="form-control" %}
+            {% render_field address.street placeholder='Enter street name' class+="form-control" %}
 
             <label for="id_street_number" class="form-label">{{address.street_number.label}} <b>*</b></label>
-            {% render_field address.street_number placeholder=address.street_number.label class+="form-control" %}
+            {% render_field address.street_number placeholder='Enter street number' class+="form-control" %}
 
             <label for="id_apartment_number" class="form-label">{{address.apartment_number.label}}</label>
-            {% render_field address.apartment_number placeholder=address.apartment_number.label class+="form-control" %}
+            {% render_field address.apartment_number placeholder='Enter apartment number' class+="form-control" %}
 
             <label for="id_town" class="form-label">{{address.town.label}} <b>*</b></label>
-            {% render_field address.town placeholder=address.town.label class+="form-control town-search" %}
+            {% render_field address.town placeholder='Enter town name' class+="form-control town-search" %}
 
             <label for="id_zip_code" class="form-label">{{address.zip_code.label}} <b>*</b></label>
-            {% render_field address.zip_code placeholder=address.zip_code.label class+="form-control" %}
+            {% render_field address.zip_code placeholder='Enter zip code' class+="form-control" %}
 
             <label for="id_img" class="form-label">{{form.image.label}}</label>
             {% render_field form.image placeholder=form.image.label class+="form-control mb-3" %}

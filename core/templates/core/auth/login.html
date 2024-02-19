@@ -8,11 +8,11 @@
             <div class="mb-3 ">
                 {% load widget_tweaks %}
                 <label for="id_username" class="form-label">{{form.username.label}}</label>
-                {% render_field form.username placeholder=form.username.label class+="form-control" %}
+                {% render_field form.username placeholder='Enter username' class+="form-control" %}
             </div>
             <div class="mb-3 ">
                 <label for="id_password" class="form-label">{{form.password.label}}</label>
-                {% render_field form.password placeholder=form.password.label class+="form-control" %}
+                {% render_field form.password placeholder='Enter password' class+="form-control" %}
             </div>
 
             <input type="submit" class="btn btn-primary " value="Login">
