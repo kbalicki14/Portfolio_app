@@ -48,6 +48,7 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+```
 
 ## Running the Django project
 1.Navigate to your Django project directory:
@@ -65,7 +66,7 @@ python manage.py load_citys core/data/city_names_small.csv
 python manage.py load_category core/data/advertise_category.csv
 ```
 4.Run django server:
-```cmd
+```
 python manage.py runserver
 ```
 
