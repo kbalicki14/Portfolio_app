@@ -8,6 +8,13 @@ Ensure you have the following tools installed:
 - virtualenv
 - PostgreSQL
 
+## Clone the Repository
+
+1. Clone the repository from GitHub
+2. Navigate to the cloned repository:
+```
+cd your_repository
+```
 ## Environment Setup
 
 1. Create a Python virtual environment (venv) using the command:
@@ -54,21 +61,21 @@ Remember to replace `your_project_name`, `your_database_name`, `your_postgres_us
 
 
 ## Running the Django project
-1.Navigate to your Django project directory:
+1. Navigate to your Django project directory:
 ```
 cd your_project_name
 ```
-2.Run migrations to database:
+2. Run migrations to database:
 ```
 python manage.py makemigrations
 python manage.py migrate
 ```
-3.Load base data by run commands:
+3. Load base data by run commands:
 ```
 python manage.py load_citys core/data/city_names_small.csv
 python manage.py load_category core/data/advertise_category.csv
 ```
-4.Run django server:
+4. Run django server:
 ```
 python manage.py runserver
 ```
