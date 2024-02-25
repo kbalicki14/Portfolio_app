@@ -50,6 +50,9 @@ DATABASES = {
 }
 ```
 
+Remember to replace `your_project_name`, `your_database_name`, `your_postgres_username`, and `your_postgres_password` with your actual Django project name, PostgreSQL database name, PostgreSQL username, and PostgreSQL password, respectively. Also, ensure you have a `requirements.txt` file that contains all the required packages to run your project.
+
+
 ## Running the Django project
 1.Navigate to your Django project directory:
 ```
