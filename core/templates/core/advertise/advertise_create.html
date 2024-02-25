@@ -2,9 +2,9 @@
 {% block headerTag %}
 <div class="container mt-4">
     {% if is_edit_page %}
-    <h3>Edit Advertise </h3>
+    <h3>Edit Advertisement </h3>
     {% else %}
-    <h3>Create Advertise </h3>
+    <h3>Create Advertisement </h3>
     {% endif %}
 </div>
 {% endblock headerTag %}
@@ -14,27 +14,15 @@
 
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 
-
-<!--select2-->
-<!--<script src="https://code.jquery.com/jquery-3.7.1.min.js"-->
-<!--        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>-->
-<!--<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>-->
-<!--<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>-->
-
 {% endblock head %}
 
 
 {% block content %}
-<!--<div class=" row row-col-1 justify-content-center">-->
-<!--    <div class="col-5">-->
 <div class="row">
     <div class="col-lg-8 mx-auto">
         <form method="post" enctype="multipart/form-data">
             {% load widget_tweaks %}
             {% csrf_token %}
-
-            <!--            <label for="id_user" class="form-label">{{form.user.label}}</label>-->
-            <!--            {% render_field form.user placeholder=form.user.label class+="form-control" %}-->
 
             <label for="id_title" class="form-label">{{form.title.label}} <b>*</b> </label>
             {% render_field form.title placeholder='Enter title' class+="form-control" %}
@@ -96,7 +84,6 @@
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 <script src="{% static 'jquery_city.js' %}"></script>
 <!--<script>$("#id_town").select2()</script>-->
-
 
 <script src="{% static 'image_placeholder.js' %}"></script>
 {% endblock script %}

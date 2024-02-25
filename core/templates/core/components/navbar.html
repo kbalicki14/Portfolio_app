@@ -16,7 +16,7 @@
                 </li>
                 {% if request.user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'user_advertise' %}">My advertise</a>
+                    <a class="nav-link" href="{% url 'user_advertise' %}">My advertisements</a>
                 </li>
                 <li class="nav-item dropdown ">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
@@ -25,7 +25,7 @@
                     </a>
                     <ul class="dropdown-menu bg-light">
                         <li><a class="dropdown-item" href="{% url 'profile_detail' %}">Profile</a></li>
-                        <li><a class="dropdown-item" href="{% url 'advertise' %}">Add advertise</a></li>
+                        <li><a class="dropdown-item" href="{% url 'advertise' %}">Add advertisement</a></li>
                         <li><a class="dropdown-item text-danger" href="{% url 'logout' %}">Logout</a></li>
                     </ul>
                 </li>
