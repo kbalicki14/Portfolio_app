@@ -1,0 +1,8 @@
+.bg-custom-color {
+    background-color: #5D4037 !important ;
+}
+/* change the brand and text color */
+.bg-custom-color .navbar-brand,
+.navbar-custom .navbar-text {
+    color: #faf7f7;
+}

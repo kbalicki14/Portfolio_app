@@ -1,0 +1,57 @@
+{% extends 'core/main.html' %}
+{% block headerTag %}
+
+{% endblock headerTag %}
+
+
+{% block content %}
+{% if average_rating %}
+<div class="container mt-4 ms-10">
+    <h3>Rating <i class="fa-solid fa-star ms-2" style="color: #f3ed35;"></i> {{ average_rating|floatformat:1 }} /5</h3>
+    <div class="mt-4 row">
+        <a href="{% url 'rating' id_advertise %}" class="btn btn-primary col-md-12 col-lg-3 mx-auto">Add rate</a>
+    </div>
+</div>
+{% endif %}
+<div class="container py-3">
+
+    <div class="row">
+        <div class="col-lg-12 text-center">
+            <h2></h2>
+        </div>
+    </div>
+    {% for rating in ratings %}
+    <div class="row mt-4">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">@{{ rating.user.username }} <i class="fa-solid fa-star"
+                                                                          style="color: #f3ed35;"></i>
+                        {{rating.rating|floatformat:1}}
+                    </h5>
+                    <p class="card-text">{{ rating.comment }}</p>
+                    <p class="card-text"><small class="text-muted">{{ rating.created_at }}
+                        {% if request.user == rating.user %}
+                        <a href="{% url 'rating_update' advertise_pk=id_advertise pk=rating.id %}" class="ms-3"><i
+                                class="fa-solid fa-pen-to-square"></i></a>
+                        <a href="{% url 'rating_delete' advertise_pk=id_advertise pk=rating.id %}" class="ms-3"><i
+                                class="fa-solid fa-trash"></i></a>
+                        {% endif %}
+                    </small></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="row mt-4">
+        <div class="col-lg-12">
+            <p>No ratings yet</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<!--pagination-->
+{% include 'core/components/pagination_comp.html' %}
+
+
+{% endblock content %}

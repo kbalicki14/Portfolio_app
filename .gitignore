@@ -4,3 +4,8 @@ migrations/
 /env
 *.env
 pull_code.sh
+media/images
+core/static/admin
+staticfiles
+db.sqlite3
+

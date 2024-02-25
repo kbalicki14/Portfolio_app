@@ -1,0 +1,412 @@
+{% extends 'core/main.html' %}
+{% block content %}
+
+{% if request.user.is_authenticated %}
+<p>{{request.user}}</p>
+<a href="{% url 'logout' %}"> Logout</a>
+{% else %}
+<a href="{% url 'login' %}"> Log in</a>
+{% endif %}
+<hr>
+
+<h1>Task list </h1>
+<a href="{% url 'task_create' %}">add task</a>
+<p>Task count: {{count}}</p>
+
+<!--<form method="get">-->
+<!--    <input type="text" name="search_area" value="{{search_input}}">-->
+<!--    <input type="submit" value="search">-->
+<!--</form>-->
+
+<!--<i class="fa-regular fa-magnifying-glass"></i>-->
+<!--<i class="bi bi-search"></i>-->
+
+<div class="container">
+    <form class="d-flex" role="search" method="get">
+        <div class="input-group ">
+            <input class="form-control " type="text" placeholder="Search" name="search_area"
+                   value="{{search_input}}"
+                   aria-label="Search">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                    aria-expanded="false">Dropdown
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Action</a></li>
+                <li><a class="dropdown-item" href="#">Another action</a></li>
+                <li><a class="dropdown-item" href="#">Something else here</a></li>
+
+                <li><a class="dropdown-item" href="#">Separated link</a></li>
+            </ul>
+
+        </div>
+        <button class="btn btn-outline-success" type="submit">Search</button>
+    </form>
+</div>
+
+<div class="container">
+    <div class="row justify-content-center mt-3">
+        <form class="col-lg-7 col-md-9 mx-auto" role="search" method="get">
+            <div class="row">
+                <div class="col-12 col-lg-9 mb-3 mb-lg-0">
+                    <input class="form-control town-search" type="search" placeholder="Search" name="search_image"
+                           aria-label="Search">
+                </div>
+                <div class="col-12 col-lg-2">
+                    <button class="btn btn-success w-100" type="submit">Search</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<table class="">
+    <tr>
+        <th>Items</th>
+    </tr>
+    {% for task in tasks %}
+    <tr>
+        <td>{{task.title}}</td>
+        <td><a href="{% url 'task_detail' task.id %}">View</a></td>
+        <td><a href="{% url 'task_update' task.id %}">Edit</a></td>
+        <td><a href="{% url 'task_delete' task.id %}">Delete</a></td>
+    </tr>
+    {% empty %}
+    <h3>No item in list</h3>
+    {% endfor %}
+</table>
+{% load get_absolute_url %}
+{% if is_paginated %}
+<div class="pagination">
+            <span class="page-links">
+                {% if page_obj.has_previous %}
+                    <a href="?{% query_transform page=page_obj.previous_page_number %}">previous</a>
+                {% endif %}
+                <span class="page-item">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+                {% if page_obj.has_next %}
+                    <a href="?{% query_transform page=page_obj.next_page_number %}">next</a>
+                {% endif %}
+            </span>
+</div>
+
+{% endif %}
+<div class="mt-3">
+    {% include 'core/components/offert_card.html' %}
+</div>
+
+<div>
+    {% load static %}
+    <img src="{% static 'core/mountain.jpg' %}" style="max-height:100px" alt="My image">
+</div>
+
+<div id="carouselExampleIndicators" class="carousel slide " data-mdb-ride="carousel">
+
+    <div class="carousel-indicators">
+        <button
+                type="button"
+                data-mdb-target="#carouselExampleIndicators"
+                data-mdb-slide-to="0"
+                class="active"
+                aria-current="true"
+                aria-label="Slide 1"
+        ></button>
+        <button
+                type="button"
+                data-mdb-target="#carouselExampleIndicators"
+                data-mdb-slide-to="1"
+                aria-label="Slide 2"
+        ></button>
+        <button
+                type="button"
+                data-mdb-target="#carouselExampleIndicators"
+                data-mdb-slide-to="2"
+                aria-label="Slide 3"
+        ></button>
+    </div>
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="https://mdbcdn.b-cdn.net/img/new/slides/041.webp" class="d-block w-100" alt="Wild Landscape"/>
+        </div>
+        <div class="carousel-item">
+            <img src="https://mdbcdn.b-cdn.net/img/new/slides/042.webp" class="d-block w-100" alt="Camera"/>
+        </div>
+        <div class="carousel-item">
+            <img src="https://mdbcdn.b-cdn.net/img/new/slides/043.webp" class="d-block w-100" alt="Exotic Fruits"/>
+        </div>
+    </div>
+    <form class="d-flex justify-content-center position-absolute top-50 start-50 translate-middle w-75" role="search"
+          method="get">
+        <div class="input-group row me-2">
+            <input class="form-control  w-50" type="search" placeholder="Search" name="search_area"
+                   value="{{search_input}}"
+                   aria-label="Search">
+            <select class="form-control" aria-label="Default select example">
+                <option selected>Category</option>
+                <option value="1">Barber</option>
+                <option value="2">Hairdress</option>
+                <option value="3">Three</option>
+            </select>
+        </div>
+        <button class="btn btn-success " type="submit">Search</button>
+    </form>
+
+    <!--    <button class="carousel-control-prev" type="button" data-mdb-target="#carouselExampleIndicators"-->
+    <!--            data-mdb-slide="prev">-->
+    <!--        <span class="carousel-control-prev-icon" aria-hidden="true"></span>-->
+    <!--        <span class="visually-hidden">Previous</span>-->
+    <!--    </button>-->
+    <!--    <button class="carousel-control-next" type="button" data-mdb-target="#carouselExampleIndicators"-->
+    <!--            data-mdb-slide="next">-->
+    <!--        <span class="carousel-control-next-icon" aria-hidden="true"></span>-->
+    <!--        <span class="visually-hidden">Next</span>-->
+    <!--    </button>-->
+</div>
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="text-center">
+                <img src="https://via.placeholder.com/150" class="rounded-circle" alt="Zdjęcie profilowe">
+                <h1 class="mt-3">Nazwa Użytkownika</h1>
+                <p class="lead">Witaj na swoim profilu!</p>
+                <div class="mt-4">
+                    <a href="/change_password/" class="btn btn-primary ">Zmień hasło</a>
+                    <a href="/change_username/" class="btn btn-primary ">Zmień nazwę użytkownika</a>
+                    <a href="/add_advertise/" class="btn btn-primary ">Dodaj ogłoszenie</a>
+                    <a href="/add_image/" class="btn btn-primary ">Dodaj obrazek do ogłoszenia</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="jumbotron">
+                <h1 class="display-4">404</h1>
+                <p class="lead">Przykro nam, ale strona, której szukasz, nie istnieje.</p>
+                <hr class="my-4">
+                <p>Może chcesz wrócić do strony głównej?</p>
+                <a class="btn btn-primary btn-lg" href="/" role="button">Wróć do strony głównej</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-6">
+            <img src="twoje_zdjecie.jpg" class="img-fluid" alt="Zdjęcie salonu">
+        </div>
+        <div class="col-lg-6">
+            <h1 class="display-4">Mister Cut Barbershop</h1>
+            <p class="lead">Opis Twojego salonu fryzjerskiego. Możesz tutaj dodać więcej informacji o swoim salonie,
+                usługach, które oferujesz, i dlaczego klienci powinni wybrać właśnie Ciebie.</p>
+            <h4 class="mt-4">Adres</h4>
+            <p>Ulica, Miasto, Kod pocztowy</p>
+        </div>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-4 mt-2">
+            <div class="card h-100">
+                <!-- Dodajemy atrybut data-bs-toggle i data-bs-target do obrazka -->
+                <img src="https://mdbcdn.b-cdn.net/img/new/slides/041.webp" class="card-img-top p-2 rounded"
+                     alt="Obraz 1" data-bs-toggle="modal"
+                     data-bs-target="#imageModal{{ forloop.counter }}">
+                <div class="card-body">
+                    <h5 class="card-title">Title</h5>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal dla obrazka -->
+        <div class="modal fade" id="imageModal{{ forloop.counter }}" tabindex="-1" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <img src="https://mdbcdn.b-cdn.net/img/new/slides/041.webp" class="img-fluid rounded"
+                             alt="Obraz 1">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+        data-bs-whatever="@mdo">Open modal for @mdo
+</button>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">New Report</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="recipient-name" class="col-form-label">Email:</label>
+                        <input type="text" class="form-control" id="recipient-name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="message-text" class="col-form-label">Message:</label>
+                        <textarea class="form-control" id="message-text"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Send message</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <strong>Holy guacamole!</strong> You should check in on some of those fields below.
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+<span class="badge rounded-pill bg-info text-dark">Heads up!</span>
+
+<div class="container mt-5">
+    <h1 class="text-center">O nas</h1>
+    <p class="lead text-center">Jesteśmy firmą specjalizującą się w tworzeniu aplikacji internetowych do wyszukiwania
+        firm usługowych na podstawie lokalizacji.</p>
+
+    <div class="row mt-5">
+        <div class="col-md-6">
+            <h2>Nasza misja</h2>
+            <p>Naszą misją jest ułatwianie klientom znalezienia najlepszych lokalnych firm usługowych. Nasza aplikacja
+                internetowa pozwala użytkownikom szybko i łatwo wyszukiwać firmy w ich lokalizacji.</p>
+        </div>
+        <div class="col-md-6">
+            <h2>Nasza wizja</h2>
+            <p>Pragniemy stać się liderem w dziedzinie wyszukiwania lokalnych firm usługowych. Dążymy do ciągłego
+                ulepszania naszej aplikacji, aby zapewnić naszym użytkownikom najbardziej aktualne i dokładne
+                informacje.</p>
+        </div>
+    </div>
+    <!-- Sekcja Nasz zespół -->
+    <h2 class="text-center">Nasz zespół</h2>
+    <p class="lead text-center">Nasz zespół składa się z doświadczonych profesjonalistów z różnych dziedzin, którzy
+        łączą swoje umiejętności, aby dostarczyć najlepszą aplikację do wyszukiwania firm usługowych.</p>
+
+    <div class="row mt-5">
+        <!-- Możesz dodać zdjęcia i opisy członków zespołu tutaj -->
+    </div>
+
+    <!-- Sekcja Nasze wartości -->
+    <h2 class="text-center">Nasze wartości</h2>
+    <p class="lead text-center">Wierzymy w dostarczanie najwyższej jakości usług, integrytet, innowacyjność i ciągłe
+        doskonalenie. Te wartości kierują wszystkim, co robimy.</p>
+
+    <div class="row mt-5">
+        <!-- Możesz dodać więcej szczegółów o wartościach firmy tutaj -->
+    </div>
+</div>
+
+<div class="container marketing">
+
+    <!-- Three columns of text below the carousel -->
+    <div class="row">
+        <div class="col-lg-4">
+
+            <h2>Heading</h2>
+            <p>Some representative placeholder content for the three columns of text below the carousel. This is the
+                first column.</p>
+            <p><a class="btn btn-secondary" href="#">View details »</a></p>
+        </div><!-- /.col-lg-4 -->
+        <div class="col-lg-4">
+
+            <h2>Heading</h2>
+            <p>Another exciting bit of representative placeholder content. This time, we've moved on to the second
+                column.</p>
+            <p><a class="btn btn-secondary" href="#">View details »</a></p>
+        </div><!-- /.col-lg-4 -->
+        <div class="col-lg-4">
+
+            <h2>Heading</h2>
+            <p>And lastly this, the third column of representative placeholder content.</p>
+            <p><a class="btn btn-secondary" href="#">View details »</a></p>
+        </div><!-- /.col-lg-4 -->
+    </div><!-- /.row -->
+
+
+    <!-- START THE FEATURETTES -->
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+        <div class="col-md-7">
+            <h2 class="featurette-heading">First featurette heading. <span
+                    class="text-muted">It’ll blow your mind.</span></h2>
+            <p class="lead">Some great placeholder content for the first featurette here. Imagine some exciting prose
+                here.</p>
+        </div>
+        <div class="col-md-5">
+            <svg class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500"
+                 height="500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500"
+                 preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title>
+                <rect width="100%" height="100%" fill="#eee"></rect>
+                <text x="50%" y="50%" fill="#aaa" dy=".3em">500x500</text>
+            </svg>
+
+        </div>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+        <div class="col-md-7 order-md-2">
+            <h2 class="featurette-heading">Oh yeah, it’s that good. <span class="text-muted">See for yourself.</span>
+            </h2>
+            <p class="lead">Another featurette? Of course. More placeholder content here to give you an idea of how this
+                layout would work with some actual real-world content in place.</p>
+        </div>
+        <div class="col-md-5 order-md-1">
+            <svg class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500"
+                 height="500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500"
+                 preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title>
+                <rect width="100%" height="100%" fill="#eee"></rect>
+                <text x="50%" y="50%" fill="#aaa" dy=".3em">500x500</text>
+            </svg>
+
+        </div>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+        <div class="col-md-7">
+            <h2 class="featurette-heading">And lastly, this one. <span class="text-muted">Checkmate.</span></h2>
+            <p class="lead">And yes, this is the last block of representative placeholder content. Again, not really
+                intended to be actually read, simply here to give you a better view of what this would look like with
+                some actual content. Your content.</p>
+        </div>
+        <div class="col-md-5 mb-4">
+            <svg class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500"
+                 height="500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500"
+                 preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title>
+                <rect width="100%" height="100%" fill="#eee"></rect>
+                <text x="50%" y="50%" fill="#aaa" dy=".3em">500x500</text>
+            </svg>
+
+        </div>
+    </div>
+
+
+    <!-- /END THE FEATURETTES -->
+
+</div>
+
+{% endblock content %}

@@ -1,0 +1,116 @@
+{% extends 'core/main.html' %}
+{% block head %}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+
+{% endblock head %}
+
+{% block headerTag %}
+{% load static %}
+<div class="container">
+    <div class="row justify-content-center mt-3">
+        <form class="col-lg-7 col-md-9 mx-auto" role="search"
+              method="get" action="{% url 'advert_list' %}">
+
+            <div class="row">
+                <div class="col-12 col-lg-8 col-xl-9  mb-2 mb-lg-0">
+                    <div class="input-group">
+                        <input class="form-control w-50 town-search " type="search" placeholder="Search"
+                               name="search_area"
+                               value="{{search_input}}"
+                               aria-label="Search">
+                        <select class="form-control " aria-label="Default select example" name="search_category">
+                            {% for item in category %}
+                            {% if search_category == item.id %}
+                            <option value="{{ item.id }}" selected>{{ item.category_name }}</option>
+                            {% else %}
+                            <option value="{{ item.id }}">{{ item.category_name }}</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-3 col-xl-3 col-xxl-2">
+                    <button class="btn btn-success w-100" type="submit">Search</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% load get_absolute_url %}
+<div class="container mt-4">
+    <div class="row">
+        <h3>Results for {{ search_input }} </h3>
+        <!--        <div class="d-flex col-2 justify-content-end"></div>-->
+        <!--        <form method="get" id="filterForm"-->
+        <!--              action="{% query_transform %}"-->
+        <!--              class="">-->
+        <!--            <select class="form-select" aria-label="Default select example" name="filter_search">-->
+        <!--                <option value="latest" selected>Latest</option>-->
+        <!--                <option value="best_rating">Best rating</option>-->
+
+        <!--            </select>-->
+        <!--            <input type="submit" value="Filter">-->
+        <!--        </form>-->
+    </div>
+</div>
+
+{% endblock headerTag %}
+
+{% block content %}
+{% for item in advert %}
+<div class="d-flex align-items-center justify-content-center">
+    <div class="card mb-3 mt-4 " style="width: 1000px; ">
+        <a class="text-decoration-none text-body" href="{% url 'advertise_details' item.id %}">
+            <div class="row g-0 ">
+                <div class="col-md-4" style="">
+                    <img src="{{ item.image.url }}"
+                         class="img-fluid w-100 mx-auto d-block rounded-start " style="max-height:276px"
+                         alt="advert image">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ item.title|title }}</h5>
+                        <p class="card-text">{{ item.description|truncatewords:50 }}</p>
+                        <p class="card-text"><small class="text-body-secondary"></small></p>
+                        <!--                        {% lorem 20 w random %}-->
+                    </div>
+                </div>
+            </div>
+
+        </a>
+    </div>
+</div>
+
+{% empty %}
+<h3 class="container row row-col-1 justify-content-center mt-4">Not found places in this location </h3>
+{% endfor %}
+
+<!--pagination-->
+{% include 'core/components/pagination_comp.html' %}
+
+
+{% endblock content %}
+
+{% block script %}
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+<script src="{% static 'jquery_city.js' %}"></script>
+
+<!--<script>-->
+<!--document.getElementById('filterForm').addEventListener('submit', function(e) {-->
+<!--    e.preventDefault();-->
+<!--    var filterOption = document.querySelector('select[name="filter_search"]').value;-->
+<!--    var currentUrl = window.location.href;-->
+
+<!--    if (currentUrl.includes('filter_search')){-->
+<!--        var newUrl = currentUrl.includes('?') ? currentUrl + filterOption-->
+<!--    }-->
+<!--    else {-->
+<!--        var newUrl = currentUrl.includes('?') ? currentUrl + '&filter_search=' + filterOption : currentUrl + '?filter_search=' + 'duap';-->
+<!-- }-->
+<!--    window.location.href = newUrl;-->
+<!--});-->
+
+<!--</script>-->
+
+{% endblock script %}

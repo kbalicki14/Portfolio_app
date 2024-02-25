@@ -1,0 +1,82 @@
+{% extends 'core/main.html' %}
+{% block headerTag %}
+
+<div class="container mt-4">
+    <div class="container">
+        <div class="row justify-content-center mt-3">
+            <form class="col-lg-7 col-md-9 mx-auto" role="search" method="get">
+                <div class="row">
+                    <div class="col-12 col-lg-8 col-xl-9  mb-2 mb-lg-0">
+                        <input class="form-control town-search" type="search" placeholder="Search in portfolio"
+                               name="search_image"
+                               value="{{search_input}}"
+                               aria-label="Search">
+                    </div>
+                    <div class="col-12 col-lg-3 col-xl-3 col-xxl-2">
+                        <button class="btn btn-success w-100" type="submit">Search</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <h3 class="mt-4 mt-lg-0">Portfolio gallery </h3>
+</div>
+{% endblock headerTag %}
+
+
+{% block content %}
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }} alert-dismissible fade show col-md-6 mx-auto mt-2" role="alert">
+    <h4 class="alert-heading">Well done!</h4>
+    <p>{{ message }}</p>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    {% endfor %}
+</div>
+{% endif %}
+<div class="container py-4">
+    {% if is_owner %}
+    <div class="row mb-4">
+        <a href="{% url 'add_image' id_advertise  %}" class="btn btn-primary col-md-12 col-lg-3 mx-auto">Add photo</a>
+    </div>
+    {% endif %}
+    <div class="row">
+        {% for image in gallery %}
+        <div class="col-md-5 col-lg-4 mt-2">
+            <div class="card h-100" data-bs-toggle="modal" data-bs-target="#imageModal{{ forloop.counter }}">
+                <img src="{{image.image.url}}" class="card-img-top p-2 rounded" alt="Obraz 1">
+                <div class="card-body">
+                    <h5 class="card-title ">{{ image.title|title }}</h5>
+                    {% if is_owner %}
+                    <div class="text-center">
+                        <a href="{% url 'image_update' advertise_pk=id_advertise pk=image.id %}"
+                           class="btn btn-primary me-2">Edit</a>
+                        <a href="{% url 'image_delete' advertise_pk=id_advertise pk=image.id %}"
+                           class="btn btn-danger ">Delete</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <!-- Modal dla obrazka -->
+        <div class="modal fade" id="imageModal{{ forloop.counter }}" tabindex="-1" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <img src="{{image.image.url}}" class="img-fluid rounded" alt="Obraz 1">
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <h3 class="container row row-col-1 justify-content-center mt-4">No images in gallery </h3>
+        {% endfor %}
+
+    </div>
+</div>
+<!--pagination-->
+{% include 'core/components/pagination_comp.html' %}
+
+
+{% endblock content %}

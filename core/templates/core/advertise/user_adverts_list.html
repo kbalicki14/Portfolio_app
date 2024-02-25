@@ -1,0 +1,60 @@
+{% extends 'core/main.html' %}
+{% block headerTag %}
+
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }} alert-dismissible fade show col-md-6 mx-auto mt-2" role="alert">
+    <h4 class="alert-heading">Well done!</h4>
+    <p>{{ message }}</p>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    {% endfor %}
+</div>
+{% endif %}
+<div class="container mt-4">
+    <h3>My Advertisements </h3>
+
+</div>
+
+{% endblock headerTag %}
+
+{% block content %}
+<div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4 mt-3">
+    {% for user_item in user_adverts %}
+
+    <div class="col">
+        <a href="{% url 'advertise_details' user_item.id %}" class="text-decoration-none text-body ">
+            <div class="card w-100 h-100">
+                <img src=" {{ user_item.image.url }}
+            " class="card-img-top"
+                     alt="Advertise image" style="height: 200px; object-fit: cover;">
+                <div class=" card-body ">
+                    <h5 class="card-title">{{ user_item.title|title }}</h5>
+                    <p class="card-text">{{ user_item.address.town|title }}, {{user_item.address.street}}</p>
+                    <!--                    <p class="card-text">{{ user_item.advertise_category }}</p>-->
+
+
+                </div>
+                <div class="card-footer bg-transparent text-center mb-2 ">
+                    <a href="{% url 'advertise_update' user_item.id %}" class="btn btn-primary ">Edit</a>
+                    <a href="{% url 'gallery' user_item.id  %}" class="btn btn-primary ">Gallery</a>
+                    <a href="{% url 'advertise_delete' user_item.address.id  %}" class="btn btn-danger ">Delete</a>
+                    {% if not user_item.advertise_status == 'accepted' %}
+                    <hr class="opacity-15">
+                    <small class="text-muted">Status: <b>{{user_item.advertise_status}}</b>, for more info contact
+                        administration</small>
+
+                    {% endif %}
+
+                </div>
+            </div>
+        </a>
+    </div>
+    {% empty %}
+
+    <h3>No item in list</h3>
+    {% endfor %}
+</div>
+<!--pagination-->
+{% include 'core/components/pagination_comp.html' %}
+
+{% endblock content %}

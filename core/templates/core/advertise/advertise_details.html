@@ -1,0 +1,137 @@
+{% extends 'core/main.html' %}
+{% block content %}
+
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }} alert-dismissible fade show col-md-6 mx-auto mt-2" role="alert">
+    <h4 class="alert-heading">Well done!</h4>
+    <p>{{ message }}</p>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-5">
+            <img src="{{detail.image.url}}" class="img-fluid rounded" alt="Zdjęcie salonu">
+        </div>
+        <div class="col-lg-7 ">
+            <h1 class="display-4 text-break">{{detail.title|title}}</h1>
+            <p class="lead text-break">{{detail.description}} </p>
+            <!--            {% lorem 20 w random %}-->
+            <!--            <h4 class="mt-4">Usługi</h4>-->
+            <!--            <p class="text-break">Specjalizujemy się w usługach barberskich, oferując szeroki zakres usług, w tym-->
+            <!--                strzyżenie, golenie,-->
+            <!--                stylizację brody i wiele innych. Nasz zespół doświadczonych barberów jest gotowy, aby pomóc Ci osiągnąć-->
+            <!--                swój idealny wygląd.</p>-->
+            <h4 class="mt-4">{{address.town}}</h4>
+            <p>{{address.street}} {{address.street_number}} {% if address.apartment_number %} /
+                {{address.apartment_number}} {% endif %}, {{address.zip_code}}</p>
+            {% if detail.phone_number %}
+            <h4 class="mt-4">Contact </h4>
+            <p>tel. {{detail.phone_number.as_international}}</p>
+
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+<div class="container mt-4 ms-10">
+    <h3>Portfolio </h3>
+</div>
+
+<div class="container py-3">
+    <div class="row">
+        {% for image in gallery %}
+        <div class="col-md-4 mt-2">
+            <div class="card h-100 " data-bs-toggle="modal" data-bs-target="#imageModal{{ forloop.counter }}">
+                <img src="{{image.image.url}}" class="card-img-top p-2 rounded" alt="Obraz 1">
+                <div class="card-body">
+                    <h5 class="card-title">{{ image.title }}</h5>
+                </div>
+            </div>
+        </div>
+        <!-- Modal dla obrazka -->
+        <div class="modal fade" id="imageModal{{ forloop.counter }}" tabindex="-1" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <img src="{{image.image.url}}" class="img-fluid rounded" alt="Obraz 1">
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <h3 class="container row row-col-1 justify-content-center mt-4">No images in gallery </h3>
+        {% endfor %}
+
+    </div>
+</div>
+{% if gallery %}
+<div class="row mt-2 mb-5">
+    <div class="col text-center">
+        <a href="{% url 'gallery' detail.id %}" class="btn btn-outline-dark">See whole gallery</a>
+
+    </div>
+</div>
+{% endif %}
+
+<!-- Rating -->
+{% if average_rating %}
+<div class="container mt-4 ms-10">
+    <h3>Rating <i class="fa-solid fa-star ms-2" style="color: #f3ed35;"></i> {{ average_rating|floatformat:1 }} /5</h3>
+</div>
+{% endif %}
+
+<div class="container py-3">
+    <div class="mt-2 row">
+        <a href="{% url 'rating' detail.id %}" class="btn btn-primary col-md-12 col-lg-3  mx-auto">Add rate</a>
+    </div>
+
+
+    {% for rating in ratings %}
+    <div class="row mt-4">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">@{{ rating.user.username }} <i class="fa-solid fa-star"
+                                                                          style="color: #f3ed35;"></i>
+                        {{rating.rating|floatformat:1}}
+                    </h5>
+                    <p class="card-text">{{ rating.comment }}</p>
+                    <p class="card-text"><small class="text-muted">{{ rating.created_at }}
+                        {% if request.user == rating.user%}
+                        <a href="{% url 'rating_update' advertise_pk=detail.id pk=rating.id %}" class="ms-3"><i
+                                class="fa-solid fa-pen-to-square"></i></a>
+                        <a href="{% url 'rating_delete' advertise_pk=detail.id pk=rating.id %}" class="ms-3"><i
+                                class="fa-solid fa-trash"></i></a>
+                        {% endif %}
+                    </small></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <h3 class="container row row-col-1 justify-content-center mt-4">No ratings yet</h3>
+    {% endfor %}
+</div>
+
+{% if ratings %}
+<div class="row mt-3">
+    <div class="col text-center">
+        <a href="{% url 'rating_list' detail.id %}" class="btn btn-outline-dark">See whole ratings</a>
+
+    </div>
+</div>
+{% endif %}
+
+<div class="d-flex container justify-content-end mb-4">
+    <a href="{% url 'report_advertise' advertise_pk=detail.id %}" class="text-danger"> <i class="fa-solid fa-flag"
+                                                                                          style="color: #c81414;"></i>
+        Report</a>
+</div>
+
+
+{% endblock content %}

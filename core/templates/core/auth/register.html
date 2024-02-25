@@ -1,0 +1,42 @@
+{% extends 'core/main.html' %}
+{% block content %}
+
+
+<form method="post">
+    {% csrf_token %}
+    <div class="row row-col-1 justify-content-center mt-5">
+        <div class="col-lg-4 col-md-6">
+            <h1>Register</h1>
+            <div class="mb-3 ">
+                {% load widget_tweaks %}
+                <label for="id_username" class="form-label">{{form.username.label}}</label>
+                <!--                <input type="text" name="{{form.username.name}}" class="form-control" id="id_username"-->
+                <!--                       aria-describedby="emailHelp">-->
+                {% render_field form.username placeholder='Enter username' class+="form-control" %}
+            </div>
+            <div class="mb-3 ">
+                <label for="id_password1" class="form-label">{{form.password1.label}}</label>
+                <!--                <input type="password" name="{{form.password1.name}}" class="form-control" id="InputPassword1">-->
+                {% render_field form.password1 placeholder='Enter password' class+="form-control" %}
+
+            </div>
+            <div class="mb-3 ">
+
+                <label for="id_password2" class="form-label">{{form.password2.label}}</label>
+                <!--                <input type="password" name="{{form.password2.name}}" class="form-control" id="InputPassword2">-->
+                {% render_field form.password2 placeholder=form.password2.label class+="form-control" %}
+
+            </div>
+
+            <input type="submit" class="btn btn-primary " value="Register">
+            <p class="mt-3">Already have account? <a href="{% url 'login' %}">Login</a></p>
+
+            {% if form.errors %}
+            <small class="help-block text-danger">{{ form.errors|striptags }}</small>
+            {% endif %}
+        </div>
+    </div>
+</form>
+
+
+{% endblock content %}

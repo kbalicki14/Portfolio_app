@@ -1,0 +1,156 @@
+{% extends 'core/main.html' %}
+{% block head %}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+
+{% endblock head %}
+
+{% block index %}
+{% load static %}
+<div id="carouselExampleIndicators" class="carousel slide " data-mdb-ride="carousel">
+    <div class="carousel-indicators">
+        <button
+                type="button"
+                data-mdb-target="#carouselExampleIndicators"
+                data-mdb-slide-to="0"
+                class="active"
+                aria-current="true"
+                aria-label="Slide 1"
+        ></button>
+        <button
+                type="button"
+                data-mdb-target="#carouselExampleIndicators"
+                data-mdb-slide-to="1"
+                aria-label="Slide 2"
+        ></button>
+        <button
+                type="button"
+                data-mdb-target="#carouselExampleIndicators"
+                data-mdb-slide-to="2"
+                aria-label="Slide 3"
+        ></button>
+    </div>
+    <div class="carousel-inner">
+
+        <div class="carousel-item active">
+            <img src="{% static 'images/slider-2.jpg' %}" class="d-block w-100"
+                 alt="Barber tools"/>
+        </div>
+        <div class="carousel-item">
+            <img src="{% static 'images/slider-1.jpg' %}" class="d-block w-100" alt="Barber Shop"/>
+
+        </div>
+        <div class="carousel-item">
+            <img src="{% static 'images/slider-4.jpg' %}" class="d-block w-100" alt="Tatto Artis"/>
+        </div>
+
+    </div>
+
+    <form class="justify-content-center position-absolute top-50 start-50 translate-middle w-75"
+          role="search"
+          method="get" action="{% url 'advert_list' %}">
+
+        <div class="row">
+            <div class="col-12 col-lg-8 col-xl-9 mb-2 mb-lg-0">
+                <div class="input-group">
+                    <input class="form-control w-50 town-search" type="search"
+                           placeholder="Search places in your city"
+                           name="search_area"
+                           value="{{search_input}}"
+                           aria-label="Search">
+                    <select class="form-control w-25" aria-label="Default select example" name="search_category">
+
+                        {% for item in category %}
+                        <option value="{{ item.id }}">{{ item.category_name }}</option>
+                        {% endfor %}
+
+                    </select>
+                </div>
+            </div>
+            <div class="col-12 col-lg-2 ">
+                <button class="btn btn-success w-100" type="submit">Search</button>
+            </div>
+        </div>
+    </form>
+
+
+</div>
+
+{% endblock index %}
+
+{% block content %}
+<div class="container marketing py-5 mt-5">
+
+    <!-- Three columns of text below the carousel -->
+    <div class="row mb-8">
+        <div class="col-lg-4">
+
+            <h2>Service Search</h2>
+            <p>Our web application allows for quick and easy search of service companies in a selected category and
+                location.</p>
+
+        </div><!-- /.col-lg-4 -->
+        <div class="col-lg-4">
+
+            <h2>Company Portfolios</h2>
+            <p>Visitors can view a company's portfolio that showcases its skills and experience.</p>
+
+
+        </div><!-- /.col-lg-4 -->
+        <div class="col-lg-4">
+
+            <h2>Ratings and Reviews</h2>
+            <p>Users can browse average ratings and reviews from other users about service companies.</p>
+
+        </div><!-- /.col-lg-4 -->
+    </div><!-- /.row -->
+
+
+    <!-- START THE FEATURETTES -->
+
+    <hr class="featurette-divider">
+
+
+    <div class="row featurette ">
+        <div class="col-md-7 my-auto">
+            <h2 class="featurette-heading ">The best specialists in your city. <span
+                    class="text-muted">Right here </span></h2>
+            <p class="lead">Our application brings together the best specialists in various fields, such as barbers,
+                hairdressers, and tattoo studios, in one place. This allows you to easily find the service you need in
+                your city.</p>
+        </div>
+        <div class="col-md-5">
+            <img src="{% static 'images/specialist_image.jpg' %}"
+                 class="bd-placeholder-img bd-placeholder-img-lg  img-fluid mx-auto" width="500"
+                 height="500" alt="image">
+
+        </div>
+    </div>
+    <div class="mb-6"></div>
+    <hr class="featurette-divider">
+
+    <div class="row featurette ">
+        <div class="col-md-7 order-md-2 my-auto">
+            <h2 class="featurette-heading">Join us. <span class="text-muted">Sign in</span>
+            </h2>
+            <p class="lead ">Are you a specialist in your field? Join our community and let others find your
+                services.
+            </p>
+        </div>
+        <div class="col-md-5 order-md-1">
+            <img src="{% static 'images/join_us_image.jpeg' %}"
+                 class="bd-placeholder-img bd-placeholder-img-lg  img-fluid mx-auto" width="500"
+                 height="500" alt="image">
+
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+
+{% block script %}
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+<script src="{% static 'jquery_city.js' %}"></script>
+
+{% endblock script %}
