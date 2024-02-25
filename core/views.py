@@ -19,10 +19,6 @@ from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth import login, update_session_auth_hash
 from django.views.generic import TemplateView
 from django.db.models import Avg
-from django.core.paginator import Paginator
-from PIL import Image as PilImage
-from io import BytesIO
-from django.core.files import File
 
 from .forms import AdvertiseForm, MultiImageForm, ImageForm, RatingForm, AddressForm, ReportAdvertiseForm, \
     UsernameChangeForm
@@ -113,7 +109,6 @@ class SerachBarAutoComplete(View):
             return HttpResponse('<p>null</p>')
 
 
-# png not upload
 class AdvertiseCreate(LoginRequiredMixin, CreateView):
     model = AdvertiseModel
     form_class = AdvertiseForm
@@ -139,7 +134,7 @@ class AdvertiseCreate(LoginRequiredMixin, CreateView):
         if form.is_valid():
             form.instance.user = self.request.user
 
-        messages.success(self.request, "Advertise created.")
+        messages.success(self.request, "Advertisement created.")
         return super().form_valid(form)
 
 
@@ -147,11 +142,6 @@ class AdvertiseDetails(DetailView):
     model = AdvertiseModel
     context_object_name = 'detail'
     template_name = 'core/advertise/advertise_details.html'
-
-    # def get_queryset(self):
-    #     tasks = super().get_queryset()
-    #     rating = AdvertiseRating.objects.filter(advertise=self.object)
-    #     return rating
 
     def get_context_data(self, **kwargs):
         advertise_id = self.kwargs['pk']
@@ -161,10 +151,7 @@ class AdvertiseDetails(DetailView):
             'rating__avg']
         context['ratings'] = AdvertiseRating.objects.filter(advertise=self.object).order_by("-created_at")[:5]
         context['address'] = self.object.address
-        # ratings_list = AdvertiseRating.objects.filter(advertise=self.object)
-        # paginator = Paginator(ratings_list, 2)
-        # page = self.request.GET.get('page')
-        # context['ratings'] = paginator.get_page(page)
+
         return context
 
 
@@ -247,11 +234,11 @@ class AdvertiseUpdate(LoginRequiredMixin, UpdateView):
         try:
             advert_object = AdvertiseModel.objects.get(id=form.instance.id)
         except ObjectDoesNotExist as e:
-            form.add_error(None, f"Not found this advertise")
+            form.add_error(None, f"Not found this advertisement")
             return super().form_invalid(form)
 
         if advert_object.user != self.request.user:
-            form.add_error(None, "Only owner can edit advertise")
+            form.add_error(None, "Only owner can edit advertisement")
             return super().form_invalid(form)
 
         context = self.get_context_data()
@@ -262,7 +249,7 @@ class AdvertiseUpdate(LoginRequiredMixin, UpdateView):
         if form.is_valid():
             form.instance.advertise.set = advert_object
 
-        messages.success(self.request, "Advertise details updated.")
+        messages.success(self.request, "Advertisement details updated.")
         return super().form_valid(form)
 
 
@@ -286,15 +273,15 @@ class AdvertiseDelete(LoginRequiredMixin, DeleteView):
         try:
             advert_object = AdvertiseModel.objects.get(address=delete_id)
         except ObjectDoesNotExist as e:
-            form.add_error(None, f"Not found this advertise")
+            form.add_error(None, f"Not found this advertisement")
             return super().form_invalid(form)
 
         if advert_object.user != self.request.user:
-            form.add_error(None, "Only owner can delete advertise!")
+            form.add_error(None, "Only owner can delete advertisement!")
             return super().form_invalid(form)
 
         # form.instance.advertise = advert_object
-        messages.error(self.request, "Advertise deleted", extra_tags="danger")
+        messages.error(self.request, "Advertisement deleted", extra_tags="danger")
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
@@ -310,10 +297,6 @@ class AddImageToGallery(LoginRequiredMixin, CreateView):
     template_name = 'core/advertise/add_to_gallery.html'
     context_object_name = 'image'
 
-    # possible issues in url
-    # redirect to gallery by kwargs id
-    # def get_success_url(self):
-    #     return self.request.path_info
     def get_success_url(self):
         advertise_id = self.kwargs['advertise_pk']
         return reverse_lazy('gallery', kwargs={'pk': advertise_id})
@@ -329,7 +312,7 @@ class AddImageToGallery(LoginRequiredMixin, CreateView):
             advert_object = AdvertiseModel.objects.get(id=pk_advertise)
 
         except ObjectDoesNotExist as e:
-            form.add_error(None, f"Not found this advertise")
+            form.add_error(None, f"Not found this image")
             return super().form_invalid(form)
 
         if advert_object.user != self.request.user:
@@ -362,7 +345,7 @@ class ImageInGalleryUpdate(LoginRequiredMixin, UpdateView):
             advert_object = AdvertiseModel.objects.get(id=pk_advertise)
 
         except ObjectDoesNotExist as e:
-            form.add_error(None, f"Not found this advertise")
+            form.add_error(None, f"Not found this image")
             return super().form_invalid(form)
 
         if advert_object.user != self.request.user:
@@ -399,16 +382,17 @@ class ImageInGalleryDelete(LoginRequiredMixin, DeleteView):
         try:
             advertise_object = AdvertiseModel.objects.get(id=delete_id)
         except ObjectDoesNotExist as e:
-            form.add_error(None, f"Not found this advertise")
+            form.add_error(None, f"Not found this image")
             return super().form_invalid(form)
 
         if advertise_object.user != self.request.user:
-            form.add_error(None, "Only owner can delete rating!")
+            form.add_error(None, "Only owner can delete image!")
             return super().form_invalid(form)
         messages.error(self.request, "Image deleted.", extra_tags="danger")
         return super().form_valid(form)
 
 
+# Multi images upload
 class CreateImagesToGallery(LoginRequiredMixin, CreateView):
     model = Image
     form_class = MultiImageForm
@@ -436,30 +420,6 @@ class CreateImagesToGallery(LoginRequiredMixin, CreateView):
     #     # images = form.FILES.getlist('image')
     #     for image in images:
     #         Image.objects.create(image=image)
-
-
-def AddMultiImage(request):
-    form = MultiImageForm()
-
-    if request.method == 'POST':
-        form = MultiImageForm(request.POST, request.FILES)
-        images = request.FILES.getlist("image")
-
-        # images = form.cleaned_data.getlist('image')
-        if form.is_valid():
-            title = form.cleaned_data['title']
-            advertise = form.cleaned_data['advertise']
-
-            for image in images:
-                Image.objects.create(title=title, advertise=advertise, image=image)
-            return redirect('multi_image')
-
-    context = {'form': form}
-    return render(request, 'core/advertise/add_to_gallery.html', context)
-
-
-def thanks(request):
-    return HttpResponse('<h1>Form saved.</h1>')
 
 
 def imageUpload(request):
@@ -657,7 +617,7 @@ class ReportAdvertiseView(CreateView):
         try:
             advertise_object = AdvertiseModel.objects.get(id=advertise_id)
         except ObjectDoesNotExist as e:
-            form.add_error(None, f"Not found this advertise")
+            form.add_error(None, f"Not found this advertisement")
             return super().form_invalid(form)
 
         if self.request.user.is_authenticated:
@@ -725,3 +685,23 @@ def handler500(request, *args, **argv):
 #     model = Task
 #     context_object_name = 'task'
 #     success_url = reverse_lazy('task')
+
+# def AddMultiImage(request):
+#     form = MultiImageForm()
+#
+#     if request.method == 'POST':
+#         form = MultiImageForm(request.POST, request.FILES)
+#         images = request.FILES.getlist("image")
+#
+#         # images = form.cleaned_data.getlist('image')
+#         if form.is_valid():
+#             title = form.cleaned_data['title']
+#             advertise = form.cleaned_data['advertise']
+#
+#             for image in images:
+#                 Image.objects.create(title=title, advertise=advertise, image=image)
+#             return redirect('multi_image')
+#
+#     context = {'form': form}
+#     return render(request, 'core/advertise/add_to_gallery.html', context)
+#

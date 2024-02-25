@@ -4,7 +4,6 @@ from .models import AdvertiseModel, Image, CityList, AdvertiseCategory, Advertis
 
 # Register your models here.
 
-# admin.site.register(Task)
 # admin.site.register(ReportAdvertise)
 # admin.site.register(AdvertiseRating)
 # admin.site.register(AdvertiseModel)

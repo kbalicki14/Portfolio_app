@@ -2,7 +2,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, include
 from .views import CustomLoginView, RegisterView, \
-    imageUpload, AdvertList, AdvertiseCreate, AddMultiImage, CreateImagesToGallery, WelcomePage, AdvertiseUpdate, \
+    imageUpload, AdvertList, AdvertiseCreate, CreateImagesToGallery, WelcomePage, AdvertiseUpdate, \
     AddImageToGallery, AdvertiseDetails, CurrentUserAdvertise, AdvertiseDelete, AdvertiseGallery, ProfileDetail, \
     RatingAdvertise, AdvertiseRatingList, RatingUpdate, RatingDelete, ImageInGalleryUpdate, ImageInGalleryDelete, \
     SerachBarAutoComplete, ReportAdvertiseView, AboutUsPage, ChangePassword, ChangeUsername
@@ -17,7 +17,6 @@ urlpatterns = [
     path('change_password/', ChangePassword.as_view(), name='change_password'),
     path('change_username/', ChangeUsername.as_view(), name='change_username'),
 
-    # path('upload/', imageUpload, name='upload'),
     path('advert/', AdvertList.as_view(), name='advert_list'),
     path('advertise_create/', AdvertiseCreate.as_view(), name='advertise'),
     path('advertise_details/<int:pk>/', AdvertiseDetails.as_view(), name='advertise_details'),
@@ -42,6 +41,7 @@ urlpatterns = [
 
     # path('multi_image/', CreateImagesToGallery.as_view(), name='multi_image'),
     # path('multi_image_work/', AddMultiImage, name='multi_image_work'),
+    # path('upload/', imageUpload, name='upload'),
     path('user_advertise/', CurrentUserAdvertise.as_view(), name='user_advertise'),
     path('user_profile/', ProfileDetail.as_view(), name='profile_detail'),
     path('about_us/', AboutUsPage.as_view(), name='about_us'),

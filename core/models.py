@@ -9,10 +9,6 @@ from phonenumber_field.modelfields import PhoneNumberField
 from django.core.files import File
 from PIL import Image as PilImage
 from io import BytesIO
-from django.core.files.uploadedfile import InMemoryUploadedFile
-from datetime import datetime
-from django.db.models.signals import post_delete
-from django.dispatch import receiver
 
 # Create your models here.
 
@@ -76,7 +72,7 @@ def custom_image_compress(image_file):
         filename = "%s.%s" % (uuid.uuid4(), ext)
         img.save(img_io, quality=60, format='JPEG')
         image_file = ContentFile(img_io.getvalue(), filename)
-        
+
     return image_file
 
 
