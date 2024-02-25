@@ -22,11 +22,11 @@ cd your_repository
 python3 -m venv venv
 ```
 2. Activate the virtual environment:
-On Unix or MacOS systems, use the command:
+ On Unix or MacOS systems, use the command:
   ```
   source venv/bin/activate
   ```
-On Windows systems, use the command:
+ On Windows systems, use the command:
   ```
   venv\Scripts\activate
   ```
