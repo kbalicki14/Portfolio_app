@@ -451,7 +451,7 @@ class AdvertList(ListView):
         # print(addres_qs)
         advert_qs = super().get_queryset().filter(address__town=search_input,
                                                   advertise_category=search_category,
-                                                  advertise_status='accepted')
+                                                  advertise_status='accepted').order_by("-created_at")
         # filter_by_rating = advert_qs.annotate(avg_rating=Avg('advertiserating__rating'))
         #
         # if filter_search == 'best_rating':
