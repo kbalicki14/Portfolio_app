@@ -177,8 +177,6 @@ class AdvertiseGallery(ListView):
         # context['user'] = object_advertise.user
         context['is_owner'] = self.request.user == object_advertise.user
         context['search_input'] = self.request.GET.get('search_image') or ''
-
-        print(context['is_owner'])
         return context
 
 
