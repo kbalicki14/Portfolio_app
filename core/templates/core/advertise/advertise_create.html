@@ -31,7 +31,7 @@
             {% render_field form.description placeholder='Enter a few words about your company' class+="form-control" %}
 
             <label for="id_phone_number" class="form-label">{{form.phone_number.label}}</label>
-            {% render_field form.phone_number placeholder='Enter phone number' class+="form-control" %}
+            {% render_field form.phone_number placeholder='Enter Poland phone number, no prefix' class+="form-control"%}
 
             <label for="id_advertise_category" class="form-label">{{form.advertise_category.label}} <b>*</b></label>
             {% render_field form.advertise_category placeholder=form.advertise_category.label class+="form-control" %}
