@@ -128,10 +128,9 @@ class AdvertiseCreate(LoginRequiredMixin, CreateView):
         # form is advertiseForm
         context = self.get_context_data()
         address = context['address']
-        if address.is_valid():
+        if address.is_valid() and form.is_valid():
             address = address.save()  # zapisz najpierw formularz adresu
             form.instance.address = address  # ustaw adres na formularzu AdvertiseModel
-        if form.is_valid():
             form.instance.user = self.request.user
 
         messages.success(self.request, "Advertisement created.")
@@ -179,7 +178,6 @@ class AdvertiseGallery(ListView):
         context['is_owner'] = self.request.user == object_advertise.user
         context['search_input'] = self.request.GET.get('search_image') or ''
 
-        print(context['is_owner'])
         return context
 
 
@@ -243,10 +241,9 @@ class AdvertiseUpdate(LoginRequiredMixin, UpdateView):
 
         context = self.get_context_data()
         address = context['address']
-        if address.is_valid():
+        if address.is_valid() and form.is_valid():
             address.save()  # zapisz najpierw formularz adresu
             form.instance.address = address.instance  # ustaw adres na formularzu AdvertiseModel
-        if form.is_valid():
             form.instance.advertise.set = advert_object
 
         messages.success(self.request, "Advertisement details updated.")
@@ -449,6 +446,7 @@ class AdvertList(ListView):
         filter_search = self.request.GET.get('filter_search') or ''
         # addres_qs = Address.objects.filter(town=search_input)
         # print(addres_qs)
+        search_input = search_input.title()
         advert_qs = super().get_queryset().filter(address__town=search_input,
                                                   advertise_category=search_category,
                                                   advertise_status='accepted').order_by("-created_at")

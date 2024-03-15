@@ -58,22 +58,31 @@ def image_compression(image):
 
 
 def custom_image_compress(image_file):
-    with PilImage.open(image_file) as img:
-        if img.width > 1350 or img.height > 1080:
-            new_resolution = (1350, 1080)
-            img.thumbnail(new_resolution)
+    try:
+        with PilImage.open(image_file) as img:
+            if img.width > 1350 or img.height > 1080:
+                new_resolution = (1350, 1080)
+                img.thumbnail(new_resolution)
 
-        if img.mode != 'RGB':
-            img = img.convert('RGB')
+            img_io = BytesIO()
+            # replace name to uuid|
+            ext = image_file.name.split(".")[-1]
+            filename = "%s.%s" % (uuid.uuid4(), ext)
+            if ext.lower() == 'jpg':
+                ext = 'JPEG'
+            img.save(img_io, format=ext.upper())
+            image_file = ContentFile(img_io.getvalue(), filename)
 
-        img_io = BytesIO()
-        # replace name to uuid|
-        ext = 'jpeg'
-        filename = "%s.%s" % (uuid.uuid4(), ext)
-        img.save(img_io, quality=60, format='JPEG')
-        image_file = ContentFile(img_io.getvalue(), filename)
-
-    return image_file
+        return image_file
+    except IOError:
+        print(f"Error open/read/write file {image_file}")
+        raise Exception
+    except KeyError:
+        print(f"Unknown format file {ext}")
+        raise KeyError
+    except Exception as e:
+        print(f"Unexpected error occur: {str(e)}")
+        raise Exception
 
 
 # apartment_number null
@@ -106,10 +115,12 @@ class AdvertiseModel(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
-        # issue save 2 times
-        if self.image:
-            self.image = custom_image_compress(self.image)
-        super().save(*args, **kwargs)
+        try:
+            if self.image:
+                self.image = custom_image_compress(self.image)
+            super().save(*args, **kwargs)
+        except Exception as e:
+            print(f"Error while saving image file {str(e)}")
 
 
 class Image(models.Model):
@@ -122,8 +133,11 @@ class Image(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
-        self.image = custom_image_compress(self.image)
-        super().save(*args, **kwargs)
+        try:
+            self.image = custom_image_compress(self.image)
+            super().save(*args, **kwargs)
+        except Exception as e:
+            print(f"Error while saving image file {str(e)}")
 
 
 class AdvertiseRating(models.Model):
