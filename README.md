@@ -1,8 +1,13 @@
 # Dyplom APP
 
+This Django-based project is my graduate app. The goal is to make a local service finder for barbers, hairdressers, and
+tattoo studios in a given city. It’s designed for easy discovery, complete with user reviews and detailed service
+information. An important feature is the photo portfolio of each company that showcases their experience and work style.
+
 ## Prerequisites
 
 Ensure you have the following tools installed:
+
 - Python 3.8 or newer
 - pip (Python Package Installer)
 - virtualenv
@@ -12,16 +17,21 @@ Ensure you have the following tools installed:
 
 1. Clone the repository from GitHub
 2. Navigate to the cloned repository:
+
 ```
 cd your_repository
 ```
+
 ## Environment Setup
 
 1. Create a Python virtual environment (venv) using the command:
+
 ```
 python3 -m venv venv
 ```
+
 2. Activate the virtual environment:
+
 - On Unix or MacOS systems, use the command:
   ```
   source venv/bin/activate
@@ -41,9 +51,10 @@ pip install -r requirements.txt
 
 1. Start your PostgreSQL service.
 
-2. Create a new database for your project. Recommend pgadmin4 
+2. Create a new database for your project. Recommend pgadmin4
 
 3. Update the `DATABASES` configuration in your Django `settings.py` file:
+
 ```python
 DATABASES = {
     'default': {
@@ -57,25 +68,35 @@ DATABASES = {
 }
 ```
 
-Remember to replace `your_project_name`, `your_database_name`, `your_postgres_username`, and `your_postgres_password` with your actual Django project name, PostgreSQL database name, PostgreSQL username, and PostgreSQL password, respectively. Also, ensure you have a `requirements.txt` file that contains all the required packages to run your project.
-
+Remember to replace `your_project_name`, `your_database_name`, `your_postgres_username`, and `your_postgres_password`
+with your actual Django project name, PostgreSQL database name, PostgreSQL username, and PostgreSQL password,
+respectively. Also, ensure you have a `requirements.txt` file that contains all the required packages to run your
+project.
 
 ## Running the Django project
+
 1. Navigate to your Django project directory:
+
 ```
 cd your_project_name
 ```
+
 2. Run migrations to database:
+
 ```
 python manage.py makemigrations
 python manage.py migrate
 ```
+
 3. Load base data by run commands:
+
 ```
 python manage.py load_citys core/data/city_names_small.csv
 python manage.py load_category core/data/advertise_category.csv
 ```
+
 4. Run django server:
+
 ```
 python manage.py runserver
 ```
