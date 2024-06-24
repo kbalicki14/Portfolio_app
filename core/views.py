@@ -178,7 +178,6 @@ class AdvertiseGallery(ListView):
         context['is_owner'] = self.request.user == object_advertise.user
         context['search_input'] = self.request.GET.get('search_image') or ''
 
-        print(context['is_owner'])
         return context
 
 
@@ -447,6 +446,7 @@ class AdvertList(ListView):
         filter_search = self.request.GET.get('filter_search') or ''
         # addres_qs = Address.objects.filter(town=search_input)
         # print(addres_qs)
+        search_input = search_input.title()
         advert_qs = super().get_queryset().filter(address__town=search_input,
                                                   advertise_category=search_category,
                                                   advertise_status='accepted').order_by("-created_at")
