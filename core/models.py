@@ -114,13 +114,20 @@ class AdvertiseModel(models.Model):
     def __str__(self):
         return self.title
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Przechowaj oryginalną nazwę obrazka
+        self.__original_image_name = self.image.name
+
     def save(self, *args, **kwargs):
+        current_name = self.image.name
         try:
-            if self.image:
+            if self.image and current_name != self.__original_image_name:
                 self.image = custom_image_compress(self.image)
             super().save(*args, **kwargs)
         except Exception as e:
             print(f"Error while saving image file {str(e)}")
+        self.__original_image_name = self.image.name
 
 
 class Image(models.Model):
@@ -128,16 +135,24 @@ class Image(models.Model):
     image = models.ImageField(upload_to='images')
     advertise = models.ForeignKey(AdvertiseModel, related_name='advertise', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.title
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.__original_image_name = self.image.name
+
     def save(self, *args, **kwargs):
+        current_name = self.image.name
         try:
-            self.image = custom_image_compress(self.image)
+            if current_name != self.__original_image_name:
+                self.image = custom_image_compress(self.image)
             super().save(*args, **kwargs)
         except Exception as e:
             print(f"Error while saving image file {str(e)}")
+        self.__original_image_name = self.image.name
 
 
 class AdvertiseRating(models.Model):
