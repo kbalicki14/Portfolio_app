@@ -41,8 +41,10 @@ class AddressAdmin(admin.ModelAdmin):
 
 @admin.register(Image)
 class ImageAdmin(admin.ModelAdmin):
-    list_display = ('title', 'get_advertise_title')
+    list_display = ('title', 'get_advertise_title', 'updated')
     search_fields = ('title', 'advertise__title')
+    list_filter = ['created_at', 'updated']
+    readonly_fields = ('created_at', 'updated')
 
     def get_advertise_title(self, obj):
         return obj.advertise.title
