@@ -92,9 +92,7 @@ def get_default_image():
     if settings.DEBUG:
         return 'default_images/mountain.jpg'
     else:
-        url = "https://res.cloudinary.com/dphtmeujm/image/upload/v1727430295/dyplom_app/default/default_image.png"
-        # result = cloudinary.api.resource_by_asset_id("8bae1883fd9b11c991e84f488d61d446")
-        # print(result)
+        url = "default/deafult_image"
         return url
 
 
