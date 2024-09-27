@@ -1,5 +1,6 @@
 import os
 import uuid
+from django.conf import settings
 
 from django.core.files.base import ContentFile
 from django.db import models
@@ -9,6 +10,8 @@ from phonenumber_field.modelfields import PhoneNumberField
 from django.core.files import File
 from PIL import Image as PilImage
 from io import BytesIO
+
+import cloudinary
 
 # Create your models here.
 
@@ -85,6 +88,14 @@ def custom_image_compress(image_file):
         raise Exception
 
 
+def get_default_image():
+    if settings.DEBUG:
+        return 'default_images/mountain.jpg'
+    else:
+        url = "default/deafult_image"
+        return url
+
+
 # apartment_number null
 class Address(models.Model):
     street = models.CharField(max_length=50)
@@ -109,7 +120,7 @@ class AdvertiseModel(models.Model):
     address = models.OneToOneField(Address, related_name='address', on_delete=models.CASCADE)
     updated = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    image = models.ImageField(upload_to='images', default='default_images/mountain.jpg', null=True, blank=True)
+    image = models.ImageField(upload_to='images', default=get_default_image(), null=True, blank=True)
 
     def __str__(self):
         return self.title
