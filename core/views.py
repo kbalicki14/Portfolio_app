@@ -440,6 +440,15 @@ class AdvertList(ListView):
 
     paginate_by = 4
 
+    # def get(self, request, *args, **kwargs):
+    #     response = super().get(request, *args, **kwargs)
+    #     search_input_cookie = self.request.GET.get('search_area') or self.request.COOKIES.get('search_cache_cookie', '')
+    #     search_category_cookie = self.request.GET.get('search_category') or int(self.request.COOKIES.get(
+    #         'category_cache_cookie'))
+    #     response.set_cookie('search_cache_cookie', search_input_cookie)
+    #     response.set_cookie('category_cache_cookie', search_category_cookie)
+    #     return response
+
     def get_queryset(self):
         search_input = self.request.GET.get('search_area') or ''
         search_category = self.request.GET.get('search_category')
