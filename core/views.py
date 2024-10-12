@@ -441,12 +441,6 @@ class AdvertList(ListView):
     paginate_by = 4
 
     # def get(self, request, *args, **kwargs):
-    #     search_category = self.request.GET.get('search_category')
-    #     if not search_category:
-    #         raise Http404("Search category not found")
-    #     return super().get(request, *args, **kwargs)
-
-    # def get(self, request, *args, **kwargs):
     #     response = super().get(request, *args, **kwargs)
     #     search_input_cookie = self.request.GET.get('search_area') or self.request.COOKIES.get('search_cache_cookie', '')
     #     search_category_cookie = self.request.GET.get('search_category') or int(self.request.COOKIES.get(
