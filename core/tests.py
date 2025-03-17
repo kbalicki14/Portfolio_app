@@ -5,6 +5,7 @@ from django.test import TestCase, RequestFactory, override_settings
 from django.contrib.auth.models import User
 from django.urls import reverse
 from .models import AdvertiseCategory, AdvertiseModel, Address, AdvertiseRating
+from core.forms import RatingForm
 
 
 # Create your tests here.
@@ -153,3 +154,35 @@ class AdvertiseTest(TestCase):
     #         address=self.address
     #     )
     #     self.assertEqual(advertise.image.name, 'default_images/mountain.jpg')
+
+#AI
+class RatingAdvertiseViewTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.advertise = AdvertiseModel.objects.create(title='Test Advertise', user=self.user)
+        self.url = reverse('rating_advertise', kwargs={'pk': self.advertise.pk})
+
+    def user_can_access_rating_form(self):
+        self.client.login(username='testuser', password='12345')
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'core/advertise/rating_form.html')
+
+    def user_can_submit_valid_rating(self):
+        self.client.login(username='testuser', password='12345')
+        data = {'rating': 5, 'comment': 'Great!'}
+        response = self.client.post(self.url, data)
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(AdvertiseRating.objects.filter(advertise=self.advertise, user=self.user).exists())
+
+    def user_cannot_submit_invalid_rating(self):
+        self.client.login(username='testuser', password='12345')
+        data = {'rating': '', 'comment': 'Great!'}
+        response = self.client.post(self.url, data)
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(AdvertiseRating.objects.filter(advertise=self.advertise, user=self.user).exists())
+
+    def anonymous_user_cannot_access_rating_form(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, f'/accounts/login/?next={self.url}')

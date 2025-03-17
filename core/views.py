@@ -451,7 +451,7 @@ class AdvertList(ListView):
 
     def get_queryset(self):
         search_input = self.request.GET.get('search_area') or ''
-        search_category = self.request.GET.get('search_category')
+        search_category = self.request.GET.get('search_category') or None
         filter_search = self.request.GET.get('filter_search') or ''
         # addres_qs = Address.objects.filter(town=search_input)
         # print(addres_qs)
@@ -469,6 +469,8 @@ class AdvertList(ListView):
         return advert_qs
 
     def get_context_data(self, **kwargs):
+        if not self.request.GET.get('search_category'):
+            raise Http404("Search category not found")
         context = super().get_context_data(**kwargs)
         context['search_input'] = self.request.GET.get('search_area') or ''
         context['search_category'] = int(self.request.GET.get('search_category'))
