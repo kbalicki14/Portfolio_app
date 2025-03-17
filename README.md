@@ -1,4 +1,4 @@
-# Dyplom APP
+# NearbyNow
 
 This Django-based project is my graduate app. The goal is to make a local service finder for barbers, hairdressers, and
 tattoo studios in a given city. It’s designed for easy discovery, complete with user reviews and detailed service
