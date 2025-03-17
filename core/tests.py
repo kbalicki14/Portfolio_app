@@ -1,7 +1,11 @@
-from django.test import TestCase, RequestFactory
+from django.conf import settings
+import tempfile
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test import TestCase, RequestFactory, override_settings
 from django.contrib.auth.models import User
 from django.urls import reverse
 from .models import AdvertiseCategory, AdvertiseModel, Address, AdvertiseRating
+from core.forms import RatingForm
 
 
 # Create your tests here.
@@ -103,7 +107,9 @@ class AdvertiseTest(TestCase):
     def test_address_str(self):
         self.assertEqual(str(self.address), 'Testowa 123 Wroclaw')
 
+    @override_settings(MEDIA_ROOT=tempfile.gettempdir())
     def user_create_advertise(self):
+        image = SimpleUploadedFile(name='test_image.jpg', content=b'', content_type='image/jpeg')
         response = self.client.post(reverse('advertise'), {
             'user': self.user,
             'title': "User advertise",
@@ -112,6 +118,7 @@ class AdvertiseTest(TestCase):
             'advertise_status': "accepted",
             'advertise_category': self.category,
             'address': self.address,
+            'image': image
         })
         self.assertEqual(response.status_code, 200)
         advert = AdvertiseModel.objects.get(title="User advertise")
@@ -133,3 +140,49 @@ class AdvertiseTest(TestCase):
         rating = AdvertiseRating.objects.get(advertise=self.advertise1)
         self.assertEqual(rating.rating, 5.0)
         self.assertEqual(rating.comment, 'Great!')
+
+    # def test_default_image_in_debug_mode(self):
+    #     # Ustawienie trybu DEBUG na True
+    #     settings.DEBUG = True
+    #     advertise = AdvertiseModel.objects.create(
+    #         user=self.user,
+    #         title='Test Advertise',
+    #         description='This is a test advertise.',
+    #         phone_number='+48123456789',
+    #         advertise_status='accepted',
+    #         advertise_category=self.category,
+    #         address=self.address
+    #     )
+    #     self.assertEqual(advertise.image.name, 'default_images/mountain.jpg')
+
+#AI
+class RatingAdvertiseViewTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.advertise = AdvertiseModel.objects.create(title='Test Advertise', user=self.user)
+        self.url = reverse('rating_advertise', kwargs={'pk': self.advertise.pk})
+
+    def user_can_access_rating_form(self):
+        self.client.login(username='testuser', password='12345')
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'core/advertise/rating_form.html')
+
+    def user_can_submit_valid_rating(self):
+        self.client.login(username='testuser', password='12345')
+        data = {'rating': 5, 'comment': 'Great!'}
+        response = self.client.post(self.url, data)
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(AdvertiseRating.objects.filter(advertise=self.advertise, user=self.user).exists())
+
+    def user_cannot_submit_invalid_rating(self):
+        self.client.login(username='testuser', password='12345')
+        data = {'rating': '', 'comment': 'Great!'}
+        response = self.client.post(self.url, data)
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(AdvertiseRating.objects.filter(advertise=self.advertise, user=self.user).exists())
+
+    def anonymous_user_cannot_access_rating_form(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, f'/accounts/login/?next={self.url}')
