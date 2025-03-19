@@ -35,6 +35,7 @@ ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,[::1]").s
 
 
 CSRF_TRUSTED_ORIGINS = ["https://comfortable-rosamund-projects-django-080370fd.koyeb.app"]
+
 # Application definition
 
 INSTALLED_APPS = [
